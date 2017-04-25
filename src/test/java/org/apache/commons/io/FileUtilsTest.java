@@ -60,7 +60,6 @@ public class FileUtilsTest {
         }
 
         for (int i = 0; i < 1000; i++) {
-            LOG.info(""+i);
             assertTrue("loop #" + i, dir.mkdirs());
             mySimpleDelete(Paths.get(TEST_DIR.getAbsolutePath()));
             assertFalse(TEST_DIR.exists());
@@ -86,7 +85,6 @@ public class FileUtilsTest {
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                //LOG.info(dir.toString());
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;
             }
