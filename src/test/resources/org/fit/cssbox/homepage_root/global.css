@@ -1,0 +1,240 @@
+body {
+	font-family: Arial, sans-serif;
+	font-size: small;
+	background-color: #fafafa;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: 120%;
+	border-left: 0.5em solid #ffb200;
+	padding-left: 0.3em;
+	margin: 1.5em 0 0.5em 0;
+}
+
+p {
+	margin: 0.5em;
+	line-height: 1.5;
+	text-indent: 2em;
+}
+
+ul {
+	margin: 0.5em 0 0.5em 2em;
+	padding: 0;
+}
+
+a:link, a:visited, a:hover, a:active {
+	text-decoration: underline;
+}
+
+a:link, a:visited {
+	color: black;
+}
+
+a:link, a:visited {
+	color: #343434;
+}
+
+a.logo {
+	text-decoration: none;
+}
+
+.note {
+	border-bottom: 1px dotted #ffb200;
+	cursor: default;
+}
+
+/*--------------------------------------------------------------------------*/
+
+#header {
+	float: left;
+	width: 11em;
+	margin-top: 1em;
+}
+
+#header a {
+	text-decoration: none;
+}
+
+h1 {
+	margin: 0;
+	padding: 1px; /* MSIE 7 border bug(?) */
+	text-align: center;
+	font-size: 240%;
+}
+
+h1 span.s1 {
+	border: 2px solid #ffb200;
+}
+
+h1 span.s2 {
+	border: 2px solid #aaa;
+}
+
+#main {
+	margin: 0 4em 0 14em;
+	padding-top: 10em;
+	min-height: 20em;
+}
+
+#main h1 {
+	position: absolute;
+	top: 2em;
+	left: 6em;
+}
+
+#main dt {
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+
+.news {
+	margin-top: 3em;
+}
+
+.news .item {
+	margin: 1.2em 0 1em 1em;
+}
+
+.news h3 {
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.news p {
+	margin: 0;
+	padding: 0;
+	padding-left: 0.5em;
+	text-indent: 0;
+}
+
+.news .date {
+	font-size: 80%;
+}
+
+.screenshots {
+	margin: 3em 0;
+	text-align: center;
+}
+
+.screenshots img {
+	margin: 0.5em 1em;
+	border: none;
+	box-shadow: 3px 3px 5px 1px rgba(0, 0, 0, 1);
+}
+
+#mainmenu {
+	width: 11em;
+	position: absolute;
+	left: 1em;
+	top: 10em;
+}
+
+#subproj {
+	width: 11em;
+	position: absolute;
+	left: 1em;
+	top: 28em;
+	padding-top: 0;
+}
+
+.menu {
+	padding: 1em 0;
+	background-color: #eee;
+	border-top: 0.3em solid #ddd;
+	border-bottom: 0.3em solid #ddd;
+}
+
+.menu h2 {
+	margin: 0 0 0.5em 0;
+	padding: 0.5em 0 0.5em 1em;
+	border: none;
+	font-size: 80%;
+	text-align: left;
+	background-color: #ddd;
+}
+
+.menu ul {
+	margin: 0;
+	padding: 0;
+	line-height: 2.5;
+}
+
+.menu li {
+	list-style: none;
+	margin: 0 1em;
+	font-weight: bold;
+}
+
+.menu li span { /* neklikatelna polozka v menu */
+	color: #999;
+}
+
+.menu li a, .menu li span {
+	padding: 0 0.3em;
+}
+
+.menu li.selected a {
+	border-bottom: 1px solid #ffb200;
+}
+
+.menu li a {
+	border-bottom: none;
+}
+
+.menu li a:link, .menu li a:visited {
+	text-decoration: none;
+	color: #232323;
+}
+
+.menu li a:hover, .menu li a:active {
+	text-decoration: none;
+	border-bottom: 1px dotted #ffb200;
+}
+
+#subproj ul {
+	line-height: 1.2;
+}
+
+#subproj li {
+	font-weight: normal;
+	padding-top: 0.5em;
+	padding-bottom: 0;
+}
+
+#subproj span {
+	display: block;
+	font-size: 80%;
+	color: inherit;
+}
+
+.menu hr {
+	margin: 0.5em 1em;
+	padding: 0;
+	border: none;
+	border-top: 1px solid #999;
+}
+
+#footer {
+	margin-top: 12em;
+	font-size: 80%;
+	text-align: center;
+}
+
+#footer p {
+	margin: 0.5em;
+}
+
+/* TOC of the manual */
+#main .toc {
+	float: none;
+}
+
+/* New feature */
+#main .new {
+	font-size: 50%;
+	font-weight: bold;
+	color: red;
+}
