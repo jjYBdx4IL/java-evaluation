@@ -25,6 +25,7 @@ import com.paypal.exception.MissingCredentialException;
 import com.paypal.exception.SSLConfigurationException;
 import com.paypal.sdk.exceptions.OAuthException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -107,45 +108,33 @@ import urn.ebay.apis.eBLBaseComponents.SolutionTypeType;
 @RetryRunnerConfig(delayMillis = 300000l)
 public class MerchantSDKTest extends SeleniumTestBase {
 
-    public static final String SDK_TEST_CONFIG_RESOURCE_PATH = "paypal_test.properties";
-
-    public static final String SANDBOX_SELLER1_EMAIL = "paypal.sandbox.seller@host.com";
-    public static final String SANDBOX_DE_BUYER_EMAIL = "paypal.sandbox.buyer@host.com";
-    public static final String SANDBOX_DE_BUYER_PASSWORD = "324lk5jlk34j5";
-    public static final String SANDBOX_US_BUYER_EMAIL = "paypal.sandbox.usbuyer@host.com";
-    public static final String SANDBOX_US_BUYER_PASSWORD = "T40927340234";
-
-    public static final String SANDBOX_LOGIN_ACCOUNT = "devnull.paypal.12-facilitator@host.com";
-    public static final String SANDBOX_LOGIN_ENDPOINT = "api.sandbox.paypal.com";
-    public static final String SANDBOX_LOGIN_APPID = "AZ3NI345345345345si9p7tjNm21YmNR40mZ";
-    public static final String SANDBOX_LOGIN_SECRET = "EAQMFsdfsdfsdfsdfsdf2345234kj234hEEp";
-
-    public static final String SANDBOX_TOKENSERVICE_URL = "https://api.sandbox.paypal.com/v1/identity/openidconnect/tokenservice";
-    public static final String SANDBOX_USERINFO_URL = "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo/?schema=openid";
-
-    public static final String SANDBOX_EC_REDIRECT_URL = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";
-
-
-
-
     private static final Logger LOG = LoggerFactory.getLogger(MerchantSDKTest.class);
     public static final String PaymentActionCompleted = "PaymentActionCompleted";
     public static final String PaymentActionNotInitiated = "PaymentActionNotInitiated";
     private static Random RAND = new Random();
+    
     @Rule
     public final IgnoreTestExceptionsRule ignoreSocketTimeoutException;
     private PayPalAPIInterfaceServiceService service = null;
+    private final PayPalConfig config;
+    private final PayPalTestAccountsConfig testAccountsConfig;
 
-    public MerchantSDKTest() {
+    public MerchantSDKTest() throws FileNotFoundException, IOException {
         ignoreSocketTimeoutException = new IgnoreTestExceptionsRule();
         ignoreSocketTimeoutException.addException(SocketTimeoutException.class);
+        
+        config = new PayPalConfig();
+        testAccountsConfig = new PayPalTestAccountsConfig();
     }
 
     @Before
     public void before() throws IOException {
         assumeTrue(Surefire.isSingleTextExecution()); // don't run tests with unstable external dependencies in CI
-        service = new PayPalAPIInterfaceServiceService(
-                this.getClass().getResourceAsStream(SDK_TEST_CONFIG_RESOURCE_PATH));
+        
+        config.read();
+        testAccountsConfig.read();
+        
+        service = new PayPalAPIInterfaceServiceService(config.getSDKProps());
     }
 
     /**
@@ -250,7 +239,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // is required and must contain the Payer Id or the email address of the
         // merchant.
         SellerDetailsType sellerDetails1 = new SellerDetailsType();
-        sellerDetails1.setPayPalAccountID(SANDBOX_SELLER1_EMAIL);
+        sellerDetails1.setPayPalAccountID(testAccountsConfig.seller1Email);
         paymentDetails1.setSellerDetails(sellerDetails1);
 
         // A unique identifier of the specific payment request, which is
@@ -326,7 +315,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // is required and must contain the Payer Id or the email address of the
         // merchant.
         SellerDetailsType sellerDetails2 = new SellerDetailsType();
-        sellerDetails2.setPayPalAccountID(SANDBOX_SELLER1_EMAIL);
+        sellerDetails2.setPayPalAccountID(testAccountsConfig.seller1Email);
         paymentDetails2.setSellerDetails(sellerDetails2);
 
         // A unique identifier of the specific payment request, which is
@@ -574,7 +563,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         paymentDetails1.setOrderTotal(orderTotal1);
         paymentDetails1.setPaymentAction(PaymentActionCodeType.SALE);
         SellerDetailsType sellerDetails1 = new SellerDetailsType();
-        sellerDetails1.setPayPalAccountID(SANDBOX_SELLER1_EMAIL);
+        sellerDetails1.setPayPalAccountID(testAccountsConfig.seller1Email);
         paymentDetails1.setSellerDetails(sellerDetails1);
         paymentDetails1.setPaymentRequestID("PaymentRequest1");
         paymentDetails1.setNotifyURL("http://localhost/ipn");
@@ -587,7 +576,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         paymentDetails2.setOrderTotal(orderTotal2);
         paymentDetails2.setPaymentAction(PaymentActionCodeType.SALE);
         SellerDetailsType sellerDetails2 = new SellerDetailsType();
-        sellerDetails2.setPayPalAccountID(SANDBOX_SELLER1_EMAIL);
+        sellerDetails2.setPayPalAccountID(testAccountsConfig.seller1Email);
         paymentDetails2.setSellerDetails(sellerDetails2);
         paymentDetails2.setPaymentRequestID("PaymentRequest2");
         paymentDetails2.setNotifyURL("http://localhost/ipn");
@@ -803,7 +792,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         LOG.info("EC Token:" + setExpressCheckoutResponse.getToken());
 
         visitPayPalWebsiteAndConfirmAgreement(setExpressCheckoutResponse.getToken(),
-                SANDBOX_US_BUYER_EMAIL, SANDBOX_US_BUYER_PASSWORD);
+        		testAccountsConfig.usBuyerEmail, testAccountsConfig.usBuyerPassword);
 
         GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
         GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(
@@ -921,14 +910,14 @@ public class MerchantSDKTest extends SeleniumTestBase {
     private void visitPayPalWebsiteAndConfirmPayment(String ecToken)
             throws WebElementNotFoundException, InterruptedException {
         visitPayPalWebsiteAndConfirmPayment(ecToken,
-                SANDBOX_DE_BUYER_EMAIL, SANDBOX_DE_BUYER_PASSWORD);
+        		testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
     }
 
     private void visitPayPalWebsiteAndConfirmPayment(String ecToken, String buyerEmail, String buyerPassword)
             throws WebElementNotFoundException, InterruptedException {
         LOG.info("visitPayPalWebsiteAndConfirmPayment()");
 
-        String redirectUrl = SANDBOX_EC_REDIRECT_URL + ecToken;
+        String redirectUrl = config.ecRedirectUrl + ecToken;
         LOG.info("redirecting customer to: " + redirectUrl);
         LOG.info("using paypal customer test account " + buyerEmail + " - " + buyerPassword);
         getDriver().get(redirectUrl);
@@ -976,14 +965,14 @@ public class MerchantSDKTest extends SeleniumTestBase {
 	private void visitPayPalWebsiteAndConfirmAgreement(String ecToken)
             throws WebElementNotFoundException, InterruptedException {
         visitPayPalWebsiteAndConfirmAgreement(ecToken,
-                SANDBOX_DE_BUYER_EMAIL, SANDBOX_DE_BUYER_PASSWORD);
+        		testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
     }
 
     private void visitPayPalWebsiteAndConfirmAgreement(String ecToken, String buyerEmail, String buyerPassword)
             throws WebElementNotFoundException, InterruptedException {
         LOG.info("visitPayPalWebsiteAndConfirmAgreement()");
 
-        String redirectUrl = SANDBOX_EC_REDIRECT_URL + ecToken;
+        String redirectUrl = config.ecRedirectUrl + ecToken;
         LOG.info("redirecting customer to: " + redirectUrl);
         LOG.info("using paypal customer test account " + buyerEmail + " - " + buyerPassword);
         getDriver().get(redirectUrl);

@@ -59,11 +59,21 @@ public class LoginAPITest extends SeleniumTestBase {
 
     private static AdHocHttpServer server = null;
     private static final Logger LOG = LoggerFactory.getLogger(LoginAPITest.class);
+    
+    private final PayPalLoginAPIConfig loginApiConfig;
+    private final PayPalTestAccountsConfig testAccountsConfig;
 
+    public LoginAPITest() {
+    	loginApiConfig = new PayPalLoginAPIConfig();
+    	testAccountsConfig = new PayPalTestAccountsConfig();
+    }
+    
     @Before
     public void before() throws Exception {
         assumeTrue(Surefire.isSingleTextExecution()); // don't run tests with unstable external dependencies in CI
         server = new AdHocHttpServer();
+        
+        loginApiConfig.read();
     }
 
     @After
@@ -92,7 +102,7 @@ public class LoginAPITest extends SeleniumTestBase {
                 + "<script>\n"
                 + "paypal.use( [\"login\"], function(login) {\n"
                 + "  login.render ({\n"
-                + "    \"appid\": \"" + MerchantSDKTest.SANDBOX_LOGIN_APPID + "\",\n"
+                + "    \"appid\": \"" + loginApiConfig.appId + "\",\n"
                 + "    \"authend\": \"sandbox\",\n"
                 + "    \"scopes\": \"openid profile email address phone https://uri.paypal.com/services/paypalattributes\",\n"
                 + "    \"containerid\": \"myContainer\",\n"
@@ -112,8 +122,8 @@ public class LoginAPITest extends SeleniumTestBase {
         WebElement emailField = waitForElement("xpath://input[@id='email']");
         WebElement passwordField = waitForElement("xpath://input[@id='password']");
         WebElement submitButton = waitForElement("xpath://input[@type='submit']");
-        setInputFieldValue(emailField, MerchantSDKTest.SANDBOX_DE_BUYER_EMAIL);
-        setInputFieldValue(passwordField, MerchantSDKTest.SANDBOX_DE_BUYER_PASSWORD);
+        setInputFieldValue(emailField, testAccountsConfig.deBuyerEmail);
+        setInputFieldValue(passwordField, testAccountsConfig.deBuyerPassword);
         takeScreenshot();
         LOG.info("current url: " + getDriver().getCurrentUrl());
         submitButton.click();
@@ -141,8 +151,8 @@ public class LoginAPITest extends SeleniumTestBase {
 
         
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("client_id", MerchantSDKTest.SANDBOX_LOGIN_APPID));
-        nameValuePairs.add(new BasicNameValuePair("client_secret", MerchantSDKTest.SANDBOX_LOGIN_SECRET));
+        nameValuePairs.add(new BasicNameValuePair("client_id", loginApiConfig.appId));
+        nameValuePairs.add(new BasicNameValuePair("client_secret", loginApiConfig.secret));
         nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
         nameValuePairs.add(new BasicNameValuePair("code", URLUtils.getQueryParams(returnUrl).get("code").get(0)));
         nameValuePairs.add(new BasicNameValuePair("redirect_uri", redirectUri));
@@ -152,7 +162,7 @@ public class LoginAPITest extends SeleniumTestBase {
         String accessToken = null;
         try {
             // turn authorization code into access token
-            HttpPost httpPost = new HttpPost(MerchantSDKTest.SANDBOX_TOKENSERVICE_URL);
+            HttpPost httpPost = new HttpPost(loginApiConfig.tokenServiceUrl);
 
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             httpPost.setHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
@@ -172,7 +182,7 @@ public class LoginAPITest extends SeleniumTestBase {
             assertNotNull(accessToken);
 
             // get user information
-            HttpGet httpGet = new HttpGet(MerchantSDKTest.SANDBOX_USERINFO_URL);
+            HttpGet httpGet = new HttpGet(loginApiConfig.userInfoUrl);
 
             httpGet.setHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
             httpGet.setHeader("Authorization", "Bearer " + accessToken);
