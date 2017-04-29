@@ -70,7 +70,7 @@ public class LoginAPITest extends SeleniumTestBase {
     
     @Before
     public void before() throws Exception {
-        assumeTrue(Surefire.isSingleTextExecution()); // don't run tests with unstable external dependencies in CI
+        assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with unstable external dependencies in CI
         server = new AdHocHttpServer();
         
         loginApiConfig.read();

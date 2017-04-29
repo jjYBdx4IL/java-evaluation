@@ -24,6 +24,8 @@ public class FileUtilsTest {
     private static final Logger LOG = LoggerFactory.getLogger(FileUtilsTest.class);
     private static final File TEST_DIR = FileUtil.createMavenTestDir(FileUtilsTest.class);
 
+    private static final int ITERATIONS = 100;
+    
     @Test
     public void testCleanDirectory() throws IOException {
         File dir = TEST_DIR;
@@ -31,7 +33,7 @@ public class FileUtilsTest {
             dir = new File(dir, "a");
         }
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             assertTrue("loop #" + i, dir.mkdirs());
             FileUtils.cleanDirectory(TEST_DIR);
             assertFalse(new File(TEST_DIR, "a").exists());
@@ -45,7 +47,7 @@ public class FileUtilsTest {
             dir = new File(dir, "a");
         }
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             assertTrue("loop #" + i, dir.mkdirs());
             FileUtils.deleteDirectory(TEST_DIR);
             assertFalse(TEST_DIR.exists());
@@ -59,7 +61,7 @@ public class FileUtilsTest {
             dir = new File(dir, Integer.toString(i));
         }
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             assertTrue("loop #" + i, dir.mkdirs());
             mySimpleDelete(Paths.get(TEST_DIR.getAbsolutePath()));
             assertFalse(TEST_DIR.exists());

@@ -131,7 +131,7 @@ public class CssBoxTest {
 
     @Test
     public void testPreview() throws MalformedURLException, IOException, SAXException, InterruptedException, Exception {
-        assumeTrue(Surefire.isSingleTextExecution());
+        assumeTrue(Surefire.isSingleTestExecution());
         
         JFrame frame = new JFrame("HTML Editor With Preview Provided by CSSBox");
         frame.setLayout(new GridBagLayout());

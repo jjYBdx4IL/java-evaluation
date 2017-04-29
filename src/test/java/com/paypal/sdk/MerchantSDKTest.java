@@ -129,7 +129,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
     @Before
     public void before() throws IOException {
-        assumeTrue(Surefire.isSingleTextExecution()); // don't run tests with unstable external dependencies in CI
+        assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with unstable external dependencies in CI
         
         config.read();
         testAccountsConfig.read();

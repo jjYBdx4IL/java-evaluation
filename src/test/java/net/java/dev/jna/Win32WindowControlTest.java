@@ -17,7 +17,7 @@ public class Win32WindowControlTest {
 
     @Test
     public void test() throws InterruptedException {
-        Assume.assumeTrue(Surefire.isSingleTextExecution());
+        Assume.assumeTrue(Surefire.isSingleTestExecution());
 
         while (true) {
             HWND hwnd = User32Utils.getWindowAtCursor();

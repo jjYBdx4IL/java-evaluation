@@ -45,16 +45,15 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.utils.env.Env;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import com.google.common.collect.Lists;
+import static org.junit.Assume.assumeTrue;
 
 public class JGitTest {
 
@@ -70,7 +69,7 @@ public class JGitTest {
     public void test() throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
         
         // doesn't run from within cygwin bash, jgit computes user home to be C:\cygwin64\Users\<username>
-        Assume.assumeFalse(Surefire.isSingleTestExecution());
+        assumeTrue(Surefire.isSingleTestExecution());
         
         final File origin = new File(TEMP_DIR, "repo");
         final File clone = new File(TEMP_DIR, "clone");
