@@ -22,6 +22,11 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Test;
 
 import com.github.jjYBdx4IL.utils.xml.XMLUtils;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,6 +34,8 @@ import com.github.jjYBdx4IL.utils.xml.XMLUtils;
  */
 public class JAXBTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JAXBTest.class);
+    
     @Test
     public void testObject2XML() throws JAXBException {
         Customer customer = new Customer();
@@ -132,7 +139,7 @@ public class JAXBTest {
      * @throws Exception
      */
     @Test
-    public void testParseNotExistingProperty() throws Exception {
+    public void testParseUnknownProperty() throws Exception {
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<customer id=\"101\">\n"
                 + "    <agebbb>55</agebbb>\n"
@@ -147,4 +154,25 @@ public class JAXBTest {
         assertEquals(0, customer.getAge());
     }
 
+    @Test(expected = UnmarshalException.class)
+    public void testFailOnUnknownProperty() throws Exception {
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<customer id=\"101\">\n"
+                + "    <agebbb>55</agebbb>\n"
+                + "</customer>\n";
+
+        JAXBContext jaxbContext = JAXBContext.newInstance(Customer.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        
+        jaxbUnmarshaller.setEventHandler(new ValidationEventHandler () {
+
+            @Override
+            public boolean handleEvent(ValidationEvent event) {
+                return false;
+            }
+
+        });
+        
+        jaxbUnmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+    }
 }
