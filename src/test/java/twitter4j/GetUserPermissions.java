@@ -30,9 +30,8 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
 
     private final String appOAuthToken;
     private final String appOAuthTokenSecret;
-    private volatile boolean returned = false;
     private String oAuthVerifier = null;
-    private AccessToken accessToken = null;
+    private volatile AccessToken accessToken = null;
     private Server server = null;
 
     private Twitter twitter = null;
@@ -46,7 +45,9 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
     @Override
     public void close() throws IOException {
         try {
-            server.stop();
+            if (server != null) {
+                server.stop();
+            }
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -67,7 +68,6 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
         baseRequest.setHandled(true);
 
         synchronized (this) {
-            returned = true;
             notify();
         }
     }
@@ -108,9 +108,10 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
         return twitter;
     }
 
+    // doesnt account for user not accepting authorization yet
     void waitForUserReturn() {
         synchronized (this) {
-            while (!returned) {
+            while (accessToken == null) {
                 try {
                     wait(1000L);
                 } catch (InterruptedException e) {
