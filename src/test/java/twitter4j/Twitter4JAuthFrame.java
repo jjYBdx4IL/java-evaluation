@@ -30,6 +30,7 @@ import twitter4j.auth.RequestToken;
  * @author jjYBdx4IL
  *
  */
+@SuppressWarnings("serial")
 public class Twitter4JAuthFrame extends JFrame implements ActionListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(Twitter4JAuthFrame.class);
@@ -77,7 +78,8 @@ public class Twitter4JAuthFrame extends JFrame implements ActionListener {
     private void updateRequestToken() {
         try {
             twitter = Twitter4JTestConfig.getTwitter();
-            requestToken = twitter.getOAuthRequestToken("oob");
+            //requestToken = twitter.getOAuthRequestToken("oob");
+            requestToken = twitter.getOAuthRequestToken("http://localhost:9999/return");
             String authURL = requestToken.getAuthorizationURL();
             LOG.info("new auth URL: " + authURL);
             urlButton.setText(authURL);

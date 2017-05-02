@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import com.github.jjYBdx4IL.utils.AbstractConfig;
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import static twitter4j.TwitterApp.APP_OAUTH_SECRET;
+import static twitter4j.TwitterApp.APP_OAUTH_TOKEN;
 
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -12,9 +14,6 @@ import twitter4j.conf.ConfigurationBuilder;
  * @author jjYBdx4IL
  */
 public class Twitter4JTestConfig extends AbstractConfig {
-
-    private static final String APP_OAUTH_TOKEN = "IwWpYMEdV0eZHYxwznNNr5fh5";
-    private static final String APP_OAUTH_SECRET = "ZzBkuVmNqL7gGWZAsUKDsqNagXtP1l6gpyM48PNBQ564d8MVae";
 
     public String token = "";
     public String tokenSecret = "";
