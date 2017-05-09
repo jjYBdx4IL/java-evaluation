@@ -29,7 +29,7 @@ public class ChatServer implements Runnable {
         LOG.info("number of active sessions: " + sessions.size());
     }
 
-    public synchronized void received(Message message) {
+    public void received(Message message) {
         if (message == null) {
             throw new NullPointerException();
         }
@@ -75,7 +75,7 @@ public class ChatServer implements Runnable {
         LOG.info("connections total: " + sessions.size());
     }
 
-    public synchronized void shutdown() {
+    public void shutdown() {
         LOG.info("signaling shutdown to chat server thread");
         messages.add(shutdownMessage);
     }
