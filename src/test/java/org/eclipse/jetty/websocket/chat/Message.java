@@ -72,4 +72,10 @@ public class Message {
     public Session getSession() {
         return session;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" + "messageType=" + messageType + ", message=" + message + ", session=" + session + '}';
+    }    
+    
 }

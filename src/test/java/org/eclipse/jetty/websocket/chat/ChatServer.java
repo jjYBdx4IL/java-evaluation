@@ -29,7 +29,11 @@ public class ChatServer implements Runnable {
         if (message == null) {
             throw new NullPointerException();
         }
-        userqueue.add(message);
+        try {
+            userqueue.add(message);
+        } catch (IllegalStateException ex) {
+            LOG.error("dropped message: " + message, ex);
+        }
         LOG.info("messages in queue: " + userqueue.size());
     }
 
@@ -83,10 +87,19 @@ public class ChatServer implements Runnable {
 
     public void shutdown() {
         LOG.info("signaling shutdown to chat server thread");
-        highprio.add(Message.createShutdown());
+        try {
+            highprio.add(Message.createShutdown());
+        } catch (IllegalStateException ex) {
+            LOG.error("failed to add shutdown message to high prio queue", ex);
+        }
+
         // make sure the server gets the shutdown message if it is listening to
         // the user queue:
-        userqueue.add(Message.createShutdown());
+        try {
+            userqueue.add(Message.createShutdown());
+        } catch (IllegalStateException ex) {
+            LOG.error("failed to add shutdown message to regular queue", ex);
+        }
     }
 
     public void wait4Shutdown(long timeoutSecs) {
