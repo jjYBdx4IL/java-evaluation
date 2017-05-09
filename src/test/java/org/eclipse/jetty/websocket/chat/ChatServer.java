@@ -16,7 +16,10 @@ public class ChatServer implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(ChatServer.class);
 
     private final Collection<Session> sessions = new HashSet<>();
-    private final LinkedBlockingQueue<Message> messages = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Message> userqueue = new LinkedBlockingQueue<>();
+    // high priority queue for internal messages, so operational stuff isn't delayed by high
+    // user load
+    private final LinkedBlockingQueue<Message> highprio = new LinkedBlockingQueue<>();
     private final CountDownLatch shutdownLatch = new CountDownLatch(1);
 
     public ChatServer() {
@@ -26,8 +29,8 @@ public class ChatServer implements Runnable {
         if (message == null) {
             throw new NullPointerException();
         }
-        messages.add(message);
-        LOG.info("messages in queue: " + messages.size());
+        userqueue.add(message);
+        LOG.info("messages in queue: " + userqueue.size());
     }
 
     @Override
@@ -36,12 +39,14 @@ public class ChatServer implements Runnable {
         boolean shutdown = false;
         while (!shutdown) {
             LOG.info("server loop start");
-            Message message = null;
-            try {
-                message = messages.take();
-            } catch (InterruptedException ex) {
-                LOG.error("", ex);
-                continue;
+            Message message = highprio.poll();
+            if (message == null) {
+                try {
+                    message = userqueue.take();
+                } catch (InterruptedException ex) {
+                    LOG.error("", ex);
+                    continue;
+                }
             }
             switch (message.getMessageType()) {
                 case SHUTDOWN:
@@ -78,7 +83,10 @@ public class ChatServer implements Runnable {
 
     public void shutdown() {
         LOG.info("signaling shutdown to chat server thread");
-        messages.add(Message.createShutdown());
+        highprio.add(Message.createShutdown());
+        // make sure the server gets the shutdown message if it is listening to
+        // the user queue:
+        userqueue.add(Message.createShutdown());
     }
 
     public void wait4Shutdown(long timeoutSecs) {

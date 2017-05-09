@@ -43,7 +43,12 @@ public class Message {
         return new Message(MessageType.DISCONNECT, null, session);
     }
     
-    public static Message createShutdown() {
+    /**
+     * Use {@link ChatServer#shutdown()} instead.
+     * 
+     * @return 
+     */
+    static Message createShutdown() {
         return new Message(MessageType.SHUTDOWN, null, null);
     }
     
