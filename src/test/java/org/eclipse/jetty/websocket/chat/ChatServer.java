@@ -18,18 +18,11 @@ public class ChatServer implements Runnable {
     private final Collection<Session> sessions = new HashSet<>();
     private final LinkedBlockingQueue<Message> messages = new LinkedBlockingQueue<>();
     private final CountDownLatch shutdownLatch = new CountDownLatch(1);
-    // poison object:
-    private final Message shutdownMessage = new Message(null);
 
     public ChatServer() {
     }
 
-    public synchronized void add(Session session) {
-        sessions.add(session);
-        LOG.info("number of active sessions: " + sessions.size());
-    }
-
-    public void received(Message message) {
+    public void add(Message message) {
         if (message == null) {
             throw new NullPointerException();
         }
@@ -40,7 +33,8 @@ public class ChatServer implements Runnable {
     @Override
     public void run() {
         LOG.info("chat server thread started");
-        while (true) {
+        boolean shutdown = false;
+        while (!shutdown) {
             LOG.info("server loop start");
             Message message = null;
             try {
@@ -49,35 +43,42 @@ public class ChatServer implements Runnable {
                 LOG.error("", ex);
                 continue;
             }
-            if (message == shutdownMessage) {
-                break;
-            }
-            for (Session sess : sessions) {
-                sess.getRemote().sendString("Received TEXT message: >>>" + message.getMessage() + "<<<", new WriteCallback() {
-                    @Override
-                    public void writeFailed(Throwable x) {
-                        LOG.warn("write failed");
-                    }
+            switch (message.getMessageType()) {
+                case SHUTDOWN:
+                    shutdown = true;
+                    continue;
+                case MSG:
+                    for (Session sess : sessions) {
+                        sess.getRemote().sendString("Received TEXT message: >>>" + message.getMessage() + "<<<", new WriteCallback() {
+                            @Override
+                            public void writeFailed(Throwable x) {
+                                LOG.warn("write failed");
+                            }
 
-                    @Override
-                    public void writeSuccess() {
-                        LOG.info("write success");
+                            @Override
+                            public void writeSuccess() {
+                                LOG.info("write success");
+                            }
+                        });
                     }
-                });
+                    break;
+                case CONNECT:
+                    sessions.add(message.getSession());
+                    LOG.info("connections total: " + sessions.size());
+                    break;
+                case DISCONNECT:
+                    sessions.remove(message.getSession());
+                    LOG.info("connections total: " + sessions.size());
+                    break;
             }
         }
         LOG.info("chat server thread stopped");
         shutdownLatch.countDown();
     }
 
-    public synchronized void remove(Session session) {
-        sessions.remove(session);
-        LOG.info("connections total: " + sessions.size());
-    }
-
     public void shutdown() {
         LOG.info("signaling shutdown to chat server thread");
-        messages.add(shutdownMessage);
+        messages.add(Message.createShutdown());
     }
 
     public void wait4Shutdown(long timeoutSecs) {

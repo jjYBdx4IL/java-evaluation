@@ -23,7 +23,7 @@ public class ServerChatSocket extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session sess) {
         super.onWebSocketConnect(sess);
-        chatServer.add(sess);
+        chatServer.add(Message.createConnect(sess));
         LOG.info("Socket Connected: " + sess);
     }
 
@@ -31,21 +31,21 @@ public class ServerChatSocket extends WebSocketAdapter {
     public void onWebSocketText(String message) {
         super.onWebSocketText(message);
         LOG.info("Received TEXT message: " + message);
-        chatServer.received(new Message(message));
+        chatServer.add(Message.createMsg(message));
     }
 
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
         LOG.info("Socket Closed: [" + statusCode + "] " + reason);
-        chatServer.remove(getSession());
+        chatServer.add(Message.createDisonnect(getSession()));
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
         super.onWebSocketError(cause);
         LOG.error("", cause);
-        chatServer.remove(getSession());
+        chatServer.add(Message.createDisonnect(getSession()));
     }
 
 }
