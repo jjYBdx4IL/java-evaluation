@@ -74,6 +74,10 @@ public class WebSocketChatTest {
             Session sess = sessions.get(client);
             sess.close();
         }
+
+        server.stop();
+        
+        chatHandler.getChatServer().wait4Shutdown(10L);
     }
 
     public URI getURI(Server server) throws MalformedURLException, UnknownHostException {

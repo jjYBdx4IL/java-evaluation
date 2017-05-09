@@ -13,6 +13,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ChatHandler extends WebSocketHandler implements LifeCycle.Listener, Container.Listener {
 
+    /**
+     * @return the chatServer
+     */
+    public ChatServer getChatServer() {
+        return chatServer;
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(ChatHandler.class);
     
     private final ChatServer chatServer = new ChatServer();
@@ -22,7 +29,7 @@ public class ChatHandler extends WebSocketHandler implements LifeCycle.Listener,
     
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.setCreator(new ChatCreator(chatServer));
+        factory.setCreator(new ChatCreator(getChatServer()));
         addLifeCycleListener(this);
         addEventListener(this);
     }
@@ -35,7 +42,7 @@ public class ChatHandler extends WebSocketHandler implements LifeCycle.Listener,
     @Override
     public void lifeCycleStarted(LifeCycle event) {
         LOG.info("lifeCycleStarted");
-        Thread thread = new Thread(chatServer);
+        Thread thread = new Thread(getChatServer());
         thread.start();
     }
 
@@ -47,7 +54,7 @@ public class ChatHandler extends WebSocketHandler implements LifeCycle.Listener,
     @Override
     public void lifeCycleStopping(LifeCycle event) {
         LOG.info("lifeCycleStopping");
-        chatServer.shutdown();
+        getChatServer().shutdown();
     }
 
     @Override
