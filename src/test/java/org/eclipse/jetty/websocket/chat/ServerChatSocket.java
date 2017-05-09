@@ -31,7 +31,7 @@ public class ServerChatSocket extends WebSocketAdapter {
     public void onWebSocketText(String message) {
         super.onWebSocketText(message);
         LOG.info("Received TEXT message: " + message);
-        chatServer.received(message);
+        chatServer.received(new Message(message));
     }
 
     @Override
