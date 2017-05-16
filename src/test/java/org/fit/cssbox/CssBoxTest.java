@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
  */
 public class CssBoxTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CssBoxTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CssBoxTest.class);
     private static AdHocHttpServer server = null;
 
     public static File getLocalExampleHomepageRoot() throws URISyntaxException {
@@ -132,61 +132,61 @@ public class CssBoxTest {
     @Test
     public void testPreview() throws MalformedURLException, IOException, SAXException, InterruptedException, Exception {
         assumeTrue(Surefire.isSingleTestExecution());
-        
+
         JFrame frame = new JFrame("HTML Editor With Preview Provided by CSSBox");
         frame.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         Container container = frame.getContentPane();
-        
+
         final JPanel browserPanel = new JPanel();
         JTextArea textArea = new JTextArea();
-        
+
         textArea.setText("<b>example</b>");
         textArea.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				anything();
-			}
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				anything();
-			}
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                anything();
+            }
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				anything();
-			}
-			
-			private void anything() {
-				browserPanel.removeAll();
-				try {
-					browserPanel.add(getBrowser(textArea.getText()));
-				} catch (IOException | SAXException e1) {
-					LOG.error("", e1);
-				}
-			}
-		});
-        
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                anything();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                anything();
+            }
+
+            private void anything() {
+                browserPanel.removeAll();
+                try {
+                    browserPanel.add(getBrowser(textArea.getText()));
+                } catch (IOException | SAXException e1) {
+                    LOG.error("", e1);
+                }
+            }
+        });
+
         c.gridx = 0;
         c.gridy = 0;
         c.weighty = 1.0;
         c.weightx = 1.0;
         c.fill = GridBagConstraints.BOTH;
-        
+
         container.add(textArea, c);
-        
+
         c.gridy++;
-        
+
         browserPanel.add(getBrowser(textArea.getText()));
         container.add(browserPanel, c);
         frame.pack();
-        frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()*2));
+        frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight() * 2));
 
         AWTUtils.showFrameAndWaitForCloseByUser(frame);
     }
-    
+
     public static BrowserCanvas getBrowser(String html) throws UnsupportedEncodingException, IOException, SAXException {
         Document doc = null;
         URL url = new URL("http://fake.url");
@@ -202,10 +202,10 @@ public class CssBoxTest {
         da.addStyleSheet(null, CSSNorm.userStyleSheet(), DOMAnalyzer.Origin.AGENT); //use the additional style sheet
         da.getStyleSheets(); //load the author style sheets
 
-    	BrowserCanvas browser = new BrowserCanvas(da.getRoot(),
-                        da,
-                        new java.awt.Dimension(1024, 1),
-                        url);
-    	return browser;
+        BrowserCanvas browser = new BrowserCanvas(da.getRoot(),
+                da,
+                new java.awt.Dimension(1024, 1),
+                url);
+        return browser;
     }
 }

@@ -26,4 +26,16 @@ public class ScriptEngineTest {
 
         assertEquals("123", result);
     }
+
+    @Test
+    public void testBindings() throws ScriptException {
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("javascript");
+        Bindings bindings = engine.createBindings();
+
+        engine.eval("var example = \"abc\";", bindings);
+
+        assertEquals("abc", bindings.get("example"));
+    }
+
 }
