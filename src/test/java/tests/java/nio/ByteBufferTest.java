@@ -306,4 +306,34 @@ public class ByteBufferTest {
         bb.get(ba1);
         assertEquals("7", new String(ba1));
     }
+    
+    @Test
+    public void test() {
+        ByteBuffer bb = ByteBuffer.allocateDirect(1024);
+        assertEquals(0, bb.position());
+        assertEquals(1024, bb.limit());
+
+        bb.put("abc".getBytes());
+        assertEquals(3, bb.position());
+        assertEquals(1024, bb.limit());
+
+        bb.flip();
+        assertEquals(0, bb.position());
+        assertEquals(3, bb.limit());
+
+        bb.put("123".getBytes());
+        try {
+            bb.put("4".getBytes());
+            fail();
+        } catch (BufferOverflowException ex) {
+        }
+
+        bb.flip();
+        assertEquals(0, bb.position());
+        assertEquals(3, bb.limit());
+
+        byte[] bytes3 = new byte[3];
+        bb.get(bytes3);
+        assertEquals("123", new String(bytes3));
+    }
 }
