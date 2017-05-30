@@ -1,10 +1,14 @@
 package io.github.lukehutch.fastclasspathscanner;
 
+import io.github.lukehutch.fastclasspathscanner.matchprocessor.ClassAnnotationMatchProcessor;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchProcessor;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchProcessorWithContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,7 @@ public class ClassPathScannerTest {
                 LOG.debug(relativePath);
             }
         };
+        
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchFilenamePattern("^org/openimaj/image/.*\\.(png|jpg|jpeg|JPG)", fileMatchProcessor);
         scanner.scan();
@@ -46,5 +51,51 @@ public class ClassPathScannerTest {
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchFilenamePattern(".*", fileMatchProcessorWithContext);
         scanner.scan();
+    }
+    
+    @Test
+    public void testFindAnnotatedPackages() {
+        final List<String> foundClassNames = new ArrayList<>();
+        
+        ClassAnnotationMatchProcessor classAnnotationMatchProcessor = new ClassAnnotationMatchProcessor() {
+            @Override
+            public void processMatch(Class<?> classWithAnnotation) {
+                foundClassNames.add(classWithAnnotation.getName().replaceAll("\\.package-info$", ""));
+            }
+        };
+        
+        FastClasspathScanner scanner = new FastClasspathScanner();
+        scanner.matchClassesWithAnnotation(ExamplePackageAnnotation.class, classAnnotationMatchProcessor);
+        scanner.scan();
+        
+        assertArrayEquals(new String[]{getClass().getPackage().getName()}, foundClassNames.toArray());
+    }
+    
+    @Test
+    public void testFindAnnotatedPackagesInCurrentModuleOnly() {
+        String moduleUriPrefix = new File(System.getProperty("basedir")).toURI().toString();
+
+        final List<String> foundClassNames = new ArrayList<>();
+        
+        ClassAnnotationMatchProcessor classAnnotationMatchProcessor = new ClassAnnotationMatchProcessor() {
+            @Override
+            public void processMatch(Class<?> classRef) {
+                ClassLoader cl = classRef.getClassLoader();
+                if (cl == null) {
+                    cl = ClassLoader.getSystemClassLoader();
+                }
+                String classResourceFileName = classRef.getName().replace('.', '/') + ".class";
+                String fullResourcePath = cl.getResource(classResourceFileName).toString();
+                if (fullResourcePath.startsWith(moduleUriPrefix)) {
+                    foundClassNames.add(classRef.getName().replaceAll("\\.package-info$", ""));
+                }
+            }
+        };
+        
+        FastClasspathScanner scanner = new FastClasspathScanner();
+        scanner.matchClassesWithAnnotation(ExamplePackageAnnotation.class, classAnnotationMatchProcessor);
+        scanner.scan();
+        
+        assertArrayEquals(new String[]{getClass().getPackage().getName()}, foundClassNames.toArray());
     }
 }
