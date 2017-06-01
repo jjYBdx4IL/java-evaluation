@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public class ClassPathScannerTest {
     }
     
     @Test
-    public void testFindAnnotatedPackagesInCurrentModuleOnly() {
+    public void testFindAnnotatedPackagesInCurrentModuleOnly() throws Throwable {
         String moduleUriPrefix = new File(System.getProperty("basedir")).toURI().toString();
 
         final List<String> foundClassNames = new ArrayList<>();
@@ -80,20 +80,27 @@ public class ClassPathScannerTest {
         ClassAnnotationMatchProcessor classAnnotationMatchProcessor = new ClassAnnotationMatchProcessor() {
             @Override
             public void processMatch(Class<?> classRef) {
-                ClassLoader cl = classRef.getClassLoader();
-                if (cl == null) {
-                    cl = ClassLoader.getSystemClassLoader();
-                }
-                String classResourceFileName = classRef.getName().replace('.', '/') + ".class";
-                String fullResourcePath = cl.getResource(classResourceFileName).toString();
-                if (fullResourcePath.startsWith(moduleUriPrefix)) {
-                    foundClassNames.add(classRef.getName().replaceAll("\\.package-info$", ""));
+                try {
+                    ClassLoader cl = classRef.getClassLoader();
+                    if (cl == null) {
+                        cl = ClassLoader.getSystemClassLoader();
+                    }
+                    String classResourceFileName = classRef.getName().replace('.', '/') + ".class";
+                    String fullResourcePath = cl.getResource(classResourceFileName).toString();
+                    if (fullResourcePath.startsWith(moduleUriPrefix)) {
+                        // also test reading anno param
+                        assertEquals(123, classRef.getAnnotation(ExamplePackageAnnotation.class).value());
+                        foundClassNames.add(classRef.getName().replaceAll("\\.package-info$", ""));
+                    }
+                } catch (Exception ex) {
+                    LOG.error("", ex);
                 }
             }
         };
         
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchClassesWithAnnotation(ExamplePackageAnnotation.class, classAnnotationMatchProcessor);
+        //scanner.verbose(true);
         scanner.scan();
         
         assertArrayEquals(new String[]{getClass().getPackage().getName()}, foundClassNames.toArray());

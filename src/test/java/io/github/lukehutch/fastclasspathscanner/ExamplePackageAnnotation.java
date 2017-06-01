@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
  *
  * @author work
  */
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PACKAGE)
 public @interface ExamplePackageAnnotation {
-    
+    int value() default 0;
 }
