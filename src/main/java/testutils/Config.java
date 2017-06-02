@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class Config implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
-    private static final File CONFIG_FILE = Env.getConfigDir(TestAutorunGUI.class);
+    private static final File CONFIG_FILE = new File(Env.getConfigDir(TestAutorunGUI.class), "config.dat");
     
     public ControlWindow controlWindow = new ControlWindow();
     public MethodRef selectedTestMethod;
