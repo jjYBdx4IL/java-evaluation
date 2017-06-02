@@ -1,7 +1,6 @@
 package testutils;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
@@ -36,6 +35,7 @@ public class TestMethodExecutor implements Runnable {
         LOG.info("started");
 
         while (running) {
+            LOG.info("loop");
             try {
                 if (methodRef != null) {
                     long lmod = new File(new URI(methodRef.getResourceUri())).lastModified();
