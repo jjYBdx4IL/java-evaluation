@@ -25,7 +25,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.junit.Test;
@@ -102,8 +101,8 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
         addComponentListener(this);
         setVisible(true);
 
-        classWatcherTimer = new Timer(500, this);
-        classWatcherTimer.start();
+        Thread testMethodExecutorThread = new Thread(testMethodExecutor, "TestMethodExecutor");
+        testMethodExecutorThread.start();
 
         doScan();
     }
@@ -132,6 +131,7 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
                     testMethodSelectionList.setEnabled(true);
                     rescanButton.setEnabled(true);
                     testMethodSelectionList.setSelectedValue(config.selectedTestMethod, true);
+                    testMethodExecutor.setTestMethodRef(config.selectedTestMethod);
                     testMethodSelectionList.addListSelectionListener(TestAutorunGUI.this);
                 }
             });
@@ -188,8 +188,8 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
     private final Config config = Config.load();
 
-    private Timer classWatcherTimer = null;
-
+    private final TestMethodExecutor testMethodExecutor = new TestMethodExecutor();
+    
     private void doScan() {
         rescanButton.setEnabled(false);
         testMethodSelectionList.setEnabled(false);
@@ -204,8 +204,6 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
         LOG.info(e.getSource().toString());
         if (e.getSource() == rescanButton) {
             doScan();
-        } else if (e.getSource() == classWatcherTimer) {
-
         }
     }
 
@@ -232,6 +230,7 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
     @Override
     public void valueChanged(ListSelectionEvent e) {
         config.selectedTestMethod = testMethodSelectionList.getSelectedValue();
+        testMethodExecutor.setTestMethodRef(config.selectedTestMethod);
         config.save();
     }
 
