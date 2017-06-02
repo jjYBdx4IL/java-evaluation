@@ -14,4 +14,28 @@
                 <org.slf4j.simpleLogger.defaultLogLevel>debug</org.slf4j.simpleLogger.defaultLogLevel>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-TestAutorunGUI</actionName>
+            <displayName>TestAutorunGUI</displayName>
+            <goals>
+                <goal>exec:java@TestAutorunGUI</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>run.single.main</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>exec:java</goal>
+            </goals>
+            <properties>
+                <exec.mainClass>${packageClassName}</exec.mainClass>
+                
+                
+                
+                
+            </properties>
+        </action>
     </actions>

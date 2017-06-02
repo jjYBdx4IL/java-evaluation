@@ -29,7 +29,7 @@ public class ClassPathScannerTest {
                 LOG.debug(relativePath);
             }
         };
-        
+
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchFilenamePattern("^org/openimaj/image/.*\\.(png|jpg|jpeg|JPG)", fileMatchProcessor);
         scanner.scan();
@@ -52,41 +52,36 @@ public class ClassPathScannerTest {
         scanner.matchFilenamePattern(".*", fileMatchProcessorWithContext);
         scanner.scan();
     }
-    
+
     @Test
     public void testFindAnnotatedPackages() {
         final List<String> foundClassNames = new ArrayList<>();
-        
+
         ClassAnnotationMatchProcessor classAnnotationMatchProcessor = new ClassAnnotationMatchProcessor() {
             @Override
             public void processMatch(Class<?> classWithAnnotation) {
                 foundClassNames.add(classWithAnnotation.getName().replaceAll("\\.package-info$", ""));
             }
         };
-        
+
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchClassesWithAnnotation(ExamplePackageAnnotation.class, classAnnotationMatchProcessor);
         scanner.scan();
-        
+
         assertArrayEquals(new String[]{getClass().getPackage().getName()}, foundClassNames.toArray());
     }
-    
+
     @Test
     public void testFindAnnotatedPackagesInCurrentModuleOnly() throws Throwable {
         String moduleUriPrefix = new File(System.getProperty("basedir")).toURI().toString();
 
         final List<String> foundClassNames = new ArrayList<>();
-        
+
         ClassAnnotationMatchProcessor classAnnotationMatchProcessor = new ClassAnnotationMatchProcessor() {
             @Override
             public void processMatch(Class<?> classRef) {
                 try {
-                    ClassLoader cl = classRef.getClassLoader();
-                    if (cl == null) {
-                        cl = ClassLoader.getSystemClassLoader();
-                    }
-                    String classResourceFileName = classRef.getName().replace('.', '/') + ".class";
-                    String fullResourcePath = cl.getResource(classResourceFileName).toString();
+                    String fullResourcePath = getResourceUri(classRef);
                     if (fullResourcePath.startsWith(moduleUriPrefix)) {
                         // also test reading anno param
                         assertEquals(123, classRef.getAnnotation(ExamplePackageAnnotation.class).value());
@@ -97,12 +92,21 @@ public class ClassPathScannerTest {
                 }
             }
         };
-        
+
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchClassesWithAnnotation(ExamplePackageAnnotation.class, classAnnotationMatchProcessor);
         //scanner.verbose(true);
         scanner.scan();
-        
+
         assertArrayEquals(new String[]{getClass().getPackage().getName()}, foundClassNames.toArray());
+    }
+
+    public static String getResourceUri(Class<?> classRef) {
+        ClassLoader cl = classRef.getClassLoader();
+        if (cl == null) {
+            cl = ClassLoader.getSystemClassLoader();
+        }
+        String classResourceFileName = classRef.getName().replace('.', '/') + ".class";
+        return cl.getResource(classResourceFileName).toString();
     }
 }

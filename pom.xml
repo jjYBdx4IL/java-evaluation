@@ -28,6 +28,32 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <!--                <executions>
+                    <execution>
+                        <id>TestAutorunGUI</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>test</classpathScope>
+                            <mainClass>testutils.TestAutorunGUI</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>-->
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>project.basedir</key>
+                            <value>${project.basedir}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>            
+            
+            <plugin>
                 <groupId>com.googlecode.mavennatives</groupId>
                 <artifactId>maven-nativedependencies-plugin</artifactId>
                 <version>0.0.7</version>
@@ -404,6 +430,11 @@
             <classifier>natives-macos</classifier>
         </dependency>        
         
+        <dependency>
+            <groupId>org.mapdb</groupId>
+            <artifactId>mapdb</artifactId>
+            <version>3.0.4</version>
+        </dependency>
         <dependency>
             <groupId>com.paypal.sdk</groupId>
             <artifactId>merchantsdk</artifactId>
