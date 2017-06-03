@@ -1,8 +1,5 @@
 package testutils;
 
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,13 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,9 +26,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.env.Maven;
+
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
 
 /**
  * Provides a persistent GUI that re-executes a select test-method upon class change (ie. in combination with an IDE's
@@ -146,8 +152,9 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
      * @throws Throwable
      */
     public List<MethodRef> findAnnotatedTestMethodsInCurrentModuleOnly() throws Throwable {
-        String moduleUriPrefix = new File(System.getProperty("project.basedir")).toURI().toString();
-
+        ClassLoader cl = new URLClassLoader(new URL[]{new URL(moduleUriPrefix)},
+                Thread.currentThread().getContextClassLoader()); 
+        
         final List<MethodRef> foundMethods = new ArrayList<>();
 
         MethodAnnotationMatchProcessor matchProcessor = new MethodAnnotationMatchProcessor() {
@@ -166,6 +173,7 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.matchClassesWithMethodAnnotation(Test.class, matchProcessor);
+        scanner.overrideClassLoaders(cl);
         //scanner.verbose(true);
         scanner.scan();
 
@@ -188,7 +196,10 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
     private final Config config = Config.load();
 
-    private final TestMethodExecutor testMethodExecutor = new TestMethodExecutor();
+    private final String moduleUriPrefix = Maven.getBasedir(TestAutorunGUI.class) + "target/test-classes/";
+    private final TestMethodExecutor testMethodExecutor = new TestMethodExecutor(moduleUriPrefix);
+    
+    
     
     private void doScan() {
         rescanButton.setEnabled(false);
@@ -233,5 +244,4 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
         testMethodExecutor.setTestMethodRef(config.selectedTestMethod);
         config.save();
     }
-
 }

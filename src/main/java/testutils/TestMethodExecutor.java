@@ -22,6 +22,11 @@ public class TestMethodExecutor implements Runnable {
 
     private long lastExecTimeMillis = 0;
     private MethodRef lastExecMethodRef = null;
+    private final String moduleUriPrefix;
+    
+    public TestMethodExecutor(String moduleUriPrefix) {
+        this.moduleUriPrefix = moduleUriPrefix;
+    }
 
     public void setTestMethodRef(MethodRef newMethodRef) {
         methodRef = newMethodRef;
@@ -32,7 +37,7 @@ public class TestMethodExecutor implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("started");
+        LOG.info("started, moduleUriPrefix = " + moduleUriPrefix);
 
         while (running) {
             LOG.info("loop");
@@ -49,7 +54,7 @@ public class TestMethodExecutor implements Runnable {
                 synchronized (this) {
                     wait(waitMillis);
                 }
-            } catch (Exception ex) {
+            } catch (Exception | ExceptionInInitializerError ex) {
                 LOG.error("", ex);
             }
         }
@@ -58,7 +63,7 @@ public class TestMethodExecutor implements Runnable {
     private void runIt() throws Exception {
         LOG.info("running " + lastExecMethodRef);
         final ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
-        final URLClassLoader cl = new URLClassLoader(new URL[]{}, origClassLoader);
+        final URLClassLoader cl = new URLClassLoader(new URL[]{new URL(moduleUriPrefix)}, origClassLoader);
         try {
             Thread.currentThread().setContextClassLoader(cl);
             Class<?> classRef = cl.loadClass(lastExecMethodRef.getClassName());

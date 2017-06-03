@@ -73,7 +73,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindAnnotatedPackagesInCurrentModuleOnly() throws Throwable {
-        String moduleUriPrefix = new File(System.getProperty("basedir")).toURI().toString();
+        String moduleUriPrefix = "";//new File(System.getProperty("basedir")).toURI().toString();
 
         final List<String> foundClassNames = new ArrayList<>();
 
@@ -82,6 +82,7 @@ public class ClassPathScannerTest {
             public void processMatch(Class<?> classRef) {
                 try {
                     String fullResourcePath = getResourceUri(classRef);
+                    LOG.info(fullResourcePath);
                     if (fullResourcePath.startsWith(moduleUriPrefix)) {
                         // also test reading anno param
                         assertEquals(123, classRef.getAnnotation(ExamplePackageAnnotation.class).value());
