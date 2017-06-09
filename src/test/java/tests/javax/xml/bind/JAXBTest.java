@@ -25,8 +25,6 @@ import com.github.jjYBdx4IL.utils.xml.XMLUtils;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,8 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public class JAXBTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JAXBTest.class);
-    
     @Test
     public void testObject2XML() throws JAXBException {
         Customer customer = new Customer();

@@ -43,6 +43,7 @@ import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationM
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, ComponentListener, ListSelectionListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestAutorunGUI.class);

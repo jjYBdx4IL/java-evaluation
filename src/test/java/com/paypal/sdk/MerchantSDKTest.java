@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -946,16 +947,13 @@ public class MerchantSDKTest extends SeleniumTestBase {
             takeScreenshot();
             acceptButton.click();
         }
-
-        waitUntil(
-                new Predicate<WebDriver>() {
-
-                    @Override
-                    public boolean apply(WebDriver driver) {
-                        return driver.getCurrentUrl().toLowerCase().contains("://localhost/");
-                    }
-                }
-        );
+        
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                return driver.getCurrentUrl().toLowerCase().contains("://localhost/");
+            }
+        });
 
         takeScreenshot();
         LOG.info("return url: " + getDriver().getCurrentUrl());
@@ -1004,15 +1002,12 @@ public class MerchantSDKTest extends SeleniumTestBase {
         takeScreenshot();
         continueButton.click();
 
-        waitUntil(
-                new Predicate<WebDriver>() {
-
-                    @Override
-                    public boolean apply(WebDriver driver) {
-                        return driver.getCurrentUrl().toLowerCase().contains("://localhost/");
-                    }
-                }
-        );
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                return driver.getCurrentUrl().toLowerCase().contains("://localhost/");
+            }
+        });
 
         takeScreenshot();
         LOG.info("return url: " + getDriver().getCurrentUrl());

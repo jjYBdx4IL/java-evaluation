@@ -1,14 +1,11 @@
 package org.lwjgl;
 
-import com.github.jjYBdx4IL.utils.env.Surefire;
-import org.junit.Test;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import static org.junit.Assume.assumeTrue;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

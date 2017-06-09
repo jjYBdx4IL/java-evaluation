@@ -7,7 +7,6 @@ import com.sun.jna.platform.win32.WinDef.RECT;
 import com.sun.jna.platform.win32.WinUser.WINDOWPLACEMENT;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
-import static com.sun.jna.win32.W32APIOptions.DEFAULT_OPTIONS;
 
 /**
  *

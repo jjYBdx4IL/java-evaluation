@@ -26,7 +26,6 @@ import org.junit.Test;
  */
 public class ProcessBuilderTest {
 
-    @SuppressWarnings("unused")
     private final static File TEMP_DIR = FileUtil.createMavenTestDir(ProcessBuilderTest.class);
 
     @Before
@@ -49,6 +48,6 @@ public class ProcessBuilderTest {
         p.waitFor();
         assertEquals(12, p.exitValue());
         assertEquals(0, errFile.length());
-        assertEquals("pom.xml\n", IOUtils.toString(new FileInputStream(outFile)));
+        assertEquals("pom.xml\n", IOUtils.toString(new FileInputStream(outFile), "UTF-8"));
     }
 }

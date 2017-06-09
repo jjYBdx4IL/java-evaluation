@@ -25,8 +25,6 @@ public class HtmlUnitTest {
     private static AdHocHttpServer server;
     private static URL pageOne;
     private static URL pageTwo;
-    private static URL pageJQuery;
-
     @BeforeClass
     public static void beforeClass() throws Exception {
         server = new AdHocHttpServer();
@@ -46,7 +44,7 @@ public class HtmlUnitTest {
         // add jquery.js
         try (InputStream is = HtmlUnitTest.class.getResourceAsStream(JQUERY_WEBJAR_LOC)) {
             String js = IOUtils.toString(is, Charset.forName("UTF-8"));
-            pageJQuery = server.addStaticContent("/jquery.js", new AdHocHttpServer.StaticResponse(
+            server.addStaticContent("/jquery.js", new AdHocHttpServer.StaticResponse(
                     "application/javascript",
                     js
             ));

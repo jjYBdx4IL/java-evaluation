@@ -16,27 +16,13 @@
 package testutils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystem;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-
 import org.junit.Ignore;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
-import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runner.notification.StoppedByUserException;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -58,11 +44,9 @@ public class RDRunner2 extends BlockJUnit4ClassRunner {
     private static final Logger LOG = LoggerFactory.getLogger(RDRunner2.class);
     private final static long POLL_MILLIS = 300l;
 
-    private final ClassLoader origClassLoader;
-
     public RDRunner2(Class<?> klass) throws InitializationError {
         super(klass);
-        origClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().getContextClassLoader();
     }
 
     public static String getMethodName() {
@@ -77,7 +61,7 @@ public class RDRunner2 extends BlockJUnit4ClassRunner {
     public void run(final RunNotifier notifier) {
         LOG.debug("run()");
         EachTestNotifier testNotifier = new EachTestNotifier(notifier, getDescription());
-        List<FrameworkMethod> children = getChildren();
+        getChildren();
         try {
             setNewClassLoader();
             Class<?> klass = getTestClass().getJavaClass();

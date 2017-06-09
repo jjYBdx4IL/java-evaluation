@@ -49,7 +49,7 @@ public class TarTest {
         taos.close();
 
         FileWriter fw = new FileWriter(tarFileName);
-        IOUtils.write(baos.toByteArray(), fw);
+        IOUtils.write(baos.toByteArray(), fw, "UTF-8");
         
         // read in the generated tar file
         final TarArchiveInputStream tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", new BufferedInputStream(new FileInputStream(tarFileName)));

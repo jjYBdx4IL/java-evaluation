@@ -7,7 +7,6 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
 import org.junit.Test;

@@ -3,7 +3,9 @@ package javasysmon;
 import com.jezhumble.javasysmon.JavaSysMon;
 import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
+
 import java.util.List;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,9 @@ public class ProcessTreeTest {
     public static void dumpProcessTree(OsProcess proc, String indent) {
         LOG.info(indent + format(proc));
         
-        for (OsProcess p : (List<OsProcess>) proc.children()) {
+        Object result = proc.children();
+        for (Object o : (List<?>) result) {
+        	OsProcess p = (OsProcess) o;
             dumpProcessTree(p, indent + "  ");
         }
     }

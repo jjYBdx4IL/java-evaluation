@@ -35,7 +35,6 @@ public class RomeTest {
     public void test1() throws IOException, FeedException, ParseException {
 
         String feedType = "rss_2.0";
-        String fileName = "feed.xml";
 
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType(feedType);
@@ -44,7 +43,7 @@ public class RomeTest {
         feed.setLink("http://www.rgagnon.com/howto.html");
         feed.setDescription("Useful Java code examples");
 
-        List entries = new ArrayList();
+        List<SyndEntry> entries = new ArrayList<SyndEntry>();
         SyndEntry entry;
         SyndContent description;
 

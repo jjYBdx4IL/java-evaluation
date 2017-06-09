@@ -45,7 +45,8 @@ public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTestBase
         frame.repaint();
     }
 
-    public static class JFrameAppMainWindow extends JFrame {
+    @SuppressWarnings("serial")
+	public static class JFrameAppMainWindow extends JFrame {
 
         public JFrameAppMainWindow() {
             super("JFrame title");

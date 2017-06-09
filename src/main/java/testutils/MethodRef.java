@@ -8,6 +8,7 @@ import java.util.Objects;
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class MethodRef implements Serializable {
 
     public MethodRef(Class<?> classRef, Method method) {

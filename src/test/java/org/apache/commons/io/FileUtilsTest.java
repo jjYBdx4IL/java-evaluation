@@ -12,8 +12,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FileUtilsTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileUtilsTest.class);
     private static final File TEST_DIR = FileUtil.createMavenTestDir(FileUtilsTest.class);
 
     private static final int ITERATIONS = 100;

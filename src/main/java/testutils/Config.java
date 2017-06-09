@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class Config implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);

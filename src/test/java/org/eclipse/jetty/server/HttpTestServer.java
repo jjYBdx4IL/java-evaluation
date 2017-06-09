@@ -61,10 +61,10 @@ public final class HttpTestServer {
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
                 setResponseBody(getMockResponseData());
-                setRequestBody(IOUtils.toString(baseRequest.getInputStream()));
+                setRequestBody(IOUtils.toString(baseRequest.getInputStream(), "UTF-8"));
                 response.setStatus(SC_OK);
                 response.setContentType("text/xml;charset=utf-8");
-                write(getResponseBody(), response.getOutputStream());
+                write(getResponseBody(), response.getOutputStream(), "UTF-8");
                 baseRequest.setHandled(true);
             }
         };

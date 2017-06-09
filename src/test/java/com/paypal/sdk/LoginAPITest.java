@@ -46,6 +46,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,7 @@ public class LoginAPITest extends SeleniumTestBase {
     }
     
     @Before
-    public void before() throws Exception {
+    public void before2() throws Exception {
         assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with unstable external dependencies in CI
         server = new AdHocHttpServer();
         
@@ -77,7 +78,7 @@ public class LoginAPITest extends SeleniumTestBase {
     }
 
     @After
-    public void after() throws Exception {
+    public void after2() throws Exception {
         if (server != null) {
             server.close();
         }
@@ -135,22 +136,19 @@ public class LoginAPITest extends SeleniumTestBase {
             submitButton.click();
         }
 
-        waitUntil(
-                new Predicate<WebDriver>() {
-
-                    @Override
-                    public boolean apply(WebDriver driver) {
-                        return driver.getCurrentUrl().toLowerCase().contains("://localhost");
-                    }
-                }
-        );
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                return driver.getCurrentUrl().toLowerCase().contains("://localhost");
+            }
+        });
 
         takeScreenshot();
         String returnUrl = getDriver().getCurrentUrl();
         LOG.info("return url: " + returnUrl);
 
         
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("client_id", loginApiConfig.appId));
         nameValuePairs.add(new BasicNameValuePair("client_secret", loginApiConfig.secret));
         nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
@@ -170,7 +168,7 @@ public class LoginAPITest extends SeleniumTestBase {
             CloseableHttpResponse response = httpclient.execute(httpPost);
             try {
                 LOG.info("response status: " + response.getStatusLine());
-                String content = IOUtils.toString(response.getEntity().getContent());
+                String content = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
                 LOG.info("response content: " + content);
                 accessToken = new JSONObject(content).getString("access_token");
                 assertEquals(200, response.getStatusLine().getStatusCode());
@@ -190,7 +188,7 @@ public class LoginAPITest extends SeleniumTestBase {
             response = httpclient.execute(httpGet);
             try {
                 LOG.info("response status: " + response.getStatusLine());
-                String content = IOUtils.toString(response.getEntity().getContent());
+                String content = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
                 LOG.info("response content: " + content);
                 assertEquals(200, response.getStatusLine().getStatusCode());
                 // http://stackoverflow.com/questions/17715649/can-i-get-payer-id-with-login-with-paypal

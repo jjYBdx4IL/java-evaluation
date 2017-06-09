@@ -18,9 +18,15 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * My conclusion: don't use MapDB. I can't even make to unchecked cast warnings go away
+ * without suppressing them. There are also serious, open issues in the issue tracker.
+ * Generally speaking, implementing a database is a highly nontrivial task. Use mature
+ * embedded databases like h2 instead.
+ * On top of that, it is implemented in Kotlin, so forget about debugging in Java.
  *
  * @author Github jjYBdx4IL Projects
  */
+@SuppressWarnings("unchecked")
 public class MapDBTest {
 
     private final static File MAVEN_TEST_DIR = FileUtil.createMavenTestDir(MapDBTest.class);
@@ -34,7 +40,7 @@ public class MapDBTest {
                 .transactionEnable()
                 .closeOnJvmShutdown()
                 .make();
-        final ConcurrentMap<String, String> map = (ConcurrentMap<String, String>) db.hashMap("map").createOrOpen();
+		final ConcurrentMap<String, String> map = (ConcurrentMap<String, String>) db.hashMap("map").createOrOpen();
         
         assertNull(map.get("1"));
         map.put("1", "one");
