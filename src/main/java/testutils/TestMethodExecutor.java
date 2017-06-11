@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class TestMethodExecutor implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestMethodExecutor.class);
-    private static final long waitMillis = 500L;
+    private static final long waitMillis = 10L;
 
     private volatile MethodRef methodRef = null;
     private volatile boolean running = true;
