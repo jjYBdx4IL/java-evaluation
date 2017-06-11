@@ -51,6 +51,9 @@ public class MethodRef implements Serializable {
         return cl.getResource(classResourceFileName).toString();
     }
     
+    /**
+     * this returns the value shown in the GUI list:
+     */
     @Override
     public String toString() {
         return className + "#" + methodName;

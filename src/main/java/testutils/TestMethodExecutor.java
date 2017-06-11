@@ -40,7 +40,7 @@ public class TestMethodExecutor implements Runnable {
         LOG.info("started, moduleUriPrefix = " + moduleUriPrefix);
 
         while (running) {
-            LOG.info("loop");
+            LOG.trace("loop");
             try {
                 if (methodRef != null) {
                     long lmod = new File(new URI(methodRef.getResourceUri())).lastModified();

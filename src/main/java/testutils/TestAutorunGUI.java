@@ -36,11 +36,19 @@ import com.github.jjYBdx4IL.utils.env.Maven;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * Provides a persistent GUI that re-executes a select test-method upon class change (ie. in combination with an IDE's
+ * Provides a persistent GUI that re-executes a selected test-method upon class change (ie. in combination with an IDE's
  * compile-on-save feature).
  *
+ * Run this from the command line with "mvn exec:java". This requires all test dependencies having *compile* scope in
+ * pom.xml because of the way we are re-loading the actual test classes: we need to prevent having the test classes
+ * on the TestAutorunGUI's classpath because its class loaders will be used as parent for the temporary class loader
+ * used to scan the test units and used to execute them.
+ * 
  * @author jjYBdx4IL
  */
 @SuppressWarnings("serial")
@@ -67,10 +75,13 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
     private void init() {
         rescanButton.addActionListener(this);
-        rescanButton.setEnabled(false);
-        testMethodSelectionList.setEnabled(false);
+        selectedLatestButton.addActionListener(this);
         testMethodSelectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         testMethodSelectionList.addListSelectionListener(this);
+        enableInputs(false);
+        
+        rescanButton.setToolTipText("scan classpath for @org.junit.Test annotations");
+        selectedLatestButton.setToolTipText("select the test with the most recently updated class file");
 
         GridBagLayout layout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
@@ -86,11 +97,14 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
         container.add(statusLabel, c);
 
         c.gridx++;
+        container.add(selectedLatestButton, c);
+
+        c.gridx++;
         container.add(rescanButton, c);
 
         c.gridx = 0;
         c.gridy++;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         c.weighty = 1.0;
         c.weighty = 1.0;
         c.fill = GridBagConstraints.BOTH;
@@ -134,9 +148,7 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
                     for (MethodRef method : testMethods) {
                         listModel.addElement(method);
                     }
-                    statusLabel.setText("Ready.");
-                    testMethodSelectionList.setEnabled(true);
-                    rescanButton.setEnabled(true);
+                    enableInputs(true);
                     testMethodSelectionList.setSelectedValue(config.selectedTestMethod, true);
                     testMethodExecutor.setTestMethodRef(config.selectedTestMethod);
                     testMethodSelectionList.addListSelectionListener(TestAutorunGUI.this);
@@ -154,8 +166,8 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
      */
     public List<MethodRef> findAnnotatedTestMethodsInCurrentModuleOnly() throws Throwable {
         ClassLoader cl = new URLClassLoader(new URL[]{new URL(moduleUriPrefix)},
-                Thread.currentThread().getContextClassLoader()); 
-        
+                Thread.currentThread().getContextClassLoader());
+
         final List<MethodRef> foundMethods = new ArrayList<>();
 
         MethodAnnotationMatchProcessor matchProcessor = new MethodAnnotationMatchProcessor() {
@@ -191,6 +203,7 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
     }
 
     private final JLabel statusLabel = new JLabel();
+    private final JButton selectedLatestButton = new JButton("latest");
     private final JButton rescanButton = new JButton("rescan");
     private final DefaultListModel<MethodRef> listModel = new DefaultListModel<>();
     private final JList<MethodRef> testMethodSelectionList = new JList<>(listModel);
@@ -199,14 +212,16 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
     private final String moduleUriPrefix = Maven.getBasedir(TestAutorunGUI.class) + "target/test-classes/";
     private final TestMethodExecutor testMethodExecutor = new TestMethodExecutor(moduleUriPrefix);
-    
-    
-    
-    private void doScan() {
-        rescanButton.setEnabled(false);
-        testMethodSelectionList.setEnabled(false);
-        statusLabel.setText("Scanning...");
 
+    private void enableInputs(boolean enabled) {
+        rescanButton.setEnabled(enabled);
+        testMethodSelectionList.setEnabled(enabled);
+        selectedLatestButton.setEnabled(enabled);
+        statusLabel.setText(enabled ? "Ready." : "Scanning...");
+    }
+
+    private void doScan() {
+        enableInputs(false);
         Thread t = new Thread(this, "ClasspathScanner");
         t.start();
     }
@@ -216,6 +231,28 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
         LOG.info(e.getSource().toString());
         if (e.getSource() == rescanButton) {
             doScan();
+        } else if (e.getSource() == selectedLatestButton) {
+            selectLatestTest();
+        }
+    }
+
+    protected void selectLatestTest() {
+        long latestLmod = 0;
+        MethodRef latestMethod = null;
+        for (int i = 0; i < listModel.size(); i++) {
+            try {
+                MethodRef ref = listModel.get(i);
+                File classFile = new File(new URI(ref.getResourceUri()));
+                if (classFile.lastModified() > latestLmod) {
+                    latestMethod = ref;
+                    latestLmod = classFile.lastModified();
+                }
+            } catch (URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        if (latestMethod != null) {
+            testMethodSelectionList.setSelectedValue(latestMethod, true);
         }
     }
 
