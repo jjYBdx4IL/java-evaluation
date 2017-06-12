@@ -40,6 +40,12 @@
                 </executions>
                 <configuration>
                     <mainClass>testutils.TestAutorunGUI</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>basedir</key>
+                            <value>${project.basedir}</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
 
