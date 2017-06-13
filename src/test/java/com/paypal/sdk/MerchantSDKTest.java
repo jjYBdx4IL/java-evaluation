@@ -16,7 +16,6 @@ import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import com.github.jjYBdx4IL.utils.TimeUtils;
 import com.github.jjYBdx4IL.utils.env.Surefire;
-import com.google.common.base.Predicate;
 import com.paypal.exception.ClientActionRequiredException;
 import com.paypal.exception.HttpErrorException;
 import com.paypal.exception.InvalidCredentialException;

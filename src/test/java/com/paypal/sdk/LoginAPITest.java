@@ -16,8 +16,6 @@ import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import com.github.jjYBdx4IL.utils.net.URLUtils;
-import com.google.common.base.Predicate;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
