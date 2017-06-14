@@ -3,6 +3,8 @@ package org.lwjgl;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -18,6 +20,9 @@ import static org.lwjgl.system.MemoryUtil.*;
  * @author jjYBdx4IL
  */
 public class SimpleDrawElementsTestBase {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SimpleDrawElementsTestBase.class);
+	
     // We need to strongly reference callback instances.
 
     private GLFWErrorCallback errorCallback;
@@ -86,6 +91,7 @@ public class SimpleDrawElementsTestBase {
         glfwSetWindowSizeCallback(window, wsCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int w, int h) {
+            	LOG.info("window resized");
                 if (w > 0 && h > 0) {
                     width = w;
                     height = h;
