@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -23,49 +24,52 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Customer {
 
-	@XmlElement
-	String name;
-	@XmlElement
-	int age;
-	@XmlAttribute
-	int id;
+    @XmlElement
+    String name;
+    @XmlElement
+    int age;
+    @XmlAttribute
+    int id;
+    @XmlElement
+    @XmlJavaTypeAdapter(UpperCaseStringConverterJaxbAdapter.class)
+    String name2;
 
-	public String getName() {
-		return name;
-	}
+    public String getName2() {
+        return name2;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName2(String name2) {
+        this.name2 = name2;
+    }
 
-	public int getAge() {
-		return age;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getAge() {
+        return age;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Customer [");
-        builder.append("age=");
-        builder.append(age);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append("]");
-        return builder.toString();
+        return "Customer [name=" + name + ", age=" + age + ", id=" + id + ", name2=" + name2 + "]";
     }
 
+  
 }

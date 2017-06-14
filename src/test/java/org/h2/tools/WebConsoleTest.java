@@ -1,6 +1,7 @@
 package org.h2.tools;
 
 import com.github.jjYBdx4IL.test.FileUtil;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import java.awt.Desktop;
 import java.io.File;
@@ -40,7 +41,7 @@ public class WebConsoleTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebConsoleTest.class); 
     
-    private static final File TEST_DIR = FileUtil.createMavenTestDir(WebConsoleTest.class);
+    private static final File TEST_DIR = Maven.getTempTestDir(WebConsoleTest.class);
     private static final File TEST_DB = new File(TEST_DIR, "h2db");
     private static final File H2_WEB_PROPS_FILE = new File(TEST_DIR, Constants.SERVER_PROPERTIES_NAME);
     private static final String DB_URL = "jdbc:h2:" + TEST_DB.getAbsolutePath();

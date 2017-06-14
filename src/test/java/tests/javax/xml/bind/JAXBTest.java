@@ -38,6 +38,7 @@ public class JAXBTest {
         customer.setId(101);
         customer.setName("some name");
         customer.setAge(55);
+        customer.setName2("aBc");
 
         JAXBContext jaxbContext = JAXBContext.newInstance(Customer.class);
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -50,6 +51,7 @@ public class JAXBTest {
         XMLUtils.assertEquals("<customer id=\"101\">\n"
                 + "    <name>some name</name>\n"
                 + "    <age>55</age>\n"
+                + "    <name2>ABC</name2>\n"
                 + "</customer>", baos.toString());
     }
 
@@ -59,6 +61,7 @@ public class JAXBTest {
                 + "<customer id=\"101\">\n"
                 + "    <age>55</age>\n"
                 + "    <name>some name</name>\n"
+                + "    <name2>aBc</name2>\n"
                 + "</customer>\n";
 
         JAXBContext jaxbContext = JAXBContext.newInstance(Customer.class);
@@ -68,6 +71,7 @@ public class JAXBTest {
         assertEquals(101, customer.getId());
         assertEquals("some name", customer.getName());
         assertEquals(55, customer.getAge());
+        assertEquals("ABC", customer.getName2());
 
     }
 
