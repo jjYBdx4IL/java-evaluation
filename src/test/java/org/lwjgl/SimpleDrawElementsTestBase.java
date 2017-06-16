@@ -19,7 +19,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *
  * @author jjYBdx4IL
  */
-public class SimpleDrawElementsTestBase {
+public abstract class SimpleDrawElementsTestBase {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SimpleDrawElementsTestBase.class);
 	
@@ -109,9 +109,7 @@ public class SimpleDrawElementsTestBase {
 
         // Make the window visible
         glfwShowWindow(window);
-    }
-
-    private void loop() {
+        
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
@@ -121,36 +119,36 @@ public class SimpleDrawElementsTestBase {
         debugProc = GLUtil.setupDebugMessageCallback();
 
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    }
 
-        int vbo = glGenBuffers();
-        int ibo = glGenBuffers();
-        float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f};
-        int[] indices = {0, 1, 2};
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip(), GL_STATIC_DRAW);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.createIntBuffer(indices.length).put(indices).flip(), GL_STATIC_DRAW);
-        glVertexPointer(2, GL_FLOAT, 0, 0L);
-
+    public abstract void loopInit();
+    public abstract void loopIteration();
+    
+    private void loop() {
+        loopInit();
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glViewport(0, 0, width, height);
-            glMatrixMode(GL_PROJECTION);
-            float aspect = (float) width / height;
-            glLoadIdentity();
-            glOrtho(-aspect, aspect, -1, 1, -1, 1);
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L);
-
-            glfwSwapBuffers(window); // swap the color buffers
-
+            loopIteration();
+            
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
         }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public long getWindow() {
+        return window;
     }
 }

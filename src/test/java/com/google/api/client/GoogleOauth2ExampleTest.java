@@ -128,6 +128,7 @@ public class GoogleOauth2ExampleTest extends AbstractHandler {
 
         // wait for test (callback) to complete
         countDownLatch.await();
+        // let the browser download the redirect page
         Thread.sleep(1000);
         server.stop();
         server.join();

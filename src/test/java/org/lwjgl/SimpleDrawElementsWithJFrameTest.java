@@ -15,16 +15,18 @@ import org.junit.Test;
  *
  * @author jjYBdx4IL
  */
-public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTestBase implements ActionListener {
+public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTest implements ActionListener {
 
     private JFrameAppMainWindow frame;
-    
+
     /**
      * demo using swing GUI in separate window besides the lwjgl window.
      *
-     * Closing the lwjgl window terminates the application, closing the jframe does not.
+     * Closing the lwjgl window terminates the application, closing the jframe
+     * does not.
      */
     @Test
+    @Override
     public void test() throws InterruptedException, InvocationTargetException {
         assumeTrue(Surefire.isSingleTestExecution());
 
@@ -36,6 +38,7 @@ public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTestBase
                 timer.start();
             }
         });
+
         run();
     }
 
@@ -46,7 +49,7 @@ public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTestBase
     }
 
     @SuppressWarnings("serial")
-	public static class JFrameAppMainWindow extends JFrame {
+    public static class JFrameAppMainWindow extends JFrame {
 
         public JFrameAppMainWindow() {
             super("JFrame title");
