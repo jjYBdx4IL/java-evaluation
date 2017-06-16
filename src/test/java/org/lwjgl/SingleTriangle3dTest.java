@@ -16,16 +16,17 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
 /**
  *
  * @author jjYBdx4IL
  */
-public class SimpleDrawElementsTest extends SimpleDrawElementsTestBase {
+public class SingleTriangle3dTest extends LwjglTestBase {
 
     @Test
     public void test() throws Exception {
         assumeTrue(Surefire.isSingleTestExecution());
-        
+
         run();
     }
 
@@ -33,23 +34,23 @@ public class SimpleDrawElementsTest extends SimpleDrawElementsTestBase {
     public void loopInit() {
         int vbo = glGenBuffers();
         int ibo = glGenBuffers();
-        float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f};
-        int[] indices = {0, 1, 2};
+        float[] vertices = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f };
+        int[] indices = { 0, 1, 2 };
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip(),
+                GL_STATIC_DRAW);
         glEnableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.createIntBuffer(indices.length).put(indices).flip(), GL_STATIC_DRAW);
-        glVertexPointer(2, GL_FLOAT, 0, 0L);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                (IntBuffer) BufferUtils.createIntBuffer(indices.length).put(indices).flip(), GL_STATIC_DRAW);
+        glVertexPointer(3, GL_FLOAT, 0, 0L);
     }
-    
+
     @Override
     public void loopIteration() {
-        glViewport(0, 0, getWidth(), getHeight());
         glMatrixMode(GL_PROJECTION);
-        float aspect = (float) getWidth() / getHeight();
         glLoadIdentity();
-        glOrtho(-aspect, aspect, -1, 1, -1, 1);
+        glOrtho(-getAspect(), getAspect(), -1, 1, -1, 1);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L);
 
         glfwSwapBuffers(getWindow()); // swap the color buffers

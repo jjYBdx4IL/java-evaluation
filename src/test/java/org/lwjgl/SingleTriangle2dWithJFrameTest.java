@@ -15,12 +15,12 @@ import org.junit.Test;
  *
  * @author jjYBdx4IL
  */
-public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTest implements ActionListener {
+public class SingleTriangle2dWithJFrameTest extends SingleTriangle2dTest implements ActionListener {
 
     private JFrameAppMainWindow frame;
 
     /**
-     * demo using swing GUI in separate window besides the lwjgl window.
+     * Demo using swing GUI in separate window besides the lwjgl window.
      *
      * Closing the lwjgl window terminates the application, closing the jframe
      * does not.
@@ -34,7 +34,7 @@ public class SimpleDrawElementsWithJFrameTest extends SimpleDrawElementsTest imp
             @Override
             public void run() {
                 frame = new JFrameAppMainWindow();
-                Timer timer = new Timer(5000, SimpleDrawElementsWithJFrameTest.this);
+                Timer timer = new Timer(5000, SingleTriangle2dWithJFrameTest.this);
                 timer.start();
             }
         });
