@@ -30,7 +30,6 @@ public abstract class LwjglTestBase {
     private static final Logger LOG = LoggerFactory.getLogger(LwjglTestBase.class);
 
     // We need to strongly reference callback instances.
-
     private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback keyCallback;
     private GLFWWindowSizeCallback wsCallback;
@@ -190,5 +189,14 @@ public abstract class LwjglTestBase {
 
     public float getAspect() {
         return (float) getWidth() / getHeight();
+    }
+
+    /**
+     * Get the elapsed time since display loop start.
+     * 
+     * @return the elapsed (real) time in milliseconds.
+     */
+    public long getElapsedTime() {
+        return System.currentTimeMillis() - startTimeMs;
     }
 }

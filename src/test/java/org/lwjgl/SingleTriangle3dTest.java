@@ -15,6 +15,7 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
@@ -50,7 +51,8 @@ public class SingleTriangle3dTest extends LwjglTestBase {
     public void loopIteration() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-getAspect(), getAspect(), -1, 1, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glEnable(GL_DEPTH_TEST);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L);
 
         glfwSwapBuffers(getWindow()); // swap the color buffers
