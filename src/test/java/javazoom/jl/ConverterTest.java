@@ -29,11 +29,12 @@ public class ConverterTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConverterTest.class);
     public static File MP3FILE = new File(AdvancedPlayerTest.class.getResource("applause2.mp3").toExternalForm().substring(5));
+    private static final File TEMP_DIR = Maven.getTempTestDir(ConverterTest.class);
 
     @Test
     public void test() throws JavaLayerException {
         Converter converter = new Converter();
-        File wav = new File(Maven.getMavenTargetDir(), Converter.class.getName() + ".wav");
+        File wav = new File(TEMP_DIR, Converter.class.getName() + ".wav");
         converter.convert(MP3FILE.getAbsolutePath(), wav.getAbsolutePath(), new Converter.ProgressListener() {
             @Override
             public void converterUpdate(int updateID, int param1, int param2) {

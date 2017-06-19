@@ -8,15 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.Locale;
 
 import javax.swing.Timer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**

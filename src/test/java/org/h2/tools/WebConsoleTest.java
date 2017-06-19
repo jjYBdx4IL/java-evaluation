@@ -1,6 +1,5 @@
 package org.h2.tools;
 
-import com.github.jjYBdx4IL.test.FileUtil;
 import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import java.awt.Desktop;

@@ -31,6 +31,7 @@ import javazoom.jl.decoder.JavaLayerException;
 public class ClipTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClipTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(ClipTest.class);
 
     @Test
     public void test() throws JavaLayerException, InterruptedException {
@@ -78,7 +79,7 @@ public class ClipTest {
 
     private static File createWavFile() throws JavaLayerException {
         Converter converter = new Converter();
-        File wav = new File(Maven.getMavenTargetDir(), ClipTest.class.getName() + ".wav");
+        File wav = new File(TEMP_DIR, ClipTest.class.getName() + ".wav");
         converter.convert(MP3FILE.getAbsolutePath(), wav.getAbsolutePath());
         return wav;
     }
