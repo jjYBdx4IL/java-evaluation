@@ -1,13 +1,5 @@
 package com.thoughtworks.xstream;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2016 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -19,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Derived from: http://www.tutorialspoint.com/xstream/xstream_first_application.htm
+ *
+ * Comment: I don't really see any advantage of using xstream over jaxb.
  *
  * @author Github jjYBdx4IL Projects
  *
