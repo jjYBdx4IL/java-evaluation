@@ -1,12 +1,15 @@
 package com.github.javaparser;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.GenericVisitorAdapter;
+import com.github.javaparser.ast.visitor.TreeVisitor;
 
+import java.util.Locale;
 import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -14,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * @author jjYBdx4IL
  */
 public class JavaParserTest {
@@ -64,5 +67,22 @@ public class JavaParserTest {
         };
 
         compilationUnit.accept(visitor, null);
+    }
+
+    @Test
+    public void testTreeVisitor() {
+        CompilationUnit compilationUnit = JavaParser
+                .parse("class A { private boolean ok; public int get() { return abc; } }");
+
+        TreeVisitor visitor = new TreeVisitor() {
+
+            @Override
+            public void process(Node node) {
+                LOG.info(String.format(Locale.ROOT, "%s (%s-%s): %s", node.getClass().getName(),
+                        node.getBegin().get().toString(), node.getEnd().get().toString(), node.toString()));
+            }
+        };
+
+        visitor.visitPreOrder(compilationUnit);
     }
 }
