@@ -1,9 +1,6 @@
 package tests.javax.swing;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
 
 import org.junit.Test;
 
@@ -27,9 +24,7 @@ public class JFramePaintTest extends JFrame {
 
     @Test
     public void test() {
-        assumeTrue(Surefire.isSingleTestExecution());
-
-        AWTUtils.showFrameAndWaitForCloseByUser(this);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(this);
     }
 
     @Override
@@ -37,7 +32,7 @@ public class JFramePaintTest extends JFrame {
         super.paint(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setBackground(Color.black);
+        g2.setBackground(Color.blue);
         Rectangle r = g.getClipBounds();
         g2.clearRect(r.x, r.y, r.width, r.height);
     }

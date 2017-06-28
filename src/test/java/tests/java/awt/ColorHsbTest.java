@@ -1,9 +1,6 @@
-package tests.javax.swing;
-
-import static org.junit.Assume.assumeTrue;
+package tests.java.awt;
 
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
 
 import org.junit.Test;
 
@@ -16,10 +13,10 @@ import java.awt.Rectangle;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class HsbTest extends JFrame {
+public class ColorHsbTest extends JFrame {
 
-    public HsbTest() {
-        super(HsbTest.class.getSimpleName());
+    public ColorHsbTest() {
+        super(ColorHsbTest.class.getSimpleName());
 
         setPreferredSize(new Dimension(800, 600));
         pack();
@@ -27,9 +24,7 @@ public class HsbTest extends JFrame {
 
     @Test
     public void test() {
-        assumeTrue(Surefire.isSingleTestExecution());
-
-        AWTUtils.showFrameAndWaitForCloseByUser(this);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(this);
     }
 
     @Override
