@@ -24,12 +24,12 @@ import org.junit.Test;
 public class URLTest {
 
     private static final File TEMP_DIR = FileUtil.createMavenTestDir(URLTest.class);
-    
+
     @Before
     public void before() throws IOException {
         FileUtils.cleanDirectory(TEMP_DIR);
     }
-    
+
     @Test
     public void testURLParsing() throws MalformedURLException {
         URL url = new URL("ftp://user:password@host.com/some/file.txt");
@@ -39,7 +39,7 @@ public class URLTest {
         assertEquals(21, url.getDefaultPort());
         assertEquals("/some/file.txt", url.getPath());
     }
-    
+
     @Test
     public void testUrlComposition() throws MalformedURLException {
         URL base = new URL("http://some.server.de/pub/");
@@ -47,7 +47,7 @@ public class URLTest {
         assertEquals("http://some.server.de/test", new URL(base, "../test").toString());
         assertEquals("http://www.google.de", new URL(base, "http://www.google.de").toString());
     }
-    
+
     @Test
     public void testUrlDecomposition() throws MalformedURLException {
         URL url = new URL("http://some.server.de/pub/");
@@ -56,14 +56,14 @@ public class URLTest {
         assertEquals("some.server.de", url.getHost());
         assertEquals("/pub/", url.getPath());
         assertEquals("http", url.getProtocol());
-        
+
         url = new URL("hTTp://some.server.DE/Pub/");
         assertEquals(-1, url.getPort());
         assertEquals(80, url.getDefaultPort());
         assertEquals("some.server.DE", url.getHost());
         assertEquals("/Pub/", url.getPath());
         assertEquals("http", url.getProtocol());
-        
+
         url = new URL("http://some.server.de:81/pub/");
         assertEquals(81, url.getPort());
         assertEquals(80, url.getDefaultPort());
@@ -71,13 +71,22 @@ public class URLTest {
         url = new URL("https://some.server.de:444/pub/");
         assertEquals(444, url.getPort());
         assertEquals(443, url.getDefaultPort());
+
+        url = new URL("file:/home/bla");
+        assertEquals("/home/bla", url.getPath());
+        assertEquals("file", url.getProtocol());
+
+        url = new URL("file:/C:\\home\\bla");
+        assertEquals("/C:/home/bla", url.getPath());
+        assertEquals("file", url.getProtocol());
     }
 
     @Test
     public void testPathEncoding() throws MalformedURLException, URISyntaxException {
-        URL url = new URL ("http://test/some path");
+        URL url = new URL("http://test/some path");
         assertEquals("http://test/some path", url.toExternalForm());
-        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(),
+                url.getQuery(), url.getRef());
         assertEquals("/some path", uri.getPath());
         url = uri.toURL();
         assertEquals("http://test/some%20path", url.toExternalForm());
@@ -105,13 +114,13 @@ public class URLTest {
         } catch (MalformedURLException ex) {
         }
     }
-    
+
     @Test
     public void testGetContentFromLocalFile() throws IOException {
         File htmlFile = new File(TEMP_DIR, "test.html");
         FileUtils.writeStringToFile(htmlFile, "test content", "ASCII");
         URL url = htmlFile.toURI().toURL();
-        
+
         Object result = null;
         try {
             result = url.getContent();
@@ -120,10 +129,10 @@ public class URLTest {
             assertTrue(result instanceof InputStream);
         } finally {
             if (result != null && result instanceof Closeable) {
-                ((Closeable)result).close();
+                ((Closeable) result).close();
             }
         }
-        
+
     }
-    
+
 }
