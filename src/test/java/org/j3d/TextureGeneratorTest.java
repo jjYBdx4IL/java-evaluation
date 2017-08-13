@@ -1,26 +1,31 @@
 package org.j3d;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
 
 import org.j3d.texture.procedural.TextureGenerator;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Locale;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class TextureGeneratorTest extends JFrame {
+public class TextureGeneratorTest extends JFrame implements ChangeListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TextureGeneratorTest.class);
 
@@ -29,24 +34,51 @@ public class TextureGeneratorTest extends JFrame {
     private final int textureHeight = 600;
     private final float[] texture = new float[textureWidth * textureHeight];
     float min, max;
+    private final JPanel paintPanel = new JPanel() {
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+
+            Graphics2D g2 = (Graphics2D) g;
+            Rectangle r = g.getClipBounds();
+            for (int x = 0; x < r.width; x++) {
+                for (int y = 0; y < r.height; y++) {
+                    float value = texture[y * textureWidth + x];
+                    g2.setColor(Color.getHSBColor(0f, 0f, value));
+                    g2.fillRect(r.x + x, r.y + y, 1, 1);
+                }
+            }
+        }
+    };
+    private final JLabel freqLabel = new JLabel();
+    private final JSlider freqSlider = new JSlider(2, 1000, 4);
+    private final JLabel zScaleLabel = new JLabel();
+    private final JSlider zScaleSlider = new JSlider(1, 1000, 1000);
+
+    @Test
+    public void test() {
+        regenTexture();
+        AWTUtils.showFrameAndWaitForCloseByUserTest(this);
+    }
 
     public TextureGeneratorTest() {
         super(TextureGeneratorTest.class.getSimpleName());
 
-        setPreferredSize(new Dimension(800, 600));
+        Container container = getContentPane();
+        container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+        container.add(paintPanel, BorderLayout.CENTER);
+        container.add(freqLabel, BorderLayout.CENTER);
+        container.add(freqSlider, BorderLayout.CENTER);
+        container.add(zScaleLabel, BorderLayout.CENTER);
+        container.add(zScaleSlider, BorderLayout.CENTER);
+
+        freqSlider.addChangeListener(this);
+        zScaleSlider.addChangeListener(this);
+
+        paintPanel.setPreferredSize(new Dimension(800, 600));
+        setTitle(TextureGeneratorTest.class.getSimpleName());
+
         pack();
-    }
-
-    @Test
-    public void test() {
-        assumeTrue(Surefire.isSingleTestExecution());
-
-        genAndShowTexture(4, 1f);
-        genAndShowTexture(40, 1f);
-        genAndShowTexture(400, 1f);
-        genAndShowTexture(4, 5f);
-        genAndShowTexture(40, 5f);
-        genAndShowTexture(400, 5f);
     }
 
     private void normalizeTexture() {
@@ -80,13 +112,14 @@ public class TextureGeneratorTest extends JFrame {
         }
     }
 
-    private void genAndShowTexture(int freq, float zScale) {
+    private void regenTexture() {
         resetTexture();
+        int freq = freqSlider.getValue();
+        float zScale = (float) zScaleSlider.getValue() / zScaleSlider.getMaximum();
+        freqLabel.setText(String.format(Locale.ROOT, "freq = %d:", freq));
+        zScaleLabel.setText(String.format(Locale.ROOT, "zScale = %.3f:", zScale));
         gen.generateSynthesisTexture(texture, freq, zScale, textureWidth, textureHeight);
         normalizeTexture();
-        setTitle(String.format(Locale.ROOT, "%s: freq=%d, zScale=%.3f", TextureGeneratorTest.class.getSimpleName(),
-                freq, zScale));
-        AWTUtils.showFrameAndWaitForCloseByUser(this);
     }
 
     private void resetTexture() {
@@ -96,17 +129,9 @@ public class TextureGeneratorTest extends JFrame {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        Rectangle r = g.getClipBounds();
-        for (int x = 0; x < r.width; x++) {
-            for (int y = 0; y < r.height; y++) {
-                float value = texture[y * textureWidth + x];
-                g2.setColor(Color.getHSBColor(0f, 0f, value));
-                g2.fillRect(r.x + x, r.y + y, 1, 1);
-            }
-        }
+    public void stateChanged(ChangeEvent e) {
+        regenTexture();
+        paintPanel.repaint();
     }
+
 }
