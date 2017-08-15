@@ -275,11 +275,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>ecs</groupId>
-            <artifactId>ecs</artifactId>
-            <version>1.4.2</version>
-        </dependency>
-        <dependency>
             <groupId>io.github.lukehutch</groupId>
             <artifactId>fast-classpath-scanner</artifactId>
             <version>2.0.21</version>

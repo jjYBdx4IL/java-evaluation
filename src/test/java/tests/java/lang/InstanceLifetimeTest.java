@@ -2,6 +2,7 @@ package tests.java.lang;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class InstanceLifetimeTest {
 
+    @Ignore
     @Test
     public void testFinalizeCall() throws InterruptedException {
         CountDownLatch finalizeLatch = new CountDownLatch(1);
@@ -20,6 +22,7 @@ public class InstanceLifetimeTest {
         }
     }
     
+    @Ignore
     @Test
     public void testFinalizeCallAfterConstructorFailure() throws InterruptedException {
         CountDownLatch finalizeLatch = new CountDownLatch(1);

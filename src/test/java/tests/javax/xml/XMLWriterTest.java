@@ -60,7 +60,7 @@ public class XMLWriterTest {
                 transform(getW3CDocument1()));
     }
 
-    private String transform(Document doc) {
+    static String transform(Document doc) {
         try {
             DOMSource domSource = new DOMSource(doc);
             StringWriter writer = new StringWriter();
@@ -69,7 +69,7 @@ public class XMLWriterTest {
             Transformer transformer = tf.newTransformer();
             //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(domSource, result);
-            return writer.toString();
+            return writer.toString().replace("\r", "");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
