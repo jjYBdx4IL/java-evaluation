@@ -280,6 +280,11 @@
             <version>2.0.21</version>
         </dependency>
         <dependency>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>filters</artifactId>
+            <version>2.0.235-1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-test-utils</artifactId>
             <version>1.1-SNAPSHOT</version>
@@ -300,6 +305,11 @@
             <version>${gwt.version}</version>
         </dependency>
         <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <version>1.49j</version>
+        </dependency>
+        <dependency>
             <groupId>org.j3d</groupId>
             <artifactId>j3d-texture</artifactId>
             <version>3.0.1</version>
@@ -317,6 +327,11 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>6.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.jasypt</groupId>
@@ -348,6 +363,16 @@
             <version>2.0.6</version>
         </dependency>
         <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.maven-play-plugin.org.playframework</groupId>
+            <artifactId>jj-simplecaptcha</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
             <groupId>javazoom</groupId>
             <artifactId>jlayer</artifactId>
             <version>1.0.1</version>
@@ -359,6 +384,10 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
             <groupId>org.joml</groupId>
@@ -465,6 +494,11 @@
             <classifier>natives-macos</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
         <dependency>
             <groupId>org.mapdb</groupId>
             <artifactId>mapdb</artifactId>
@@ -702,6 +736,11 @@
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna-platform</artifactId>
                 <version>4.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9.9</version>
             </dependency>
             <dependency>
                 <groupId>org.json</groupId>
