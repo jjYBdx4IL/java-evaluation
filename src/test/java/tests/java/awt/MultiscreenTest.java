@@ -12,6 +12,7 @@ import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.MouseInfo;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
@@ -39,6 +40,7 @@ public class MultiscreenTest {
 
     @Test
     public void determineActiveScreenTest() throws InterruptedException, InvocationTargetException {
+        final JFrame jf = new JFrame("title");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -47,7 +49,6 @@ public class MultiscreenTest {
 
                 LOG.info(MouseInfo.getPointerInfo().getDevice().toString());
 
-                JFrame jf = new JFrame("title");
                 jf.setAlwaysOnTop(true);
                 //jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 JLabel label = new JLabel("test");
@@ -57,13 +58,14 @@ public class MultiscreenTest {
                 jf.setVisible(true);
             }
         });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                }
+                jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
             }
         });
     }
