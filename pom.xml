@@ -587,17 +587,6 @@
             <artifactId>rome</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-java</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>fr.opensagres.xdocreport.sfntly</groupId>
             <artifactId>sfntly</artifactId>
             <version>1.0.0</version>
@@ -753,7 +742,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>21.0</version>
+                <version>23.0</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -904,17 +893,6 @@
                 <groupId>com.rometools</groupId>
                 <artifactId>rome</artifactId>
                 <version>1.7.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-java</artifactId>
-                <version>3.4.0</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-remote-driver</artifactId>
-                <version>3.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
