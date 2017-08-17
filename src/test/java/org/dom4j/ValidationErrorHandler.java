@@ -1,4 +1,4 @@
-package tests.dom4j;
+package org.dom4j;
 
 /*
  * #%L

@@ -1,4 +1,4 @@
-package tests.math.stats;
+package math.stats;
 
 /*
  * #%L
