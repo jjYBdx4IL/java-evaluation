@@ -34,7 +34,7 @@ public class ListRepositoriesTest {
         List<String> repos = new ArrayList<>();
         for (Repository repo : service.getRepositories("jjYBdx4IL")) {
             repos.add(repo.getName());
-            LOG.info(repo.getName() + ": " + repo.getCloneUrl());
+            LOG.info(repo.getName() + ": " + repo.getCloneUrl() + (repo.isFork() ? " (forked)" : ""));
         }
 
         LOG.info("repo count: " + repos.size());
