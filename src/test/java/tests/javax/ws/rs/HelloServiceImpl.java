@@ -9,11 +9,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/hello")
-public class Hello {
+public class HelloServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Hello.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HelloServiceImpl.class);
 
-    public Hello() {
+    public HelloServiceImpl() {
         LOG.info("initialized");
     }
 
@@ -41,5 +41,4 @@ public class Hello {
         return "<html> " + "<title>" + "Hello Jersey" + "</title>" + "<body><h1>" + "Hello Jersey" + "</body></h1>"
                 + "</html> ";
     }
-
 }
