@@ -1,6 +1,6 @@
 package tests.javax.ws.rs;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import com.github.jjYBdx4IL.utils.io.IoUtils;
 
@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class RestTest extends RestTestBase {
@@ -30,6 +31,15 @@ public class RestTest extends RestTestBase {
         URL url = getServer().getURL("customResponseType");
         String pageContents = IoUtils.toString(url, "text/plain; charset=ASCII");
         assertEquals("CustomType serialized", pageContents);
+    }
+
+    @Test
+    public void testParamAndExceptionHandling() throws Exception {
+        URL url = new URL(getServer().getURL("customResponseType").toExternalForm() + "?fail=true");
+        try {
+            IoUtils.toString(url, "text/plain; charset=ASCII");
+            fail();
+        } catch (IOException ex) {}
     }
 
 }
