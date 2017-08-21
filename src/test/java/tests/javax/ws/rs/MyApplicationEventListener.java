@@ -7,6 +7,8 @@ import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.container.ResourceContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 
 @Provider
@@ -18,6 +20,7 @@ public class MyApplicationEventListener implements ApplicationEventListener {
 
     @Override
     public void onEvent(ApplicationEvent event) {
+        LOG.info(event.getType() + " " + event);
         switch (event.getType()) {
             case INITIALIZATION_FINISHED:
                 LOG.info("Application "
@@ -40,4 +43,5 @@ public class MyApplicationEventListener implements ApplicationEventListener {
         // return the listener instance that will handle this request.
         return new MyRequestEventListener(requestCnt);
     }
+
 }

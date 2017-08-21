@@ -21,12 +21,14 @@ public class MyRequestEventListener implements RequestEventListener {
 
     @Override
     public void onEvent(RequestEvent event) {
+        LOG.info(event.getType() + " " + event);
         switch (event.getType()) {
             case RESOURCE_METHOD_START:
                 LOG.info("Resource method "
                     + event.getUriInfo().getMatchedResourceMethod()
                         .getHttpMethod()
                     + " started for request " + requestNumber);
+                LOG.info("" + event.getUriInfo().getMatchedResources());
                 break;
             case FINISHED:
                 LOG.info("Request " + requestNumber
@@ -34,6 +36,7 @@ public class MyRequestEventListener implements RequestEventListener {
                     + (System.currentTimeMillis() - startTime) + " ms.");
                 // this can be used for transaction handling:
                 LOG.info("exception thrown: " + event.getException());
+                LOG.info("" + event.getUriInfo().getMatchedResources());
                 break;
             default:
                 break;
