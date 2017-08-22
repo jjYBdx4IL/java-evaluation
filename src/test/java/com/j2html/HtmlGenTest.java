@@ -8,11 +8,20 @@ import net.sf.jtidy.JtidyTest;
 
 import static j2html.TagCreator.*;
 
+// https://j2html.com/examples.html
 public class HtmlGenTest {
 
-    // https://j2html.com/examples.html
     @Test
-    public void test() {
+    public void test1() {
+        String s = document(
+            html(
+                head(
+                    title("Title")))).toString();
+        assertEquals("<!DOCTYPE html><html><head><title>Title</title></head></html>", s);
+    }
+
+    @Test
+    public void test2() {
         String s = document(
             html(
                 head(

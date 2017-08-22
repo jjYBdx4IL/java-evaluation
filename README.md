@@ -1,5 +1,10 @@
 # java-evaluation
 
+The test units in this module should be viewed as examples about how stuff
+works. Whenever I have issues to get something working properly, I try to
+put it in here and try to understand how a simpler variant of the problem
+works.
+
 ## TestAutorunGUI
 
 Run
