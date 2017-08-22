@@ -5,6 +5,9 @@ import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 // for this to work, we need to supply it to Jersey via the ApplicationEventListener implemented
 // in MyApplicationEventListener
 public class MyRequestEventListener implements RequestEventListener {
@@ -28,7 +31,12 @@ public class MyRequestEventListener implements RequestEventListener {
                     + event.getUriInfo().getMatchedResourceMethod()
                         .getHttpMethod()
                     + " started for request " + requestNumber);
-                LOG.info("" + event.getUriInfo().getMatchedResources());
+                LOG.info("resource instance: " + event.getUriInfo().getMatchedResources());
+                Method method = event.getUriInfo().getMatchedResourceMethod().getInvocable().getDefinitionMethod();
+                LOG.info("method: " + method);
+                for (Annotation a : method.getAnnotations()) {
+                    LOG.info("anno: " + a);
+                }
                 break;
             case FINISHED:
                 LOG.info("Request " + requestNumber
