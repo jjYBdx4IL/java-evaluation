@@ -16,7 +16,7 @@ public class HtmlGenTest {
         String s = document(
             html(
                 head(
-                    title("Title")))).toString();
+                    title("Title"))));
         assertEquals("<!DOCTYPE html><html><head><title>Title</title></head></html>", s);
     }
 
@@ -29,7 +29,7 @@ public class HtmlGenTest {
                     link().withRel("stylesheet").withHref("/css/main.css")),
                 body(
                     main(attrs("#main.content"),
-                        h1("Heading!"))))).toString();
+                        h1("Heading!")))));
         assertEquals("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
             + "<html>\n"
             + "  <head>\n"

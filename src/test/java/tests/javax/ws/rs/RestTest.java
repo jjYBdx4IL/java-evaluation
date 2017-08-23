@@ -1,20 +1,37 @@
 package tests.javax.ws.rs;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import com.github.jjYBdx4IL.utils.io.IoUtils;
 
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class RestTest extends RestTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RestTest.class);
+    private static final java.util.logging.Logger LOGJ = java.util.logging.Logger.getLogger(RestTest.class.getName());
 
     @Test
     public void testHello() throws Exception {
@@ -39,7 +56,72 @@ public class RestTest extends RestTestBase {
         try {
             IoUtils.toString(url, "text/plain; charset=ASCII");
             fail();
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+        }
+    }
+
+    @Test
+    public void testStorage() throws MalformedURLException, UnknownHostException {
+        String url = getServer().getURL("storage").toExternalForm() + "/";
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        LOGJ.setLevel(java.util.logging.Level.FINEST);
+        LOGJ.addHandler(new Handler() {
+
+            @Override
+            public void publish(LogRecord record) {
+                LOG.info(record.getSourceClassName() + System.lineSeparator() + record.getMessage());
+
+            }
+
+            @Override
+            public void flush() {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        LOGJ.log(java.util.logging.Level.FINEST, "test");
+        client.register(new LoggingFeature(LOGJ, LoggingFeature.Verbosity.PAYLOAD_ANY));
+        WebTarget webTarget = client.target(url + "1");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN);
+
+        // GET non-existing element
+        Response response = (Response) invocationBuilder.get();
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        assertEquals("key not found", response.readEntity(String.class));
+
+        // create the element using PUT
+        response = (Response) invocationBuilder.put(Entity.entity("content", MediaType.TEXT_PLAIN));
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+        // GET existing element
+        response = (Response) invocationBuilder.get();
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertEquals("content", response.readEntity(String.class));
+
+        // POST append data to the element
+        response = (Response) invocationBuilder
+            .post(Entity.entity("payload=more", MediaType.APPLICATION_FORM_URLENCODED));
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+        // GET appended element
+        response = (Response) invocationBuilder.get();
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertEquals("contentmore", response.readEntity(String.class));
+
+        // DELETE the element
+        response = (Response) invocationBuilder.delete();
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+        // GET non-existing element
+        response = (Response) invocationBuilder.get();
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        assertEquals("key not found", response.readEntity(String.class));
     }
 
 }
