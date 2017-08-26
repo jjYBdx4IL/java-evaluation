@@ -11,13 +11,14 @@ package math.stats;
 
 import static org.junit.Assert.*;
 import java.util.Random;
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SigmaTest {
 
-    private static final Logger log = Logger.getLogger(SigmaTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(SigmaTest.class);
     private Random r;
 
     @Before
@@ -62,8 +63,8 @@ public class SigmaTest {
 
         // t-student approximation of the stample standard deviation
         double sdev = Math.sqrt(sumSquareDelta / nSamples);
-        log.info("sampleAverage = " + sampleAverage);
-        log.info("sdev(t-student) = " + sdev);
+        LOG.info("sampleAverage = " + sampleAverage);
+        LOG.info("sdev(t-student) = " + sdev);
 
         double nHits1Sigma = 0;
         double nHits2Sigma = 0;
@@ -80,9 +81,9 @@ public class SigmaTest {
             }
         }
 
-        log.info("one sigma probability   = " + (nHits1Sigma / nSamples) + " (expected: 0.683)");
-        log.info("two sigma probability   = " + (nHits2Sigma / nSamples) + " (expected: 0.954)");
-        log.info("three sigma probability = " + (nHits3Sigma / nSamples) + " (expected: 0.997)");
+        LOG.info("one sigma probability   = " + (nHits1Sigma / nSamples) + " (expected: 0.683)");
+        LOG.info("two sigma probability   = " + (nHits2Sigma / nSamples) + " (expected: 0.954)");
+        LOG.info("three sigma probability = " + (nHits3Sigma / nSamples) + " (expected: 0.997)");
 
         assertEquals(0.683, nHits1Sigma / nSamples, 0.03);
         assertEquals(0.954, nHits2Sigma / nSamples, 0.03);

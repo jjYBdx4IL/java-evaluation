@@ -1,5 +1,3 @@
-package org.apache.commons.math3;
-
 /*
  * #%L
  * Evaluation
@@ -8,9 +6,9 @@ package org.apache.commons.math3;
  * %%
  * #L%
  */
+package org.apache.commons.math3;
 
-import com.github.jjYBdx4IL.utils.math.Shuffle;
-import com.github.jjYBdx4IL.utils.math.ShuffleTestBase;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +17,13 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.math3.util.MathArrays;
-import org.apache.log4j.Logger;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.math.Shuffle;
+import com.github.jjYBdx4IL.utils.math.ShuffleTestBase;
 
 /**
  *
@@ -30,7 +31,7 @@ import org.junit.Test;
  */
 public class ShuffleTest {
 
-    private static final Logger log = Logger.getLogger(ShuffleTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ShuffleTest.class);
     private static final int ITERATIONS = 1000;
     private static Random r;
 
@@ -60,7 +61,7 @@ public class ShuffleTest {
             count += ITERATIONS;
         } while (System.currentTimeMillis() < timeout);
         perSec = count * 1000 / (System.currentTimeMillis() - start);
-        log.info(String.format("Shuffe<Integer>.shuffle(...) performance: %d shuffles per second", perSec));
+        LOG.info(String.format("Shuffe<Integer>.shuffle(...) performance: %d shuffles per second", perSec));
 
         start = System.currentTimeMillis();
         timeout = start + millisPerTest;
@@ -72,7 +73,7 @@ public class ShuffleTest {
             count += ITERATIONS;
         } while (System.currentTimeMillis() < timeout);
         perSec = count * 1000 / (System.currentTimeMillis() - start);
-        log.info(String.format("Collections.shuffle(ArrayList<Integer>) performance: %d shuffles per second", perSec));
+        LOG.info(String.format("Collections.shuffle(ArrayList<Integer>) performance: %d shuffles per second", perSec));
 
         start = System.currentTimeMillis();
         timeout = start + millisPerTest;
@@ -84,7 +85,7 @@ public class ShuffleTest {
             count += ITERATIONS;
         } while (System.currentTimeMillis() < timeout);
         perSec = count * 1000 / (System.currentTimeMillis() - start);
-        log.info(String.format("MathArrays.shuffle(int[]) performance: %d shuffles per second", perSec));
+        LOG.info(String.format("MathArrays.shuffle(int[]) performance: %d shuffles per second", perSec));
     }
 
     @Test
@@ -176,11 +177,11 @@ public class ShuffleTest {
         init(ba);
         MathArrays.shuffle(ba, start, pos);
         checkArray(ba);
-        log.debug(String.format("%d %s -> %s", start, pos, Arrays.toString(ba)));
+        LOG.debug(String.format("%d %s -> %s", start, pos, Arrays.toString(ba)));
         for (int i = 0; i < ba.length; i++) {
             if (expectChange[i] == 0 && ba[i] != i || expectChange[i] == 1 && ba[i] == i) {
-                if (log.isTraceEnabled()) {
-                    log.trace("failed at position: " + i);
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("failed at position: " + i);
                 }
                 return false;
             }

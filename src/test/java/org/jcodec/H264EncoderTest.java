@@ -1,15 +1,6 @@
 package org.jcodec;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +10,9 @@ import org.apache.tika.Tika;
 import org.jcodec.api.SequenceEncoder;
 import org.jcodec.common.model.ColorSpace;
 import org.jcodec.common.model.Picture;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -37,7 +29,7 @@ public class H264EncoderTest {
 
     @Test
     public void testSequenceEncoder() throws IOException {
-        File outputFile = new File(FileUtil.getMavenTargetDir(), H264EncoderTest.class.getName() + ".test");
+        File outputFile = new File(Maven.getMavenTargetDir(), H264EncoderTest.class.getName() + ".test");
         SequenceEncoder enc = new SequenceEncoder(outputFile);
 
         for (int i = 1; i <= 3; i++) {

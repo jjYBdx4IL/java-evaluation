@@ -9,12 +9,12 @@ package com.paypal.sdk;
  * #L%
  */
 
-import com.github.jjYBdx4IL.junit.runners.RetryRunner;
-import com.github.jjYBdx4IL.junit.runners.RetryRunnerConfig;
 import com.github.jjYBdx4IL.test.AdHocHttpServer;
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import com.github.jjYBdx4IL.utils.env.Surefire;
+import com.github.jjYBdx4IL.utils.junit4.RetryRunner;
+import com.github.jjYBdx4IL.utils.junit4.RetryRunnerConfig;
 import com.github.jjYBdx4IL.utils.net.URLUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

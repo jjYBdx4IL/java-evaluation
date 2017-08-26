@@ -13,9 +13,10 @@ import static org.junit.Assert.*;
 
 import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * How many consecutive tries do we need on average to win the next game
@@ -25,7 +26,7 @@ import org.junit.Test;
  */
 public class AvgTriesNeededToWinBasedOnSingleTryWinChance {
 
-	private static final Logger log = Logger.getLogger(AvgTriesNeededToWinBasedOnSingleTryWinChance.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(AvgTriesNeededToWinBasedOnSingleTryWinChance.class);
 	private Random r;
 	
 	@Before
@@ -42,7 +43,7 @@ public class AvgTriesNeededToWinBasedOnSingleTryWinChance {
 			counter += sampleNTriesForNextWin(singleWinChance);
 		}
 		double avg = (double) counter / nSamples;
-		log.info(avg);
+		LOG.info("" + avg);
 		assertEquals(2.0, avg, 0.005);
 	}
 	

@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 /**
@@ -21,9 +20,6 @@ import org.junit.Test;
  */
 public class StatSimpleRegressionTest {
 
-	@SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(StatSimpleRegressionTest.class.getName());
-	
 	@Test
 	public void testSimpleRegression() {
 		SimpleRegression sr = new SimpleRegression(true);

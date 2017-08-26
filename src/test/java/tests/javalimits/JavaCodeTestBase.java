@@ -8,16 +8,18 @@
  */
 package tests.javalimits;
 
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.utils.ProcRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.proc.ProcRunner;
 
 /**
 *
@@ -33,9 +35,9 @@ public class JavaCodeTestBase {
 	protected static int commandExitCode;
 
     @Before
-    public void beforeTest() {
- 		outDir = FileUtil.createMavenTestDir(getClass());
-        FileUtil.provideCleanDirectory(outDir);
+    public void beforeTest() throws IOException {
+ 		outDir = Maven.getTempTestDir(getClass());
+        FileUtils.cleanDirectory(outDir);
     }
 
     protected static void assertContains(String part, String text) {

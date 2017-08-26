@@ -10,8 +10,9 @@ package math.stats;
  */
 
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -19,7 +20,7 @@ import org.junit.Test;
  */
 public class RiftRaidsNTRofFinricTest {
 
-    private final static Logger log = Logger.getLogger(RiftRaidsNTRofFinricTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(RiftRaidsNTRofFinricTest.class);
 
     @Test
     public void brutalSwellProbabilityCalculation() {
@@ -39,7 +40,7 @@ public class RiftRaidsNTRofFinricTest {
         // other wipe sources
         double noWipeProbability = Math.pow(noWipeWaveProbability, nBrutalSwells);
 
-        log.info("noWipeProbability = " + noWipeProbability);
+        LOG.info("noWipeProbability = " + noWipeProbability);
     }
 
 }

@@ -1,22 +1,15 @@
 package tests.java.lang;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.Compile;
-import com.github.jjYBdx4IL.test.FileUtil;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.klass.Compile;
 
 /**
  *
@@ -26,11 +19,11 @@ public class FieldAccessTest extends Compile {
 
     @SuppressWarnings("unused")
 	private final static Logger log = Logger.getLogger(FieldAccessTest.class.getName());
-    private final static File tempDir = FileUtil.createMavenTestDir(FieldAccessTest.class);
+    private final static File tempDir = Maven.getTempTestDir(FieldAccessTest.class);
 
     @Before
     public void before() throws IOException {
-        FileUtil.provideCleanDirectory(tempDir);
+        FileUtils.cleanDirectory(tempDir);
         setClassOutputDir(tempDir);
     }
 

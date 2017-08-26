@@ -8,7 +8,7 @@
  */
 package com.sun.codemodel;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.sun.codemodel.writer.FileCodeWriter;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
 
@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -31,11 +32,11 @@ import org.junit.Test;
  */
 public class CodeModelTest {
 
-    private static File outDir = FileUtil.createMavenTestDir(CodeModelTest.class);
+    private static File outDir = Maven.getTempTestDir(CodeModelTest.class);
 
     @Before
     public void beforeTest() throws IOException {
-        FileUtil.provideCleanDirectory(outDir);
+        FileUtils.cleanDirectory(outDir);
     }
 
     @SuppressWarnings("unused")

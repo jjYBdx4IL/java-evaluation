@@ -1,6 +1,7 @@
 package tests.javax.tools;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import com.github.jjYBdx4IL.utils.env.Maven;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -34,7 +35,7 @@ public class JavaCompilerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCompilerTest.class);
 
-    private static final File TEMP_DIR = FileUtil.createMavenTestDir(JavaCompilerTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(JavaCompilerTest.class);
 
     @Before
     public void before() throws IOException {

@@ -1,7 +1,10 @@
 package tests.java.net;
 
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.utils.io.FileUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -10,12 +13,12 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -23,7 +26,7 @@ import org.junit.Test;
  */
 public class URLTest {
 
-    private static final File TEMP_DIR = FileUtil.createMavenTestDir(URLTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(URLTest.class);
 
     @Before
     public void before() throws IOException {

@@ -8,11 +8,6 @@
  */
 package tests.java.awt;
 
-import com.github.jjYBdx4IL.utils.awt.FontScanner;
-
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -25,6 +20,10 @@ import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.awt.FontScanner;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 public class FontTest extends InteractiveTestBase {
 

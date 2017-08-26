@@ -8,7 +8,9 @@ package tests.javax.xml.bind;
  * #L%
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,14 +19,14 @@ import java.util.ArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
 
 import org.junit.Test;
 
 import com.github.jjYBdx4IL.utils.xml.XMLUtils;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
 
 /**
  *
@@ -48,11 +50,11 @@ public class JAXBTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jaxbMarshaller.marshal(customer, baos);
 
-        XMLUtils.assertEquals("<customer id=\"101\">\n"
+        assertTrue(XMLUtils.compareStrippedXml("<customer id=\"101\">\n"
                 + "    <name>some name</name>\n"
                 + "    <age>55</age>\n"
                 + "    <name2>ABC</name2>\n"
-                + "</customer>", baos.toString());
+                + "</customer>", baos.toString()));
     }
 
     @Test
@@ -93,12 +95,12 @@ public class JAXBTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jaxbMarshaller.marshal(customer, baos);
 
-        XMLUtils.assertEquals("<customerWithStringList id=\"101\">\n"
+        assertTrue(XMLUtils.compareStrippedXml("<customerWithStringList id=\"101\">\n"
                 + "    <name>some name</name>\n"
                 + "    <age>55</age>\n"
                 + "    <someList>testStr1</someList>\n"
                 + "    <someList>testStr2</someList>\n"
-                + "</customerWithStringList>", baos.toString());
+                + "</customerWithStringList>", baos.toString()));
     }
 
     @Test
@@ -123,14 +125,14 @@ public class JAXBTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jaxbMarshaller.marshal(customer, baos);
 
-        XMLUtils.assertEquals("<customerWithCustomerList id=\"101\">\n"
+        assertTrue(XMLUtils.compareStrippedXml("<customerWithCustomerList id=\"101\">\n"
                 + "    <name>some name</name>\n"
                 + "    <age>55</age>\n"
                 + "    <customer id=\"102\">\n"
                 + "        <name>cust1name</name>\n"
                 + "        <age>56</age>\n"
                 + "    </customer>\n"
-                + "</customerWithCustomerList>", baos.toString());
+                + "</customerWithCustomerList>", baos.toString()));
     }
 
     /**

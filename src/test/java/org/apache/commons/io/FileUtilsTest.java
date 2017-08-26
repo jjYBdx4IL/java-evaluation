@@ -1,6 +1,8 @@
 package org.apache.commons.io;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -9,9 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -19,7 +22,7 @@ import org.junit.Test;
  */
 public class FileUtilsTest {
 
-    private static final File TEST_DIR = FileUtil.createMavenTestDir(FileUtilsTest.class);
+    private static final File TEST_DIR = Maven.getTempTestDir(FileUtilsTest.class);
 
     private static final int ITERATIONS = 100;
     

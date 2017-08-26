@@ -1,18 +1,5 @@
 package graphics;
 
-/*
- * #%L
- * Text2Image Convertor
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-import com.github.jjYBdx4IL.junit.runners.RDRunner;
-import com.github.jjYBdx4IL.test.ClassReloader;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.utils.awt.ImageUtils;
-
 import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
@@ -23,14 +10,20 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.RDRunner;
+import com.github.jjYBdx4IL.utils.klass.ClassReloader;
 
 @RunWith(RDRunner.class)
 public class GlossyPaintTest extends InteractiveTestBase implements Runnable {
 
-    private static final Logger log = Logger.getLogger(GlossyPaintTest.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(GlossyPaintTest.class);
 
     public static void main(String[] args) throws InterruptedException {
         Thread t = ClassReloader.watchLoadAndRun("target/test-classes", GlossyPaintTest.class.getName());

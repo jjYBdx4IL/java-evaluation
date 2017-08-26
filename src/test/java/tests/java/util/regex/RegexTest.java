@@ -1,16 +1,9 @@
 package tests.java.util.regex;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.RegularExpressionTestBase;
-import com.google.gwt.regexp.shared.RegExp;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
@@ -18,11 +11,13 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.validator.routines.RegexValidator;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.junit4.RegularExpressionTestBase;
+import com.google.gwt.regexp.shared.RegExp;
 
 public class RegexTest extends RegularExpressionTestBase {
 

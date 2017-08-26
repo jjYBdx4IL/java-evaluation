@@ -21,7 +21,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,8 +31,6 @@ import org.junit.Test;
  */
 public class ConfigurationTest {
 
-    @SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(ConfigurationTest.class.getName());
     private static AdHocHttpServer server;
     private static URL url200;
     private static URL url301;

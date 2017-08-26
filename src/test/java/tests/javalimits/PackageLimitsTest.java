@@ -8,17 +8,16 @@
  */
 package tests.javalimits;
 
-import com.github.jjYBdx4IL.utils.env.CI;
-import com.github.jjYBdx4IL.utils.env.Surefire;
-
-import com.github.jjYBdx4IL.test.Compile;
-import com.github.jjYBdx4IL.test.FileUtil;
-
 import org.apache.log4j.Logger;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.CI;
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.env.Surefire;
+import com.github.jjYBdx4IL.utils.klass.Compile;
 
 /**
  *
@@ -33,7 +32,7 @@ public class PackageLimitsTest extends Compile {
     	// this test takes too long to be run anywhere else than inside automated CI instances
     	Assume.assumeTrue(CI.isCI() || Surefire.isEclipseDirectSingleJUnit());
     	
-    	setClassOutputDir(FileUtil.createMavenTestDir(getClass()));
+    	setClassOutputDir(Maven.getTempTestDir(getClass()));
     }
 
     @Ignore

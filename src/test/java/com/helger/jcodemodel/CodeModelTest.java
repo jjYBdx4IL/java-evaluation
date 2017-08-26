@@ -16,29 +16,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.helger.jcodemodel.writer.SingleStreamCodeWriter;
 import com.sun.codemodel.ExternalTestEnum;
-
-import com.github.jjYBdx4IL.test.FileUtil;
-
-import java.util.HashMap;
 
 /**
  * @author Github jjYBdx4IL Projects
  */
 public class CodeModelTest {
 
-    private static File outDir = FileUtil.createMavenTestDir(CodeModelTest.class);
+    private static File outDir = Maven.getTempTestDir(CodeModelTest.class);
     protected JCodeModel cm = null;
 
     @Before
     public void beforeTest() throws IOException {
-        FileUtil.provideCleanDirectory(outDir);
+        FileUtils.cleanDirectory(outDir);
         cm = new JCodeModel();
         cm.setBuildingNewLine("\n");
         cm.setBuildingCharset(Charset.forName("UTF-8"));

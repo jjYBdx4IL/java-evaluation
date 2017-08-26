@@ -1,12 +1,11 @@
 package tests.javax.imageio;
 
-import com.github.jjYBdx4IL.test.FileUtil;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageTypeSpecifier;
@@ -16,8 +15,12 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /*
  * #%L
@@ -34,11 +37,11 @@ import org.junit.Test;
  */
 public class AnimatedGifWriterTest {
 
-    private final static File tempDir = FileUtil.createMavenTestDir(AnimatedGifWriterTest.class);
+    private final static File tempDir = Maven.getTempTestDir(AnimatedGifWriterTest.class);
 
     @Before
-    public void before() {
-        FileUtil.provideCleanDirectory(tempDir);
+    public void before() throws IOException {
+        FileUtils.cleanDirectory(tempDir);
     }
 
     @Test

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,25 +24,35 @@ import org.slf4j.LoggerFactory;
 public class ServerTest extends AbstractHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerTest.class);
+    
+    private Server server = null;
+    
+    @Before
+    public void before() throws Exception {
+    	server = new Server(0);
+    	server.setHandler(this);
+    	server.start();
+    }
+    
+    @After
+    public void after() throws Exception {
+        server.stop();
+    }
+    
+    @Test
+    public void testAutoSetup() throws Exception {
+        URL serverUrl = getUrl("");
+        LOG.info("server URL: " + serverUrl);
+        String pageContents = IOUtils.toString(serverUrl, "ASCII");
+        LOG.info("test page contents: " + pageContents);
+        assertEquals("some test page content", pageContents);
+    }
 
-    public URL getURL(Server server) throws MalformedURLException, UnknownHostException {
+    public URL getUrl(String path) throws MalformedURLException, UnknownHostException {
         ServerConnector connector = (ServerConnector) server.getConnectors()[0];
         InetAddress addr = InetAddress.getLocalHost();
         return new URL(
-                String.format(Locale.ROOT, "%s://%s:%d", "http", addr.getHostAddress(), connector.getLocalPort()));
-    }
-
-    @Test
-    public void testAutoSetup() throws Exception {
-        Server server = new Server(0);
-        server.setHandler(this);
-        server.start();
-        URL serverURL = getURL(server);
-        LOG.info("server URL: " + serverURL);
-        String pageContents = IOUtils.toString(serverURL, "ASCII");
-        LOG.info("test page contents: " + pageContents);
-        assertEquals("some test page content", pageContents);
-        server.stop();
+                String.format(Locale.ROOT, "%s://%s:%d%s", "http", addr.getHostAddress(), connector.getLocalPort(), path));
     }
 
     @Override

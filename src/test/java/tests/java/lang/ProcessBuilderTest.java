@@ -1,24 +1,17 @@
 package tests.java.lang;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -26,11 +19,11 @@ import org.junit.Test;
  */
 public class ProcessBuilderTest {
 
-    private final static File TEMP_DIR = FileUtil.createMavenTestDir(ProcessBuilderTest.class);
+    private final static File TEMP_DIR = Maven.getTempTestDir(ProcessBuilderTest.class);
 
     @Before
-    public void beforeTest() {
-        FileUtil.provideCleanDirectory(TEMP_DIR);
+    public void beforeTest() throws IOException {
+        FileUtils.cleanDirectory(TEMP_DIR);
     }
 
     @Test

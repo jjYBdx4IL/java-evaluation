@@ -1,28 +1,11 @@
 package com.paypal.sdk;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2017 jjYBdx4IL
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.junit.rules.IgnoreTestExceptionsRule;
-import com.github.jjYBdx4IL.junit.runners.RetryRunner;
-import com.github.jjYBdx4IL.junit.runners.RetryRunnerConfig;
-import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
-import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
-import com.github.jjYBdx4IL.utils.TimeUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
-import com.paypal.exception.ClientActionRequiredException;
-import com.paypal.exception.HttpErrorException;
-import com.paypal.exception.InvalidCredentialException;
-import com.paypal.exception.InvalidResponseDataException;
-import com.paypal.exception.MissingCredentialException;
-import com.paypal.exception.SSLConfigurationException;
-import com.paypal.sdk.exceptions.OAuthException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,8 +19,6 @@ import java.util.TimeZone;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,6 +29,21 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+
+import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
+import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
+import com.github.jjYBdx4IL.utils.env.Surefire;
+import com.github.jjYBdx4IL.utils.junit4.IgnoreTestExceptionsRule;
+import com.github.jjYBdx4IL.utils.junit4.RetryRunner;
+import com.github.jjYBdx4IL.utils.junit4.RetryRunnerConfig;
+import com.github.jjYBdx4IL.utils.time.TimeUtils;
+import com.paypal.exception.ClientActionRequiredException;
+import com.paypal.exception.HttpErrorException;
+import com.paypal.exception.InvalidCredentialException;
+import com.paypal.exception.InvalidResponseDataException;
+import com.paypal.exception.MissingCredentialException;
+import com.paypal.exception.SSLConfigurationException;
+import com.paypal.sdk.exceptions.OAuthException;
 
 import urn.ebay.api.PayPalAPI.CreateRecurringPaymentsProfileReq;
 import urn.ebay.api.PayPalAPI.CreateRecurringPaymentsProfileRequestType;

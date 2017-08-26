@@ -10,7 +10,7 @@ package com.jhlabs;
  */
 
 import com.github.jjYBdx4IL.test.GraphicsResource;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.jhlabs.image.ImageUtils;
 import com.jhlabs.image.UnsharpFilter;
 import com.jhlabs.image.WoodFilter;

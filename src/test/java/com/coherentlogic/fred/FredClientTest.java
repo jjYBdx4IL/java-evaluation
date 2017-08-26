@@ -26,9 +26,9 @@ import com.coherentlogic.fred.client.core.domain.Series;
 import com.coherentlogic.fred.client.core.domain.Seriess;
 import com.coherentlogic.fred.client.core.domain.SortOrder;
 import com.coherentlogic.fred.client.core.domain.Unit;
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.test.Screenshot;
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
@@ -58,6 +57,8 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.MapModificationListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.client.RestTemplate;
@@ -70,7 +71,7 @@ import org.springframework.web.client.RestTemplate;
 @SuppressWarnings("unused")
 public class FredClientTest extends InteractiveTestBase {
 
-	private final static Logger LOG = Logger.getLogger(FredClientTest.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(FredClientTest.class);
     public final static String FRED_API_KEY = "FRED_API_KEY";
     public final static String FRED_API_TESTKEY = "e3aa92f92406f8d46fd1ce8341e40eb8";
     public final static String FRED_REST_TEMPLATE_ID = "fredRestTemplate";
@@ -200,7 +201,7 @@ public class FredClientTest extends InteractiveTestBase {
 
         final AtomicInteger updateCount = new AtomicInteger(0);
 
-        File dbFile = new File(FileUtil.createMavenTestDir(FredClientTest.class), "db");
+        File dbFile = new File(Maven.getTempTestDir(FredClientTest.class), "db");
 
         DB db = DBMaker
                 .fileDB(dbFile)

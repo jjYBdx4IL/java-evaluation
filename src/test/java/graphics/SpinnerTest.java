@@ -1,22 +1,5 @@
 package graphics;
 
-/*
- * #%L
- * Text2Image Convertor
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-import com.github.jjYBdx4IL.utils.awt.AnimatedGifOutputStream;
-
-import com.github.jjYBdx4IL.junit.runners.RDRunner;
-import com.github.jjYBdx4IL.test.ClassReloader;
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.utils.awt.ImageUtils;
-import com.github.jjYBdx4IL.utils.env.IDE;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontFormatException;
@@ -32,17 +15,27 @@ import java.lang.reflect.InvocationTargetException;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.env.IDE;
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.gfx.AnimatedGifOutputStream;
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.RDRunner;
+import com.github.jjYBdx4IL.utils.klass.ClassReloader;
 
 @RunWith(RDRunner.class)
 public class SpinnerTest extends InteractiveTestBase implements Runnable {
 
-    private final static Logger log = Logger.getLogger(SpinnerTest.class.getName());
-    private final static File tempDir = FileUtil.createMavenTestDir(SpinnerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpinnerTest.class);
+    private final static File tempDir = Maven.getTempTestDir(SpinnerTest.class);
 
     final Dimension renderSize = new Dimension(256, 256);
     final Dimension gifSize = new Dimension(24, 24);
@@ -57,8 +50,8 @@ public class SpinnerTest extends InteractiveTestBase implements Runnable {
     final int nFrames = 1 + (int)(durationMillis / timeBetweenFramesMillis);
 
     @BeforeClass
-    public static void beforeClass() {
-        FileUtil.provideCleanDirectory(tempDir);
+    public static void beforeClass() throws IOException {
+        FileUtils.cleanDirectory(tempDir);
     }
 
     @Before
@@ -251,12 +244,12 @@ public class SpinnerTest extends InteractiveTestBase implements Runnable {
         try {
             testSpinner1();
         } catch (Throwable ex) {
-            log.error("", ex);
+            LOG.error("", ex);
         }
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        log.info("started");
+        LOG.info("started");
         beforeClass();
         Thread t = ClassReloader.watchLoadAndRun("target/test-classes", SpinnerTest.class.getName());
         t.join();

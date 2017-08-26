@@ -1,11 +1,12 @@
 package twitter4j;
 
-import java.io.IOException;
-
-import com.github.jjYBdx4IL.utils.AbstractConfig;
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import static twitter4j.TwitterApp.APP_OAUTH_SECRET;
 import static twitter4j.TwitterApp.APP_OAUTH_TOKEN;
+
+import java.io.IOException;
+
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.cfg.AbstractConfig;
 
 import twitter4j.conf.ConfigurationBuilder;
 

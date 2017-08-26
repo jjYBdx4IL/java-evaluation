@@ -1,9 +1,5 @@
 package tests.java.awt;
 
-import com.github.jjYBdx4IL.test.GraphicsResource;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.jhlabs.image.ImageUtils;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -14,6 +10,10 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.test.GraphicsResource;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.jhlabs.image.ImageUtils;
 
 /*
  * #%L

@@ -1,14 +1,16 @@
 package tests.java.io;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /*
  * #%L
@@ -37,7 +39,7 @@ public class FileTest {
 
     @Test
     public void testGetCanonicalPath() throws IOException {
-        File targetDir = new File(FileUtil.getMavenTargetDir().getCanonicalPath() + File.separator);
+        File targetDir = new File(Maven.getMavenTargetDir().getCanonicalPath() + File.separator);
         LOG.debug(targetDir.getCanonicalPath());
         assertFalse(targetDir.getCanonicalPath().endsWith(File.separator));
     }

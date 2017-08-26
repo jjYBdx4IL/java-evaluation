@@ -1,27 +1,17 @@
 package tests.java.awt;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2016 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.utils.awt.FontEffects;
-
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.test.Screenshot;
+import static org.junit.Assert.assertFalse;
 
 import java.awt.EventQueue;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.log4j.Logger;
-import static org.junit.Assert.assertFalse;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.gfx.FontEffects;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 public class FontEffectsTest extends InteractiveTestBase {
 

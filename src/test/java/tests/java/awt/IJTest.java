@@ -1,20 +1,5 @@
 package tests.java.awt;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.utils.awt.ImageUtils;
-
-import com.github.jjYBdx4IL.test.GraphicsResource;
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -23,6 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.test.GraphicsResource;
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 import ij.process.ByteProcessor;
 

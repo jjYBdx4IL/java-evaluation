@@ -3,6 +3,7 @@ package org.eclipse.jgit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,15 +51,14 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import com.google.common.collect.Lists;
-import static org.junit.Assume.assumeTrue;
 
 public class JGitTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(JGitTest.class);
-	private static final File TEMP_DIR = FileUtil.createMavenTestDir(JGitTest.class);
+	private static final File TEMP_DIR = Maven.getTempTestDir(JGitTest.class);
 
 	@Before
 	public void before() throws IOException {

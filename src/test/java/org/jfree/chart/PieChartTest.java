@@ -1,32 +1,20 @@
 package org.jfree.chart;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.lang.reflect.InvocationTargetException;
-import org.apache.log4j.Logger;
+
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.util.Rotation;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class PieChartTest extends InteractiveTestBase {
-
-    @SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(PieChartTest.class.getName());
 
     @Test
     public void testPieChart() throws InvocationTargetException, InterruptedException {

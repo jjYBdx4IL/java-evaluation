@@ -242,7 +242,6 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.smali</groupId>
@@ -253,6 +252,11 @@
             <groupId>org.kitteh.irc</groupId>
             <artifactId>client-lib</artifactId>
             <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.codemodel</groupId>
+            <artifactId>codemodel</artifactId>
+            <version>2.6</version>
         </dependency>
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
@@ -274,6 +278,11 @@
             <version>1.6</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>config-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>edu.uci.ics</groupId>
             <artifactId>crawler4j</artifactId>
             <version>4.3</version>
@@ -283,6 +292,16 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>encryption-utils</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>env-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL.nn.fannj</groupId>
@@ -305,15 +324,20 @@
             <version>1.0.8-RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-test-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>gfx-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-utils</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency>
+        <!-- <dependency> -->
+        <!-- <groupId>com.github.jjYBdx4IL</groupId> -->
+        <!-- <artifactId>github-test-utils</artifactId> -->
+        <!-- <version>1.1-SNAPSHOT</version> -->
+        <!-- </dependency> -->
+        <!-- <dependency> -->
+        <!-- <groupId>com.github.jjYBdx4IL</groupId> -->
+        <!-- <artifactId>github-utils</artifactId> -->
+        <!-- <version>1.2-SNAPSHOT</version> -->
+        <!-- </dependency> -->
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
@@ -325,9 +349,18 @@
             <version>${gwt.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+        </dependency>
+        <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>2.3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
         </dependency>
         <dependency>
             <groupId>net.imagej</groupId>
@@ -473,6 +506,11 @@
             <version>r938</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>junit4-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.0.0-M4</version>
@@ -491,6 +529,12 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-console-standalone</artifactId>
             <version>1.0.0-M4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
         </dependency>
 
         <dependency>
@@ -574,9 +618,30 @@
             <version>3.0.4</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>math-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>math-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <classifier>tests</classifier>
+        </dependency>
+        <dependency>
             <groupId>com.paypal.sdk</groupId>
             <artifactId>merchantsdk</artifactId>
             <version>2.11.117</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>net-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.9</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
@@ -602,6 +667,11 @@
             <artifactId>rome</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>selenium-test-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>fr.opensagres.xdocreport.sfntly</groupId>
             <artifactId>sfntly</artifactId>
             <version>1.0.0</version>
@@ -618,7 +688,6 @@
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
-            <version>0.20.0</version>
         </dependency>
         <dependency>
             <groupId>org.tmatesoft.svnkit</groupId>
@@ -631,6 +700,11 @@
             <version>1.8.9</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>swing-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.openimaj</groupId>
             <artifactId>test-resources</artifactId>
             <version>1.3.1</version>
@@ -639,6 +713,16 @@
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
             <version>4.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>vmmgmt-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>vmmgmt-test-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
@@ -654,6 +738,11 @@
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>xml-dom4j-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -687,12 +776,12 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk15on</artifactId>
-                <version>1.54</version>
+                <version>1.56</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
-                <version>1.54</version>
+                <version>1.56</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -940,6 +1029,11 @@
                 <version>4.2.4.RELEASE</version>
             </dependency>
             <dependency>
+                <groupId>com.hierynomus</groupId>
+                <artifactId>sshj</artifactId>
+                <version>0.21.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
                 <version>1.14</version>
@@ -967,7 +1061,7 @@
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.9</version>
+                <version>1.4.10</version>
             </dependency>
             <dependency>
                 <groupId>org.tukaani</groupId>

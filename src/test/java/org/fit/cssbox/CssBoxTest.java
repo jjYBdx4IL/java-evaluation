@@ -8,10 +8,10 @@
  */
 package org.fit.cssbox;
 
-import com.github.jjYBdx4IL.test.AdHocHttpServer;
-import com.github.jjYBdx4IL.test.Screenshot;
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -42,13 +42,16 @@ import org.fit.cssbox.io.DocumentSource;
 import org.fit.cssbox.io.StreamDocumentSource;
 import org.fit.cssbox.layout.BrowserCanvas;
 import org.junit.After;
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import com.github.jjYBdx4IL.test.AdHocHttpServer;
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.env.Surefire;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
  * http://cssbox.sourceforge.net/manual/

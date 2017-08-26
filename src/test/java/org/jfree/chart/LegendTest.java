@@ -8,13 +8,10 @@
  */
 package org.jfree.chart;
 
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.log4j.Logger;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
@@ -22,14 +19,13 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.junit.Test;
 
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
+
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class LegendTest extends TestBase {
-
-    @SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(LegendTest.class.getName());
 
     @Test
     public void testManualLegendCreation() throws InvocationTargetException, InterruptedException {

@@ -8,25 +8,21 @@
  */
 package org.jfree.chart;
 
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-
 import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class TestBase extends InteractiveTestBase {
-
-    @SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(TestBase.class.getName());
 
     public TimeSeries getTimeSeries() {
     	return getTimeSeries(0);

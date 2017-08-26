@@ -1,5 +1,19 @@
 package tests.java.lang;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Locale;
+import java.util.Random;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 /*
  * #%L
  * Evaluation
@@ -8,16 +22,7 @@ package tests.java.lang;
  * %%
  * #L%
  */
-import com.github.jjYBdx4IL.test.PropertyRestorer;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Locale;
-import java.util.Random;
-
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import com.github.jjYBdx4IL.utils.junit4.PropertyRestorer;
 
 @SuppressWarnings("all")
 public class TypeTest {

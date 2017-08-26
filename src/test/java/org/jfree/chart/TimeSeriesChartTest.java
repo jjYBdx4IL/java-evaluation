@@ -8,21 +8,17 @@
  */
 package org.jfree.chart;
 
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class TimeSeriesChartTest extends TestBase {
-
-    @SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(TimeSeriesChartTest.class.getName());
 
     @Test
     public void testTimeSeriesChart() throws InvocationTargetException, InterruptedException {

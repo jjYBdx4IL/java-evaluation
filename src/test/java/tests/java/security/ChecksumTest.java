@@ -8,7 +8,8 @@
  */
 package tests.java.security;
 
-import com.github.jjYBdx4IL.utils.format.DigestFormatter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,10 +19,10 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import net.schmizz.sshj.common.IOUtils;
-
-import static org.junit.Assert.*;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
+
+import net.schmizz.sshj.common.IOUtils;
 
 /**
  *
@@ -37,7 +38,7 @@ public class ChecksumTest {
         assertNotNull(md);
         byte[] digest = md.digest(TEST_INPUT.getBytes("ASCII"));
 
-        assertEquals("900150983cd24fb0d6963f7d28e17f72", DigestFormatter.md5(digest));
+        assertEquals("900150983cd24fb0d6963f7d28e17f72", Hex.encodeHexString(digest));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class ChecksumTest {
         assertNotNull(sha1);
         byte[] digest = sha1.digest(TEST_INPUT.getBytes("ASCII"));
 
-        assertEquals("a9993e364706816aba3e25717850c26c9cd0d89d", DigestFormatter.sha1(digest));
+        assertEquals("a9993e364706816aba3e25717850c26c9cd0d89d", Hex.encodeHexString(digest));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class ChecksumTest {
         }
         byte[] digest = md.digest();
 
-        assertEquals("900150983cd24fb0d6963f7d28e17f72", DigestFormatter.md5(digest));
+        assertEquals("900150983cd24fb0d6963f7d28e17f72", Hex.encodeHexString(digest));
     }
 
 }

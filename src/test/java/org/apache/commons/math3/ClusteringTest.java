@@ -6,9 +6,10 @@ import java.util.List;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
-import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * #%L
@@ -24,7 +25,7 @@ import org.junit.Test;
  */
 public class ClusteringTest {
 
-    private final static Logger log = Logger.getLogger(ClusteringTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ClusteringTest.class);
     
     class Point implements Clusterable {
 
@@ -82,8 +83,8 @@ public class ClusteringTest {
         pts.add(new Point(10., 2.));
         List<CentroidCluster<Point>> res = clusterer.cluster(pts);
         assertEquals(2, res.size());
-        log.info(res.get(0).getCenter());
-        log.info(res.get(1).getCenter());
+        LOG.info("" + res.get(0).getCenter());
+        LOG.info("" + res.get(1).getCenter());
     }
 
 }

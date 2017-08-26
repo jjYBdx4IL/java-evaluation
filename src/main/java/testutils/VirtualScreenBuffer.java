@@ -1,6 +1,5 @@
 package testutils;
 
-import com.github.jjYBdx4IL.test.FileUtil;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  * Used for graphics drawing units.
@@ -60,7 +61,7 @@ public class VirtualScreenBuffer {
     }
 
     public void saveAndNew(Class<?> classRef, String saveName) throws IOException {
-        File outDir = FileUtil.createMavenTestDir(classRef);
+        File outDir = Maven.getTempTestDir(classRef);
         ImageIO.write(image, "png", new File(outDir, saveName + ".png"));
         newImage();
     }

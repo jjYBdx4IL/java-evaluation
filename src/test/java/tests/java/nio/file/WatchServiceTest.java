@@ -1,14 +1,8 @@
 package tests.java.nio.file;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +12,14 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static org.junit.Assert.*;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -30,14 +27,14 @@ import org.slf4j.LoggerFactory;
  */
 public class WatchServiceTest {
 
-    public static final File TEMP_DIR = FileUtil.createMavenTestDir(WatchServiceTest.class);
+    public static final File TEMP_DIR = Maven.getTempTestDir(WatchServiceTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(WatchServiceTest.class);
     private static final AtomicBoolean WATCHER_REGISTERED = new AtomicBoolean(false);
     private static final File TEST_FILE = new File(TEMP_DIR, "test.file");
 
     @Before
-    public void cleanupBefore() {
-        FileUtil.provideCleanDirectory(TEMP_DIR);
+    public void cleanupBefore() throws IOException {
+        FileUtils.cleanDirectory(TEMP_DIR);
     }
 
     /**

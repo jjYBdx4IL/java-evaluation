@@ -1,13 +1,13 @@
 package tests.javax.swing;
 
-import com.github.jjYBdx4IL.test.InteractiveTestBase;
-
-import org.junit.Test;
-
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+
+import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 
 /**
  *

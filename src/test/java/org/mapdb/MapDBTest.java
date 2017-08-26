@@ -1,21 +1,14 @@
 package org.mapdb;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.concurrent.ConcurrentMap;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  * My conclusion: don't use MapDB. I can't even make to unchecked cast warnings go away
@@ -29,7 +22,7 @@ import org.junit.Test;
 @SuppressWarnings("unchecked")
 public class MapDBTest {
 
-    private final static File MAVEN_TEST_DIR = FileUtil.createMavenTestDir(MapDBTest.class);
+    private final static File MAVEN_TEST_DIR = Maven.getTempTestDir(MapDBTest.class);
 
     @Test
     public void testPersistence() {

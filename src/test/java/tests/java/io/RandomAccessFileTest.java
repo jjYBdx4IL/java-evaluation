@@ -8,7 +8,7 @@
  */
 package tests.java.io;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +19,9 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
 import org.apache.commons.io.IOUtils;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -31,7 +32,7 @@ public class RandomAccessFileTest {
     @Test
     public void testOverwriteFileParts() throws IOException {
         System.getProperties().list(System.out);
-        File f = new File(FileUtil.createMavenTestDir(getClass()), "123");
+        File f = new File(Maven.getTempTestDir(getClass()), "123");
         try (OutputStream os = new FileOutputStream(f)) {
             IOUtils.write("aa", os);
         }

@@ -1,20 +1,7 @@
 package tests.javax.mail;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.utils.logic.Condition;
-
-import com.github.jjYBdx4IL.utils.security.PasswordGenerator;
-
-import com.github.jjYBdx4IL.test.TestCredentials;
-import com.sun.mail.imap.IMAPFolder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,9 +27,21 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
+
+/*
+ * #%L
+ * Evaluation
+ * %%
+ * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
+ * %%
+ * #L%
+ */
+
+import com.github.jjYBdx4IL.utils.logic.Condition;
+import com.github.jjYBdx4IL.utils.security.PasswordGenerator;
+import com.sun.mail.imap.IMAPFolder;
 
 /**
  *

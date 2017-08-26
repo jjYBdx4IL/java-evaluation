@@ -8,8 +8,7 @@ import com.github.javaparser.symbolsolver.model.typesystem.Type;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.utils.io.FileUtils;
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +16,8 @@ import java.io.IOException;
 import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class JavaSymbolSolverTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaSymbolSolverTest.class);
-    private static final File TEMP_DIR = FileUtil.createMavenTestDir(JavaSymbolSolverTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(JavaSymbolSolverTest.class);
     
     @Before
     public void before() throws IOException {

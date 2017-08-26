@@ -14,9 +14,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,7 +25,7 @@ import org.junit.Test;
  */
 public class CSVReaderTest {
 
-    private final static Logger log = Logger.getLogger(CSVReaderTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(CSVReaderTest.class);
 
     private static final String TEST_INPUT_1 = ""
             + "Datum,Beschreibung,Beschreibung2,Wert\n"
@@ -41,7 +42,7 @@ public class CSVReaderTest {
         String[] nextLine;
         List<String[]> lines = new ArrayList<>();
         while ((nextLine = reader.readNext()) != null) {
-            log.info(Arrays.toString(nextLine));
+            LOG.info(Arrays.toString(nextLine));
             lines.add(nextLine);
         }
         reader.close();
@@ -73,7 +74,7 @@ public class CSVReaderTest {
         String[] nextLine;
         List<String[]> lines = new ArrayList<>();
         while ((nextLine = reader.readNext()) != null) {
-            log.info(Arrays.toString(nextLine));
+            LOG.info(Arrays.toString(nextLine));
             lines.add(nextLine);
         }
         reader.close();

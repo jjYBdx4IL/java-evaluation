@@ -1,22 +1,15 @@
 package org.apache.commons.io;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -24,12 +17,12 @@ import org.junit.Test;
  */
 public class FileUtils2Test {
 
-    public final static File tempDir = FileUtil.createMavenTestDir(FileUtils2Test.class);
+    public final static File tempDir = Maven.getTempTestDir(FileUtils2Test.class);
     public final static File parentDir = new File(tempDir, "parent");
 
     @Before
-    public void beforeTest() {
-        FileUtil.provideCleanDirectory(tempDir);
+    public void beforeTest() throws IOException {
+        FileUtils.cleanDirectory(tempDir);
     }
 
     @Test

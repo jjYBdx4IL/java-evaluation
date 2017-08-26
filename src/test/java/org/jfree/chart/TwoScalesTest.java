@@ -8,12 +8,9 @@
  */
 package org.jfree.chart;
 
-import com.github.jjYBdx4IL.test.Screenshot;
-
 import java.awt.Color;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.log4j.Logger;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
@@ -21,14 +18,13 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.junit.Test;
 
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
+
 /**
  * based on http://www.java2s.com/Code/Java/Chart/JFreeChartDualAxisDemo2.htm
  * @author Github jjYBdx4IL Projects
  */
 public class TwoScalesTest extends TestBase {
-
-    @SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(TwoScalesTest.class.getName());
 
     @Test
     public void testTimeSeriesChart() throws InvocationTargetException, InterruptedException {

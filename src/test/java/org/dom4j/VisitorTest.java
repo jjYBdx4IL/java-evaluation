@@ -4,13 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 
-import org.dom4j.Attribute;
-import org.dom4j.CDATA;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Text;
-import org.dom4j.Visitor;
-import org.dom4j.VisitorSupport;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 import org.slf4j.Logger;

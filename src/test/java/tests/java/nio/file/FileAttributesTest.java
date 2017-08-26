@@ -1,6 +1,6 @@
 package tests.java.nio.file;
 
-import com.github.jjYBdx4IL.test.FileUtil;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,13 +10,16 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermissions;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
-import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /*
  * #%L
@@ -33,11 +36,11 @@ import org.slf4j.LoggerFactory;
 public class FileAttributesTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileAttributesTest.class);
-    private static final File TEMP_DIR = FileUtil.createMavenTestDir(FileAttributesTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(FileAttributesTest.class);
 
     @Before
     public void beforeTest() throws IOException {
-        FileUtil.provideCleanDirectory(TEMP_DIR);
+        FileUtils.cleanDirectory(TEMP_DIR);
     }
 
     @Test

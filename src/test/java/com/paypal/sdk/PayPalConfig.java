@@ -3,7 +3,7 @@ package com.paypal.sdk;
 import java.io.File;
 import java.util.Properties;
 
-import com.github.jjYBdx4IL.utils.AbstractConfig;
+import com.github.jjYBdx4IL.utils.cfg.AbstractConfig;
 
 public class PayPalConfig extends AbstractConfig {
 

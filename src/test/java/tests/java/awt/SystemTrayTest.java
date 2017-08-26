@@ -1,15 +1,7 @@
 package tests.java.awt;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.test.Screenshot;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -30,9 +22,11 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
  *
@@ -41,7 +35,7 @@ import org.junit.Test;
 public class SystemTrayTest {
 
     private final static Logger LOG = Logger.getLogger(SystemTrayTest.class.getName());
-    private final static File TEMP_DIR = FileUtil.createMavenTestDir(SystemTrayTest.class);
+    private final static File TEMP_DIR = Maven.getTempTestDir(SystemTrayTest.class);
     @SuppressWarnings("unused")
     private final static File SCREENSHOT_DIR = new File(TEMP_DIR, "screenshots");
     private static Process p;

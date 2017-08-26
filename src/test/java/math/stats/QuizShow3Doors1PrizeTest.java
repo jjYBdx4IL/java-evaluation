@@ -11,13 +11,14 @@ package math.stats;
 
 import static org.junit.Assert.*;
 import java.util.Random;
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QuizShow3Doors1PrizeTest {
 
-    private static final Logger log = Logger.getLogger(QuizShow3Doors1PrizeTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(QuizShow3Doors1PrizeTest.class);
     private Random r;
 
     @Before
@@ -39,7 +40,7 @@ public class QuizShow3Doors1PrizeTest {
         // five sigma shall equal 1% of all iterations (1% win chance)
         double oneSigmaRelSize = .01 / nSigma;
         long nIter = (long) (1. / (oneSigmaRelSize * oneSigmaRelSize));
-        log.info("iterations: " + nIter);
+        LOG.info("iterations: " + nIter);
 
         int nWins = 0;
         for (int i = 0; i < nIter; i++) {
@@ -50,7 +51,7 @@ public class QuizShow3Doors1PrizeTest {
             }
         }
         double winRatio = (double) nWins / nIter;
-        log.info("win ratio: " + winRatio);
+        LOG.info("win ratio: " + winRatio);
         assertEquals(expectedWinRatio, winRatio, oneSigmaRelSize * nSigma);
     }
 
@@ -64,7 +65,7 @@ public class QuizShow3Doors1PrizeTest {
         // five sigma shall equal 1% of all iterations (1% win chance)
         double oneSigmaRelSize = .01 / nSigma;
         long nIter = (long) (1. / (oneSigmaRelSize * oneSigmaRelSize));
-        log.info("iterations: " + nIter);
+        LOG.info("iterations: " + nIter);
 
         int nWins = 0;
         for (int i = 0; i < nIter; i++) {
@@ -91,7 +92,7 @@ public class QuizShow3Doors1PrizeTest {
             }
         }
         double winRatio = (double) nWins / nIter;
-        log.info("win ratio: " + winRatio);
+        LOG.info("win ratio: " + winRatio);
         assertEquals(expectedWinRatio, winRatio, oneSigmaRelSize * nSigma);
     }
 
