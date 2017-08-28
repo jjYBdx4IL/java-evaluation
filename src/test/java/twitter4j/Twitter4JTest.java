@@ -1,18 +1,19 @@
 package twitter4j;
 
-import java.util.List;
-import java.util.Random;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
+
+import com.github.jjYBdx4IL.utils.env.Surefire;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jjYBdx4IL.utils.env.Surefire;
-
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -24,16 +25,13 @@ public class Twitter4JTest {
 
     private static Twitter twitter = null;
     
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @Before
+    public void before() throws FileNotFoundException, IOException {
+        assumeTrue(Surefire.isSingleTestExecution());
+        
         Twitter4JTestConfig config = new Twitter4JTestConfig();
         config.read();
         twitter = config.getUserTwitter();
-    }
-    
-    @Before
-    public void before() {
-        assumeTrue(Surefire.isSingleTestExecution());
     }
     
     @Test

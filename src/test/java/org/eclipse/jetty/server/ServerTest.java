@@ -39,15 +39,6 @@ public class ServerTest extends AbstractHandler {
         server.stop();
     }
     
-    @Test
-    public void testAutoSetup() throws Exception {
-        URL serverUrl = getUrl("");
-        LOG.info("server URL: " + serverUrl);
-        String pageContents = IOUtils.toString(serverUrl, "ASCII");
-        LOG.info("test page contents: " + pageContents);
-        assertEquals("some test page content", pageContents);
-    }
-
     public URL getUrl(String path) throws MalformedURLException, UnknownHostException {
         ServerConnector connector = (ServerConnector) server.getConnectors()[0];
         InetAddress addr = InetAddress.getLocalHost();
@@ -65,5 +56,14 @@ public class ServerTest extends AbstractHandler {
         response.getWriter().print("some test page content");
 
         baseRequest.setHandled(true);
+    }
+    
+    @Test
+    public void testAutoSetup() throws Exception {
+        URL serverUrl = getUrl("");
+        LOG.info("server URL: " + serverUrl);
+        String pageContents = IOUtils.toString(serverUrl, "ASCII");
+        LOG.info("test page contents: " + pageContents);
+        assertEquals("some test page content", pageContents);
     }
 }

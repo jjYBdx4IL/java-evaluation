@@ -1,13 +1,17 @@
 package tests.javax.swing;
 
+import static org.junit.Assume.assumeFalse;
+
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
-
-import org.junit.Test;
-
-import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 
 /**
  *
@@ -15,6 +19,11 @@ import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
  */
 public class JProgressBarTest extends InteractiveTestBase {
 
+    @Before
+    public void before() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+    }
+    
     @Test
     public void test() throws InvocationTargetException, InterruptedException {
         openWindow();

@@ -1,37 +1,54 @@
 package tests.java.awt.image;
 
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
+import static org.junit.Assume.assumeFalse;
 
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
-import java.awt.image.MemoryImageSource;
 
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class BufferedImageRasterPaintTest extends JFrame {
+public class BufferedImageRasterPaintTest {
 
     final int[] pixels = new int[800 * 600];
-    final BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
 
-    public BufferedImageRasterPaintTest() {
-        super(BufferedImageRasterPaintTest.class.getSimpleName());
+    static class TestFrame extends JFrame {
+        public final BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
 
-        setPreferredSize(new Dimension(800, 600));
-        pack();
+        public TestFrame() {
+            super(BufferedImageRasterPaintTest.class.getSimpleName());
+            setPreferredSize(new Dimension(800, 600));
+            pack();
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+
+            Graphics2D g2 = (Graphics2D) g;
+            g2.drawImage(image, 0, 0, null);
+        }
+    }
+
+    @Before
+    public void before() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
     }
 
     @Test
     public void test() {
+
+        TestFrame frame = new TestFrame();
 
         for (int x = 0; x < 800; x++) {
             for (int y = 0; y < 600; y++) {
@@ -43,17 +60,10 @@ public class BufferedImageRasterPaintTest extends JFrame {
             }
         }
 
-        int[] raster = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        int[] raster = ((DataBufferInt) frame.image.getRaster().getDataBuffer()).getData();
         System.arraycopy(pixels, 0, raster, 0, raster.length);
 
-        AWTUtils.showFrameAndWaitForCloseByUserTest(this);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(frame);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(image, 0, 0, null);
-    }
 }

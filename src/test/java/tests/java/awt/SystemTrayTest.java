@@ -2,6 +2,15 @@ package tests.java.awt;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.junit4.Screenshot;
+
+import org.apache.log4j.Logger;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -9,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -19,14 +29,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.github.jjYBdx4IL.utils.env.Maven;
-import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
  *
@@ -57,8 +59,8 @@ public class SystemTrayTest {
     }
 
     @BeforeClass
-    @SuppressWarnings("SleepWhileInLoop")
     public static void beforeClass() throws IOException, InterruptedException {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         if (!SystemTray.isSupported()) {
             LOG.info("no system tray support found, trying stalonetray...");
             ProcessBuilder bp = new ProcessBuilder("stalonetray");

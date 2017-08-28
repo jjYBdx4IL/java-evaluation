@@ -8,17 +8,17 @@
  */
 package tests.java.awt;
 
-import javax.swing.SwingUtilities;
-
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class SwingUtilitiesTest extends ExampleJFrameBase {
-
 
     @Test
     public void testGetRoot() throws InterruptedException {
