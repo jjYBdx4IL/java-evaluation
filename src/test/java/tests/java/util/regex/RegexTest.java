@@ -225,8 +225,46 @@ public class RegexTest extends RegularExpressionTestBase {
         assertEquals(2, m.groupCount());
         assertEquals("a.b.", m.group("one"));
         assertEquals("c", m.group("two"));
+        
+        p = Pattern.compile("(?:(?<a>[0-9]+)|(?<b>[^0-9]+))");
+
+        m = p.matcher("1.2.3");
+        
+        assertTrue(m.find());
+        assertEquals(2, m.groupCount());
+        assertEquals("1", m.group("a"));
+        assertNull(m.group("b"));
+        
+        assertTrue(m.find());
+        assertEquals(2, m.groupCount());
+        assertNull(m.group("a"));
+        assertEquals(".", m.group("b"));
+        
+        assertTrue(m.find());
+        assertEquals(2, m.groupCount());
+        assertEquals("2", m.group("a"));
+        assertNull(m.group("b"));
     }
 
+    @Test
+    public void test123() {
+        Pattern p = Pattern.compile("([0-9]+|[^0-9]+)");
+
+        Matcher m = p.matcher("1.21.3");
+        
+        assertTrue(m.find());
+        assertEquals(1, m.groupCount());
+        assertEquals("1", m.group(1));
+        
+        assertTrue(m.find());
+        assertEquals(1, m.groupCount());
+        assertEquals(".", m.group(1));
+        
+        assertTrue(m.find());
+        assertEquals(1, m.groupCount());
+        assertEquals("21", m.group(1));
+    }
+    
     @SuppressWarnings("unused")
 	@Test(expected = PatternSyntaxException.class)
     public void testNamedGroupsSameName() {
