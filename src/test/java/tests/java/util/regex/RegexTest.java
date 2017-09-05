@@ -24,6 +24,12 @@ public class RegexTest extends RegularExpressionTestBase {
     private static final Logger log = LoggerFactory.getLogger(RegexTest.class);
 
     @Test
+    public void testBrackets() {
+        assertTrue(Pattern.compile("^[,\\s]+$").matcher("\t ,").find());
+        assertFalse(Pattern.compile("^[,\\s]+$").matcher("\ta ,").find());
+    }
+    
+    @Test
     public void testZeroWidthLookAheadGroupMatch() {
         assertRegexSubMatch("^(?=(.*b))", "abc", "ab");
         assertRegexSubMatch("^(?=.*(b))", "abc", "b");
