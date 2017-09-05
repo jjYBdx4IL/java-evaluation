@@ -59,6 +59,12 @@ public class StringTest {
     }
     
     @Test
+    public void testStringLowerCase() {
+        assertEquals("ü", "Ü".toLowerCase(Locale.ROOT));
+        assertEquals("ü", "Ü".toLowerCase());
+    }
+    
+    @Test
     public void testStringReplaceAll() {
         assertEquals(";abc;abc;", ";;;".replaceAll(";(?=;)", ";abc"));
         assertEquals("t.t/t.a", "t.t/t.t".replaceAll("\\.t$", ".a"));
@@ -145,4 +151,5 @@ public class StringTest {
         assertTrue("A".compareTo("B") < 0);
         assertTrue("A".compareTo("A") == 0);
     }
+    
 }
