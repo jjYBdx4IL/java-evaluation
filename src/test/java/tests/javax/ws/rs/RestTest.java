@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -63,7 +64,9 @@ public class RestTest extends RestTestBase {
     @Test
     public void testStorage() throws MalformedURLException, UnknownHostException {
         String url = getServer().getURL("storage").toExternalForm() + "/";
-        Client client = JerseyClientBuilder.createClient(new ClientConfig());
+        // add cookie handling support:
+        ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+        Client client = JerseyClientBuilder.createClient(clientConfig);
         LOGJ.setLevel(java.util.logging.Level.FINEST);
         LOGJ.addHandler(new Handler() {
 
