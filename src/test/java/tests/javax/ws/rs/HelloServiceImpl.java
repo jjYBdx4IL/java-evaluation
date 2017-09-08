@@ -20,6 +20,7 @@ public class HelloServiceImpl {
     // This method is called if TEXT_PLAIN is request
     @GET
     @Produces(MediaType.TEXT_PLAIN)
+    @Intercept
     public String sayPlainTextHello() {
         LOG.info("sayPlainTextHello()");
         return "Hello Jersey";

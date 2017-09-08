@@ -8,7 +8,6 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.net.InetAddress;
@@ -38,9 +37,11 @@ class RestServer {
         rootContext.setContextPath("/");
 
         // "/rest/"
-        ResourceConfig config = new ResourceConfig();
-        config.packages(HelloServiceImpl.class.getPackage().getName());
-        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
+//        ResourceConfig config = new ResourceConfig();
+//        config.packages(HelloServiceImpl.class.getPackage().getName());
+//        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
+        ServletHolder servlet = new ServletHolder(new ServletContainer());
+        servlet.setInitParameter("javax.ws.rs.Application", RestApp.class.getName());
         ServletContextHandler restContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
         restContext.setContextPath(REST_CTX_PATH);
         restContext.addServlet(servlet, "/*");
