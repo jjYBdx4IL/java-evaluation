@@ -35,10 +35,26 @@ public class TypeTest {
     }
 
     @Test
+    public void testBooleanParse() {
+        assertEquals(true, Boolean.parseBoolean("true"));
+        assertEquals(true, Boolean.parseBoolean("True"));
+        assertEquals(true, Boolean.parseBoolean("TRUE"));
+        assertEquals(false, Boolean.parseBoolean("1"));
+        assertEquals(false, Boolean.parseBoolean("yes"));
+        assertEquals(false, Boolean.parseBoolean(""));
+    }
+    
+    
+    @Test
     public void testCharEncodingConversion() throws UnsupportedEncodingException {
         for (byte b = -128; b < 0; b++) {
             assertEquals('�', (int)new String(new byte[]{b}, "UTF-8").charAt(0));
         }
+    }
+
+    @Test
+    public void testDoubleLongMultiplication() {
+        assertEquals("0.66", "" + (0.33d * 2L));
     }
 
     @Test
@@ -75,12 +91,7 @@ public class TypeTest {
     }
 
     @Test
-    public void testDoubleLongMultiplication() {
-        assertEquals("0.66", "" + (0.33d * 2L));
-    }
-
-    @Test
-    public void testNativeIntDivRoundingErrors() {
+    public void testIntDivRoundingErrors() {
         assertEquals(0, 1 / 3);
         assertEquals(0, 1 / 2);
         assertEquals(0, 2 / 3);
@@ -117,7 +128,7 @@ public class TypeTest {
     }
 
     @Test
-    public void testReturnViaArg() {
+    public void testLongReturnViaArg() {
         Long l = new Long(3L);
         assertEquals(3L, l.longValue());
         returnViaArg(l);
