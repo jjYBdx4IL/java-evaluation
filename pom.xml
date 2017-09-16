@@ -359,6 +359,11 @@
             <version>1.49j</version>
         </dependency>
         <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.j2html</groupId>
             <artifactId>j2html</artifactId>
             <version>1.1.0</version>
@@ -624,12 +629,12 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>math-utils</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>math-utils</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
             <classifier>tests</classifier>
         </dependency>
         <dependency>
@@ -711,7 +716,7 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>swing-utils</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.openimaj</groupId>
@@ -1061,6 +1066,11 @@
                 <groupId>com.hierynomus</groupId>
                 <artifactId>sshj</artifactId>
                 <version>0.21.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jjYBdx4IL.utils</groupId>
+                <artifactId>swing-utils</artifactId>
+                <version>1.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tika</groupId>
