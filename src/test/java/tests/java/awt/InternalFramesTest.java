@@ -1,14 +1,17 @@
 package tests.java.awt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeFalse;
 
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import com.github.jjYBdx4IL.utils.math.LineFeedPacking;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -22,6 +25,11 @@ public class InternalFramesTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalFramesTest.class);
 
+    @Before
+    public void before() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+    }
+    
     @Test
     public void testInternalFrames() {
         JFrame outerFrame = new JFrame("outerFrame");

@@ -1,17 +1,26 @@
 package org.imgscalr;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.github.jjYBdx4IL.test.GraphicsResource;
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import com.github.jjYBdx4IL.utils.awt.MdiAutoScaleFrame;
 import com.github.jjYBdx4IL.utils.awt.MdiInternalImageFrame;
 import org.imgscalr.Scalr.Method;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 
 public class ScalingTest {
 
+    @Before
+    public void before() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+    }
+    
     @Test
     public void testScaling() {
         BufferedImage img = GraphicsResource.OPENIMAJ_TESTRES_AESTHETICODE.loadImage()

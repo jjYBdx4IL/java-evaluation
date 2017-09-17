@@ -3,3 +3,9 @@ env:
   - PUBLIC_CI=true
 jdk:
   - oraclejdk8
+before_install:
+  - git clone https://github.com/jjYBdx4IL/misc
+  - mvn install -f misc/release-parent >& log || tail -n1000 log
+  - mvn install -f misc -DskipTests -DskipITs >& log || tail -n1000 log
+install: true
+script: mvn -B clean install
