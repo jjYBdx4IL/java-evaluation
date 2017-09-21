@@ -1,5 +1,13 @@
 package tests.java.util.zip;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * #%L
  * Evaluation
@@ -12,20 +20,14 @@ package tests.java.util.zip;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.channels.FileChannel;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
-import static org.junit.Assert.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // CHECKSTYLE IGNORE MagicNumber FOR NEXT 1000 LINES
 public class ZipTest {
@@ -40,13 +42,17 @@ public class ZipTest {
         File outZipFile = folder.newFile("test.zip");
         LOG.info("writing to zip file " + outZipFile.getAbsolutePath());
         // CHECKSTYLE IGNORE InnerAssignment FOR NEXT 1 LINE
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outZipFile))) {
+        try (ZipOutputStream zos = new ZipOutputStream(new LogFileOutputStream(outZipFile))) {
             ZipEntry e = new ZipEntry("testentry1");
+            LOG.info("PUT NEXT ENTRY");
             zos.putNextEntry(e);
+            LOG.info("WRITE TO ENTRY");
             for (int i = 0; i < 1000; i++) {
                 zos.write(TEST_LINE_CONTENT.getBytes());
             }
+            LOG.info("CLOSE ENTRY");
             zos.closeEntry();
+            LOG.info("CLOSE");
         }
     }
 
@@ -74,4 +80,42 @@ public class ZipTest {
             }
         }
     }
+	
+	public static class LogFileOutputStream extends FileOutputStream {
+
+        public LogFileOutputStream(File file) throws FileNotFoundException {
+            super(file);
+        }
+
+        @Override
+        public void close() throws IOException {
+            LOG.info("close");
+            super.close();
+        }
+        @Override
+        public void flush() throws IOException {
+            LOG.info("flush");
+            super.flush();
+        }
+        @Override
+        public FileChannel getChannel() {
+            LOG.info("getChannel");
+            return super.getChannel();
+        }
+        @Override
+        public void write(byte[] b) throws IOException {
+            LOG.info("write len " + b.length);
+            super.write(b);
+        }
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            LOG.info("write len " + len);
+            super.write(b, off, len);
+        }
+        @Override
+        public void write(int b) throws IOException {
+            LOG.info("write int " + b);
+            super.write(b);
+        }
+	}
 }
