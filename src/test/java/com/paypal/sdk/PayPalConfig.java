@@ -16,8 +16,8 @@ public class PayPalConfig extends AbstractConfig {
     public String acct1UserName = "";
     public String acct1Password = "";
     public String acct1Signature = "";
-    public String acct1AppId = "";
-    public String acct1Subject = "";
+    //public String acct1AppId = "";
+    //public String acct1Subject = "";
     public String emailAddress = "";
 
     public String ecRedirectUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";
@@ -40,8 +40,8 @@ public class PayPalConfig extends AbstractConfig {
         p.setProperty("acct1.UserName", acct1UserName);
         p.setProperty("acct1.Password", acct1Password);
         p.setProperty("acct1.Signature", acct1Signature);
-        p.setProperty("acct1.AppId", acct1AppId);
-        p.setProperty("acct1.Subject", acct1Subject);
+        p.setProperty("acct1.AppId", "APP-80W284485P519543T"); // global sandbox app id
+        p.setProperty("acct1.Subject", ""); // only needed when doing stuff for 3rd parties
         p.setProperty("sandbox.EmailAddress", emailAddress);
 
         // Connection Information
@@ -56,8 +56,8 @@ public class PayPalConfig extends AbstractConfig {
         p.setProperty("http.UseProxy", "false");
         p.setProperty("http.ProxyPort", "8080");
         p.setProperty("http.ProxyHost", "127.0.0.1");
-        p.setProperty("http.ProxyUserName", null);
-        p.setProperty("http.ProxyPassword", null);
+        p.setProperty("http.ProxyUserName", "");
+        p.setProperty("http.ProxyPassword", "");
 
         // Set this property to true if you are using the PayPal SDK within a Google App Engine java app
         p.setProperty("http.GoogleAppEngine", "false");

@@ -7,35 +7,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.TimeZone;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import com.github.jjYBdx4IL.utils.env.Surefire;
-import com.github.jjYBdx4IL.utils.junit4.IgnoreTestExceptionsRule;
-import com.github.jjYBdx4IL.utils.junit4.RetryRunner;
-import com.github.jjYBdx4IL.utils.junit4.RetryRunnerConfig;
 import com.github.jjYBdx4IL.utils.time.TimeUtils;
 import com.paypal.exception.ClientActionRequiredException;
 import com.paypal.exception.HttpErrorException;
@@ -44,7 +18,15 @@ import com.paypal.exception.InvalidResponseDataException;
 import com.paypal.exception.MissingCredentialException;
 import com.paypal.exception.SSLConfigurationException;
 import com.paypal.sdk.exceptions.OAuthException;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 import urn.ebay.api.PayPalAPI.CreateRecurringPaymentsProfileReq;
 import urn.ebay.api.PayPalAPI.CreateRecurringPaymentsProfileRequestType;
 import urn.ebay.api.PayPalAPI.CreateRecurringPaymentsProfileResponseType;
@@ -96,46 +78,52 @@ import urn.ebay.apis.eBLBaseComponents.SellerDetailsType;
 import urn.ebay.apis.eBLBaseComponents.SetExpressCheckoutRequestDetailsType;
 import urn.ebay.apis.eBLBaseComponents.SolutionTypeType;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.TimeZone;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 /**
  *
  * @author jjYBdx4IL
  */
-@RunWith(RetryRunner.class)
-@RetryRunnerConfig(delayMillis = 300000l)
 public class MerchantSDKTest extends SeleniumTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(MerchantSDKTest.class);
     public static final String PaymentActionCompleted = "PaymentActionCompleted";
     public static final String PaymentActionNotInitiated = "PaymentActionNotInitiated";
     private static Random RAND = new Random();
-    
-    @Rule
-    public final IgnoreTestExceptionsRule ignoreSocketTimeoutException;
+
     private PayPalAPIInterfaceServiceService service = null;
     private final PayPalConfig config;
     private final PayPalTestAccountsConfig testAccountsConfig;
 
     public MerchantSDKTest() throws FileNotFoundException, IOException {
-        ignoreSocketTimeoutException = new IgnoreTestExceptionsRule();
-        ignoreSocketTimeoutException.addException(SocketTimeoutException.class);
-        
         config = new PayPalConfig();
         testAccountsConfig = new PayPalTestAccountsConfig();
     }
 
     @Before
     public void before() throws IOException {
-        assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with unstable external dependencies in CI
-        
+        assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with
+                                                      // unstable external
+                                                      // dependencies in CI
+
         config.read();
         testAccountsConfig.read();
-        
+
         service = new PayPalAPIInterfaceServiceService(config.getSDKProps());
     }
 
     /**
-     * The following test follows the example from <a
-     * href="https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECGettingStarted/">Getting
+     * The following test follows the example from <a href=
+     * "https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECGettingStarted/">Getting
      * Started With Express Checkout</a>.
      * <p>
      * Worflow:
@@ -151,8 +139,8 @@ public class MerchantSDKTest extends SeleniumTestBase {
      * <li>show order confirmation
      * </ul>
      * <p>
-     * The code has been taken from <a
-     * href="https://github.com/paypal/codesamples-java/blob/master/src/main/java/com/sample/merchant/">github</a>.
+     * The code has been taken from <a href=
+     * "https://github.com/paypal/codesamples-java/blob/master/src/main/java/com/sample/merchant/">github</a>.
      */
     @Test
     public void testPayPalSetExpressCheckoutOrder() throws Exception {
@@ -169,7 +157,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // PayPal recommends that the value be the final review page on which
         // the buyer confirms the order and payment or billing agreement.`
         setExpressCheckoutRequestDetails
-                .setReturnURL("http://localhost/return");
+            .setReturnURL("http://localhost/return");
 
         // URL to which the buyer is returned if the buyer does not approve the
         // use of PayPal to pay you. For digital goods, you must add JavaScript
@@ -178,7 +166,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // PayPal recommends that the value be the original page on which the
         // buyer chose to pay with PayPal or establish a billing agreement.`
         setExpressCheckoutRequestDetails
-                .setCancelURL("http://localhost/cancel");
+            .setCancelURL("http://localhost/cancel");
 
         setExpressCheckoutRequestDetails.setSolutionType(SolutionTypeType.MARK);
         setExpressCheckoutRequestDetails.setAllowNote("0");
@@ -207,7 +195,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // currencies.
         // * `Amount`
         BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.EUR,
-                "2.00");
+            "2.00");
         paymentDetails1.setOrderTotal(orderTotal1);
 
         // How you want to obtain payment. When implementing parallel payments,
@@ -283,7 +271,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // currencies.
         // * `Amount`
         BasicAmountType orderTotal2 = new BasicAmountType(CurrencyCodeType.EUR,
-                "4.00");
+            "4.00");
         paymentDetails2.setOrderTotal(orderTotal2);
 
         // How you want to obtain payment. When implementing parallel payments,
@@ -347,13 +335,13 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
         SetExpressCheckoutRequestType setExpressCheckoutRequest = new SetExpressCheckoutRequestType(
-                setExpressCheckoutRequestDetails);
+            setExpressCheckoutRequestDetails);
 
         setExpressCheckoutReq
-                .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
+            .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
 
         SetExpressCheckoutResponseType setExpressCheckoutResponse = service
-                .setExpressCheckout(setExpressCheckoutReq);
+            .setExpressCheckout(setExpressCheckoutReq);
         // ## Accessing response parameters
         // You can access the response parameters using getter methods in
         // response object as shown below
@@ -369,14 +357,14 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // Express Checkout Token
             LOG.info("EC Token:" + setExpressCheckoutResponse.getToken());
         } // ### Error Values
-        // Access error values from error list using getter methods
+          // Access error values from error list using getter methods
         else {
             List<ErrorType> errorList = setExpressCheckoutResponse.getErrors();
             LOG.error("API Error Message : "
-                    + errorList.get(0).getLongMessage());
+                + errorList.get(0).getLongMessage());
             fail();
         }
-//        return setExpressCheckoutResponse;
+        // return setExpressCheckoutResponse;
 
         // ## GetExpressCheckoutDetailsReq
         GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
@@ -384,10 +372,10 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // A timestamped token, the value of which was returned by
         // `SetExpressCheckout` response.
         GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(
-                setExpressCheckoutResponse.getToken());
+            setExpressCheckoutResponse.getToken());
 
         getExpressCheckoutDetailsReq
-                .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
+            .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
 
         GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponse = null;
         try {
@@ -395,8 +383,10 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // Invoke the appropriate method corresponding to API in service
             // wrapper object
             getExpressCheckoutDetailsResponse = service
-                    .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
-        } catch (SSLConfigurationException | InvalidCredentialException | IOException | HttpErrorException | InvalidResponseDataException | ClientActionRequiredException | MissingCredentialException | InterruptedException | OAuthException | ParserConfigurationException | SAXException e) {
+                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+        } catch (SSLConfigurationException | InvalidCredentialException | IOException | HttpErrorException
+            | InvalidResponseDataException | ClientActionRequiredException | MissingCredentialException
+            | InterruptedException | OAuthException | ParserConfigurationException | SAXException e) {
             LOG.error("Error Message : " + e.getMessage());
             fail();
         }
@@ -404,12 +394,12 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // check status before user accepts payment:
         assertEquals(AckCodeType.SUCCESS, getExpressCheckoutDetailsResponse.getAck());
         assertNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
         assertEquals(PaymentActionNotInitiated, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
 
         visitPayPalWebsiteAndConfirmPayment(setExpressCheckoutResponse.getToken());
 
@@ -419,8 +409,10 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // Invoke the appropriate method corresponding to API in service
             // wrapper object
             getExpressCheckoutDetailsResponse = service
-                    .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
-        } catch (SSLConfigurationException | InvalidCredentialException | IOException | HttpErrorException | InvalidResponseDataException | ClientActionRequiredException | MissingCredentialException | InterruptedException | OAuthException | ParserConfigurationException | SAXException e) {
+                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+        } catch (SSLConfigurationException | InvalidCredentialException | IOException | HttpErrorException
+            | InvalidResponseDataException | ClientActionRequiredException | MissingCredentialException
+            | InterruptedException | OAuthException | ParserConfigurationException | SAXException e) {
             LOG.error("Error Message : " + e.getMessage());
             fail();
         }
@@ -434,28 +426,28 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // value will be null unless you authorize the payment by
             // redirecting to PayPal after `SetExpressCheckout` call.
             LOG.info("PayerID : "
-                    + getExpressCheckoutDetailsResponse
+                + getExpressCheckoutDetailsResponse
                     .getGetExpressCheckoutDetailsResponseDetails()
                     .getPayerInfo().getPayerID());
 
         } // ### Error Values
-        // Access error values from error list using getter methods
+          // Access error values from error list using getter methods
         else {
             List<ErrorType> errorList = getExpressCheckoutDetailsResponse
-                    .getErrors();
+                .getErrors();
             LOG.error("API Error Message : "
-                    + errorList.get(0).getLongMessage());
+                + errorList.get(0).getLongMessage());
             fail();
         }
-        //return getExpressCheckoutDetailsResponse;
+        // return getExpressCheckoutDetailsResponse;
 
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertEquals(PaymentActionNotInitiated, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertNotNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
 
         // final step, nothing has been committed up to now!
         // ## DoExpressCheckoutPaymentReq
@@ -471,15 +463,15 @@ public class MerchantSDKTest extends SeleniumTestBase {
         // Unique paypal buyer account identification number as returned in
         // `GetExpressCheckoutDetails` Response
         doExpressCheckoutPaymentRequestDetails.setPayerID(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
 
         doExpressCheckoutPaymentRequestDetails
-                .setPaymentDetails(paymentDetailsList);
+            .setPaymentDetails(paymentDetailsList);
         DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequest = new DoExpressCheckoutPaymentRequestType(
-                doExpressCheckoutPaymentRequestDetails);
+            doExpressCheckoutPaymentRequestDetails);
         doExpressCheckoutPaymentReq
-                .setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequest);
+            .setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequest);
 
         DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponse = null;
         try {
@@ -487,8 +479,10 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // Invoke the appropriate method corresponding to API in service
             // wrapper object
             doExpressCheckoutPaymentResponse = service
-                    .doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
-        } catch (ClientActionRequiredException | HttpErrorException | InvalidCredentialException | InvalidResponseDataException | MissingCredentialException | SSLConfigurationException | OAuthException | IOException | InterruptedException | ParserConfigurationException | SAXException e) {
+                .doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
+        } catch (ClientActionRequiredException | HttpErrorException | InvalidCredentialException
+            | InvalidResponseDataException | MissingCredentialException | SSLConfigurationException | OAuthException
+            | IOException | InterruptedException | ParserConfigurationException | SAXException e) {
             LOG.error("Error Message : " + e.getMessage());
             fail();
         }
@@ -506,38 +500,42 @@ public class MerchantSDKTest extends SeleniumTestBase {
             // This field is only returned after a successful transaction
             // for DoExpressCheckout has occurred.
             if (doExpressCheckoutPaymentResponse
-                    .getDoExpressCheckoutPaymentResponseDetails()
-                    .getPaymentInfo() != null) {
+                .getDoExpressCheckoutPaymentResponseDetails()
+                .getPaymentInfo() != null) {
                 Iterator<PaymentInfoType> paymentInfoIterator = doExpressCheckoutPaymentResponse
-                        .getDoExpressCheckoutPaymentResponseDetails()
-                        .getPaymentInfo().iterator();
+                    .getDoExpressCheckoutPaymentResponseDetails()
+                    .getPaymentInfo().iterator();
                 while (paymentInfoIterator.hasNext()) {
                     PaymentInfoType paymentInfo = paymentInfoIterator
-                            .next();
+                        .next();
                     LOG.info("Transaction ID : "
-                            + paymentInfo.getTransactionID());
+                        + paymentInfo.getTransactionID());
                     assertNotNull(paymentInfo.getTransactionID());
                     nXactIds++;
                 }
             }
         } // ### Error Values
-        // Access error values from error list using getter methods
+          // Access error values from error list using getter methods
         else {
             List<ErrorType> errorList = doExpressCheckoutPaymentResponse
-                    .getErrors();
+                .getErrors();
             LOG.error("API Error Message : "
-                    + errorList.get(0).getLongMessage());
+                + errorList.get(0).getLongMessage());
             fail();
         }
-        //return doExpressCheckoutPaymentResponse;
+        // return doExpressCheckoutPaymentResponse;
 
         assertEquals(2, nXactIds);
 
-        // usually, the payment status is now "open" and we need to wait until it is settled.
+        // usually, the payment status is now "open" and we need to wait until
+        // it is settled.
     }
 
     @Test
-    public void testPayPalSetExpressCheckoutSale() throws WebElementNotFoundException, IOException, SSLConfigurationException, InvalidCredentialException, HttpErrorException, InvalidResponseDataException, ClientActionRequiredException, MissingCredentialException, OAuthException, ParserConfigurationException, InterruptedException, SAXException {
+    public void testPayPalSetExpressCheckoutSale()
+        throws WebElementNotFoundException, IOException, SSLConfigurationException, InvalidCredentialException,
+        HttpErrorException, InvalidResponseDataException, ClientActionRequiredException, MissingCredentialException,
+        OAuthException, ParserConfigurationException, InterruptedException, SAXException {
 
         setTestName("PayPalExpressCheckoutSale");
 
@@ -545,9 +543,9 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
         setExpressCheckoutRequestDetails
-                .setReturnURL("http://localhost/return");
+            .setReturnURL("http://localhost/return");
         setExpressCheckoutRequestDetails
-                .setCancelURL("http://localhost/cancel");
+            .setCancelURL("http://localhost/cancel");
         // require buyer to pay through a paypal account (-> payer_id):
         setExpressCheckoutRequestDetails.setSolutionType(SolutionTypeType.MARK);
         setExpressCheckoutRequestDetails.setAllowNote("0");
@@ -555,7 +553,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         PaymentDetailsType paymentDetails1 = new PaymentDetailsType();
         BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.EUR,
-                "2.00");
+            "2.00");
         paymentDetails1.setOrderTotal(orderTotal1);
         paymentDetails1.setPaymentAction(PaymentActionCodeType.SALE);
         SellerDetailsType sellerDetails1 = new SellerDetailsType();
@@ -568,7 +566,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         PaymentDetailsType paymentDetails2 = new PaymentDetailsType();
         BasicAmountType orderTotal2 = new BasicAmountType(CurrencyCodeType.EUR,
-                "4.00");
+            "4.00");
         paymentDetails2.setOrderTotal(orderTotal2);
         paymentDetails2.setPaymentAction(PaymentActionCodeType.SALE);
         SellerDetailsType sellerDetails2 = new SellerDetailsType();
@@ -586,54 +584,54 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
         SetExpressCheckoutRequestType setExpressCheckoutRequest = new SetExpressCheckoutRequestType(
-                setExpressCheckoutRequestDetails);
+            setExpressCheckoutRequestDetails);
 
         setExpressCheckoutReq
-                .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
+            .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
 
         SetExpressCheckoutResponseType setExpressCheckoutResponse = service
-                .setExpressCheckout(setExpressCheckoutReq);
+            .setExpressCheckout(setExpressCheckoutReq);
         assertEquals(AckCodeType.SUCCESS, setExpressCheckoutResponse.getAck());
         LOG.info("EC Token:" + setExpressCheckoutResponse.getToken());
 
         GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
 
         GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(
-                setExpressCheckoutResponse.getToken());
+            setExpressCheckoutResponse.getToken());
 
         getExpressCheckoutDetailsReq
-                .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
+            .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
 
         GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponse = service
-                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+            .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
 
         // check status before user accepts payment:
         assertEquals(AckCodeType.SUCCESS, getExpressCheckoutDetailsResponse.getAck());
         assertNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertEquals(PaymentActionNotInitiated, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
 
         visitPayPalWebsiteAndConfirmPayment(setExpressCheckoutResponse.getToken());
 
         getExpressCheckoutDetailsResponse = service
-                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+            .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
         assertEquals(AckCodeType.SUCCESS, getExpressCheckoutDetailsResponse.getAck());
         LOG.info("PayerID : "
-                + getExpressCheckoutDetailsResponse
+            + getExpressCheckoutDetailsResponse
                 .getGetExpressCheckoutDetailsResponseDetails()
                 .getPayerInfo().getPayerID());
 
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertEquals(PaymentActionNotInitiated, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertNotNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
 
         // final step, nothing has been committed up to now!
         LOG.info("doExpressCheckoutPayment");
@@ -644,33 +642,33 @@ public class MerchantSDKTest extends SeleniumTestBase {
         doExpressCheckoutPaymentRequestDetails.setToken(setExpressCheckoutResponse.getToken());
 
         doExpressCheckoutPaymentRequestDetails.setPayerID(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
 
         doExpressCheckoutPaymentRequestDetails
-                .setPaymentDetails(paymentDetailsList);
+            .setPaymentDetails(paymentDetailsList);
         DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequest = new DoExpressCheckoutPaymentRequestType(
-                doExpressCheckoutPaymentRequestDetails);
+            doExpressCheckoutPaymentRequestDetails);
         doExpressCheckoutPaymentReq
-                .setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequest);
+            .setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequest);
 
         DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponse = service
-                .doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
+            .doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
 
         int nXactIds = 0;
         assertEquals(AckCodeType.SUCCESS, doExpressCheckoutPaymentResponse.getAck());
 
         assertNotNull(doExpressCheckoutPaymentResponse
-                .getDoExpressCheckoutPaymentResponseDetails()
-                .getPaymentInfo());
+            .getDoExpressCheckoutPaymentResponseDetails()
+            .getPaymentInfo());
         Iterator<PaymentInfoType> paymentInfoIterator = doExpressCheckoutPaymentResponse
-                .getDoExpressCheckoutPaymentResponseDetails()
-                .getPaymentInfo().iterator();
+            .getDoExpressCheckoutPaymentResponseDetails()
+            .getPaymentInfo().iterator();
         while (paymentInfoIterator.hasNext()) {
             PaymentInfoType paymentInfo = paymentInfoIterator
-                    .next();
+                .next();
             LOG.info("Transaction ID : "
-                    + paymentInfo.getTransactionID());
+                + paymentInfo.getTransactionID());
             assertNotNull(paymentInfo.getTransactionID());
             nXactIds++;
         }
@@ -678,39 +676,41 @@ public class MerchantSDKTest extends SeleniumTestBase {
         assertEquals(2, nXactIds);
 
         getExpressCheckoutDetailsResponse = service
-                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+            .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
         assertEquals(AckCodeType.SUCCESS, getExpressCheckoutDetailsResponse.getAck());
         LOG.info("PayerID : "
-                + getExpressCheckoutDetailsResponse
+            + getExpressCheckoutDetailsResponse
                 .getGetExpressCheckoutDetailsResponseDetails()
                 .getPayerInfo().getPayerID());
 
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
-        // if we use the base currency of our merchant (seller) account and the Sale type, the
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+        // if we use the base currency of our merchant (seller) account and the
+        // Sale type, the
         // payment is immediately settled:
         assertEquals(PaymentActionCompleted, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertNotNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
 
-        // if we fail to process/store the doExpressCheckoutPayment response, we need a fallback:
+        // if we fail to process/store the doExpressCheckoutPayment response, we
+        // need a fallback:
         TransactionSearchReq transactionSearchReq = new TransactionSearchReq();
         TransactionSearchRequestType transactionSearchRequest = new TransactionSearchRequestType();
         transactionSearchRequest.setStartDate("1980-01-01T00:00:00+0000");
         transactionSearchRequest.setInvoiceID(invoiceIdPrefix + "1");
         transactionSearchReq.setTransactionSearchRequest(transactionSearchRequest);
         TransactionSearchResponseType transactionSearchResponse = service
-                .transactionSearch(transactionSearchReq);
+            .transactionSearch(transactionSearchReq);
         assertEquals(AckCodeType.SUCCESS, transactionSearchResponse.getAck());
         Iterator<PaymentTransactionSearchResultType> iterator = transactionSearchResponse
-                .getPaymentTransactions().iterator();
+            .getPaymentTransactions().iterator();
         int nResults = 0;
         String transactionId = null;
         while (iterator.hasNext()) {
             PaymentTransactionSearchResultType searchResult = iterator
-                    .next();
+                .next();
 
             // Merchant's transaction ID.
             LOG.info("Transaction ID : " + searchResult.getTransactionID());
@@ -732,13 +732,13 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         getTransactionDetailsRequest.setTransactionID(transactionId);
         getTransactionDetailsReq
-                .setGetTransactionDetailsRequest(getTransactionDetailsRequest);
+            .setGetTransactionDetailsRequest(getTransactionDetailsRequest);
         GetTransactionDetailsResponseType getTransactionDetailsResponse = service
-                .getTransactionDetails(getTransactionDetailsReq);
+            .getTransactionDetails(getTransactionDetailsReq);
         assertEquals(AckCodeType.SUCCESS, getTransactionDetailsResponse.getAck());
 
         PayerInfoType payer = getTransactionDetailsResponse
-                .getPaymentTransactionDetails().getPayerInfo();
+            .getPaymentTransactionDetails().getPayerInfo();
         LOG.info("Payer ID                  : " + payer.getPayerID());
         LOG.info("Payer Address Name        : " + payer.getAddress().getName());
         LOG.info("Payer Address Street 1    : " + payer.getAddress().getStreet1());
@@ -750,7 +750,10 @@ public class MerchantSDKTest extends SeleniumTestBase {
     }
 
     @Test
-    public void testPayPalRecurringPayments() throws WebElementNotFoundException, IOException, SSLConfigurationException, InvalidCredentialException, HttpErrorException, InvalidResponseDataException, ClientActionRequiredException, MissingCredentialException, OAuthException, ParserConfigurationException, InterruptedException, SAXException {
+    public void testPayPalRecurringPayments()
+        throws WebElementNotFoundException, IOException, SSLConfigurationException, InvalidCredentialException,
+        HttpErrorException, InvalidResponseDataException, ClientActionRequiredException, MissingCredentialException,
+        OAuthException, ParserConfigurationException, InterruptedException, SAXException {
 
         setTestName("PayPalRecurringPayments");
 
@@ -759,9 +762,9 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
         setExpressCheckoutRequestDetails
-                .setReturnURL("http://localhost/return");
+            .setReturnURL("http://localhost/return");
         setExpressCheckoutRequestDetails
-                .setCancelURL("http://localhost/cancel");
+            .setCancelURL("http://localhost/cancel");
         // require buyer to pay through a paypal account (-> payer_id):
         setExpressCheckoutRequestDetails.setSolutionType(SolutionTypeType.MARK);
         setExpressCheckoutRequestDetails.setAllowNote("0");
@@ -777,45 +780,46 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
         SetExpressCheckoutRequestType setExpressCheckoutRequest = new SetExpressCheckoutRequestType(
-                setExpressCheckoutRequestDetails);
+            setExpressCheckoutRequestDetails);
 
         setExpressCheckoutReq
-                .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
+            .setSetExpressCheckoutRequest(setExpressCheckoutRequest);
 
         SetExpressCheckoutResponseType setExpressCheckoutResponse = service
-                .setExpressCheckout(setExpressCheckoutReq);
+            .setExpressCheckout(setExpressCheckoutReq);
         assertEquals(AckCodeType.SUCCESS, setExpressCheckoutResponse.getAck());
         LOG.info("EC Token:" + setExpressCheckoutResponse.getToken());
 
         visitPayPalWebsiteAndConfirmAgreement(setExpressCheckoutResponse.getToken(),
-        		testAccountsConfig.usBuyerEmail, testAccountsConfig.usBuyerPassword);
+            testAccountsConfig.usBuyerEmail, testAccountsConfig.usBuyerPassword);
 
         GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
         GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(
-                setExpressCheckoutResponse.getToken());
+            setExpressCheckoutResponse.getToken());
         getExpressCheckoutDetailsReq
-                .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
+            .setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequest);
         GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponse = service
-                .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+            .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
 
         assertEquals(AckCodeType.SUCCESS, getExpressCheckoutDetailsResponse.getAck());
         LOG.info("PayerID : "
-                + getExpressCheckoutDetailsResponse
+            + getExpressCheckoutDetailsResponse
                 .getGetExpressCheckoutDetailsResponseDetails()
                 .getPayerInfo().getPayerID());
         LOG.info(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertEquals(PaymentActionNotInitiated, getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
+            .getGetExpressCheckoutDetailsResponseDetails().getCheckoutStatus());
         assertNotNull(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getPayerInfo().getPayerID());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getPayerInfo().getPayerID());
         assertTrue(getExpressCheckoutDetailsResponse
-                .getGetExpressCheckoutDetailsResponseDetails()
-                .getBillingAgreementAcceptedStatus());
+            .getGetExpressCheckoutDetailsResponseDetails()
+            .getBillingAgreementAcceptedStatus());
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(Calendar.HOUR_OF_DAY, 2); // avoid past dates (would generate an api error)
+        cal.add(Calendar.HOUR_OF_DAY, 2); // avoid past dates (would generate an
+                                          // api error)
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -823,50 +827,57 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
         RecurringPaymentsProfileDetailsType recurringPaymentsProfileDetails = new RecurringPaymentsProfileDetailsType();
         recurringPaymentsProfileDetails.setBillingStartDate(TimeUtils.toISO8601WithSeconds(cal.getTime()));
-        // sadly, we cannot define our own transaction id. only possibility up to now is to use IPNs and
-        // the following contained parameter to recover lost profile ids during profile creation (api version 117):
+        // sadly, we cannot define our own transaction id. only possibility up
+        // to now is to use IPNs and
+        // the following contained parameter to recover lost profile ids during
+        // profile creation (api version 117):
         recurringPaymentsProfileDetails.setProfileReference(invoiceIdPrefix);
 
         ScheduleDetailsType scheduleDetails = new ScheduleDetailsType();
         scheduleDetails.setDescription(billingAgreementDescription);
         scheduleDetails.setMaxFailedPayments(1);
         BillingPeriodDetailsType billingPeriodDetails = new BillingPeriodDetailsType(BillingPeriodType.MONTH, 1,
-                new BasicAmountType(CurrencyCodeType.EUR, "9.99"));
+            new BasicAmountType(CurrencyCodeType.EUR, "9.99"));
         scheduleDetails.setPaymentPeriod(billingPeriodDetails);
 
         CreateRecurringPaymentsProfileReq createRecurringPaymentsProfileReq = new CreateRecurringPaymentsProfileReq();
         CreateRecurringPaymentsProfileRequestType createRecurringPaymentsProfileRequest = new CreateRecurringPaymentsProfileRequestType();
         CreateRecurringPaymentsProfileRequestDetailsType createRecurringPaymentsProfileRequestDetails = new CreateRecurringPaymentsProfileRequestDetailsType();
-        createRecurringPaymentsProfileRequest.setCreateRecurringPaymentsProfileRequestDetails(createRecurringPaymentsProfileRequestDetails);
-        createRecurringPaymentsProfileReq.setCreateRecurringPaymentsProfileRequest(createRecurringPaymentsProfileRequest);
-        createRecurringPaymentsProfileRequestDetails.setRecurringPaymentsProfileDetails(recurringPaymentsProfileDetails);
+        createRecurringPaymentsProfileRequest
+            .setCreateRecurringPaymentsProfileRequestDetails(createRecurringPaymentsProfileRequestDetails);
+        createRecurringPaymentsProfileReq
+            .setCreateRecurringPaymentsProfileRequest(createRecurringPaymentsProfileRequest);
+        createRecurringPaymentsProfileRequestDetails
+            .setRecurringPaymentsProfileDetails(recurringPaymentsProfileDetails);
         createRecurringPaymentsProfileRequestDetails.setScheduleDetails(scheduleDetails);
         createRecurringPaymentsProfileRequestDetails.setToken(setExpressCheckoutResponse.getToken());
-        
+
         // final step, nothing has been committed up to now!
         LOG.info("createRecurringPaymentsProfile");
         CreateRecurringPaymentsProfileResponseType createRecurringPaymentsProfileResponse = service
-                .createRecurringPaymentsProfile(createRecurringPaymentsProfileReq);
+            .createRecurringPaymentsProfile(createRecurringPaymentsProfileReq);
 
         assertEquals(AckCodeType.SUCCESS, createRecurringPaymentsProfileResponse.getAck());
         assertEquals(RecurringPaymentsProfileStatusType.ACTIVEPROFILE, createRecurringPaymentsProfileResponse
-                .getCreateRecurringPaymentsProfileResponseDetails().getProfileStatus());
+            .getCreateRecurringPaymentsProfileResponseDetails().getProfileStatus());
         String profileId = createRecurringPaymentsProfileResponse
-                .getCreateRecurringPaymentsProfileResponseDetails().getProfileID();
+            .getCreateRecurringPaymentsProfileResponseDetails().getProfileID();
         assertNotNull(profileId);
         LOG.info("profile id = " + profileId);
         String xactionId = createRecurringPaymentsProfileResponse
-                .getCreateRecurringPaymentsProfileResponseDetails().getTransactionID();
+            .getCreateRecurringPaymentsProfileResponseDetails().getTransactionID();
         LOG.info("transaction id = " + xactionId);
 
         GetRecurringPaymentsProfileDetailsReq getRecurringPaymentsProfileDetailsReq = new GetRecurringPaymentsProfileDetailsReq();
         GetRecurringPaymentsProfileDetailsRequestType getRecurringPaymentsProfileDetailsRequest = new GetRecurringPaymentsProfileDetailsRequestType();
         getRecurringPaymentsProfileDetailsRequest.setProfileID(profileId);
-        getRecurringPaymentsProfileDetailsReq.setGetRecurringPaymentsProfileDetailsRequest(getRecurringPaymentsProfileDetailsRequest);
+        getRecurringPaymentsProfileDetailsReq
+            .setGetRecurringPaymentsProfileDetailsRequest(getRecurringPaymentsProfileDetailsRequest);
         GetRecurringPaymentsProfileDetailsResponseType getRecurringPaymentsProfileDetailsResponse = service
-                .getRecurringPaymentsProfileDetails(getRecurringPaymentsProfileDetailsReq);
+            .getRecurringPaymentsProfileDetails(getRecurringPaymentsProfileDetailsReq);
         assertEquals(AckCodeType.SUCCESS, getRecurringPaymentsProfileDetailsResponse.getAck());
-        GetRecurringPaymentsProfileDetailsResponseDetailsType profileDetails = getRecurringPaymentsProfileDetailsResponse.getGetRecurringPaymentsProfileDetailsResponseDetails();
+        GetRecurringPaymentsProfileDetailsResponseDetailsType profileDetails = getRecurringPaymentsProfileDetailsResponse
+            .getGetRecurringPaymentsProfileDetailsResponseDetails();
         LOG.info("profile description: " + profileDetails.getDescription());
         LOG.info("profile final payment due date: " + profileDetails.getFinalPaymentDueDate());
         LOG.info("profile aggregate amount: " + profileDetails.getAggregateAmount().getValue());
@@ -887,30 +898,32 @@ public class MerchantSDKTest extends SeleniumTestBase {
         getBalanceRequest.setReturnAllCurrencies("1");
         getBalanceReq.setGetBalanceRequest(getBalanceRequest);
         GetBalanceResponseType getBalanceResponse = service
-                .getBalance(getBalanceReq);
+            .getBalance(getBalanceReq);
         assertEquals(AckCodeType.SUCCESS, getBalanceResponse.getAck());
         int nResults = 0;
         Iterator<BasicAmountType> iterator2 = getBalanceResponse
-                .getBalanceHoldings().iterator();
+            .getBalanceHoldings().iterator();
         while (iterator2.hasNext()) {
             BasicAmountType amount = iterator2.next();
 
-            // Available balance and associated currency code for each currency held, including the primary currency. The first currency is the primary currency.
+            // Available balance and associated currency code for each currency
+            // held, including the primary currency. The first currency is the
+            // primary currency.
             LOG.info("Balance Holdings : " + amount.getValue() + " "
-                    + amount.getCurrencyID().getValue());
+                + amount.getCurrencyID().getValue());
             nResults++;
         }
         assertEquals(1, nResults);
     }
 
     private void visitPayPalWebsiteAndConfirmPayment(String ecToken)
-            throws WebElementNotFoundException, InterruptedException {
+        throws WebElementNotFoundException, InterruptedException {
         visitPayPalWebsiteAndConfirmPayment(ecToken,
-        		testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
+            testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
     }
 
     private void visitPayPalWebsiteAndConfirmPayment(String ecToken, String buyerEmail, String buyerPassword)
-            throws WebElementNotFoundException, InterruptedException {
+        throws WebElementNotFoundException, InterruptedException {
         LOG.info("visitPayPalWebsiteAndConfirmPayment()");
 
         String redirectUrl = config.ecRedirectUrl + ecToken;
@@ -918,31 +931,42 @@ public class MerchantSDKTest extends SeleniumTestBase {
         LOG.info("using paypal customer test account " + buyerEmail + " - " + buyerPassword);
         getDriver().get(redirectUrl);
 
-        WebElement loginButton = findElement("xpath://input[@name='login_button']");
+        WebElement loginButton = findElement("xpath://input[@id='submitLogin']");
         if (loginButton != null) {
+            WebElement inputBuyerEmail = waitForElement("xpath://input[@id='login_email']");
+            WebElement inputBuyerPassword = waitForElement("xpath://input[@id='login_password']");
+            setInputFieldValue(inputBuyerEmail, buyerEmail);
+            setInputFieldValue(inputBuyerPassword, buyerPassword);
             takeScreenshot();
-            scrollAndClick(loginButton);
+            inputBuyerPassword.sendKeys(Keys.ENTER);
+            WebElement continueButton = waitForElement("xpath://input[@id='continue']");
+            takeScreenshot();
+            continueButton.click();
+        } else {
+            WebElement iframe = waitForElement("xpath://iframe[@name='injectedUl']");
+            getDriver().switchTo().frame(iframe);
+
+            WebElement inputBuyerEmail = waitForElement("xpath://input[@id='email']", null, true);
+            WebElement inputBuyerPassword = waitForElement("xpath://input[@id='password']", null, true);
+            setInputFieldValue(inputBuyerEmail, buyerEmail);
+            setInputFieldValue(inputBuyerPassword, buyerPassword);
+            takeScreenshot();
+            inputBuyerPassword.sendKeys(Keys.ENTER);
+            
+            getDriver().switchTo().parentFrame();
+            WebElement continueButton = waitForElement("xpath://input[@type='submit']");
+            takeScreenshot();
+            continueButton.click();
         }
 
-        WebElement submitButton = waitForElement("xpath://input[@id='submitLogin']");
-        WebElement inputBuyerEmail = waitForElement("xpath://input[@id='login_email']");
-        WebElement inputBuyerPassword = waitForElement("xpath://input[@id='login_password']");
-        setInputFieldValue(inputBuyerEmail, buyerEmail);
-        setInputFieldValue(inputBuyerPassword, buyerPassword);
-        takeScreenshot();
-        submitButton.click();
-
-        WebElement continueButton = waitForElement("xpath://input[@id='continue']");
-        takeScreenshot();
-        continueButton.click();
-
-        // SEPA confirmation (not working, remove bank account from test buyer as workaround)
+        // SEPA confirmation (not working, remove bank account from test buyer
+        // as workaround)
         WebElement acceptButton = findElement("xpath://input[@id='accept.x']");
         if (acceptButton != null) {
             takeScreenshot();
             acceptButton.click();
         }
-        
+
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
@@ -955,14 +979,14 @@ public class MerchantSDKTest extends SeleniumTestBase {
     }
 
     @SuppressWarnings("unused")
-	private void visitPayPalWebsiteAndConfirmAgreement(String ecToken)
-            throws WebElementNotFoundException, InterruptedException {
+    private void visitPayPalWebsiteAndConfirmAgreement(String ecToken)
+        throws WebElementNotFoundException, InterruptedException {
         visitPayPalWebsiteAndConfirmAgreement(ecToken,
-        		testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
+            testAccountsConfig.deBuyerEmail, testAccountsConfig.deBuyerPassword);
     }
 
     private void visitPayPalWebsiteAndConfirmAgreement(String ecToken, String buyerEmail, String buyerPassword)
-            throws WebElementNotFoundException, InterruptedException {
+        throws WebElementNotFoundException, InterruptedException {
         LOG.info("visitPayPalWebsiteAndConfirmAgreement()");
 
         String redirectUrl = config.ecRedirectUrl + ecToken;
@@ -970,27 +994,20 @@ public class MerchantSDKTest extends SeleniumTestBase {
         LOG.info("using paypal customer test account " + buyerEmail + " - " + buyerPassword);
         getDriver().get(redirectUrl);
 
-        WebElement loginButton = findElement("xpath://input[@name='login_button']");
-        if (loginButton != null) {
-            takeScreenshot();
-            scrollAndClick(loginButton);
-        }
-
-        WebElement submitButton = waitForElement("xpath://input[@id='submitLogin']");
         WebElement inputBuyerEmail = waitForElement("xpath://input[@id='login_email']");
         WebElement inputBuyerPassword = waitForElement("xpath://input[@id='login_password']");
         setInputFieldValue(inputBuyerEmail, buyerEmail);
         setInputFieldValue(inputBuyerPassword, buyerPassword);
         takeScreenshot();
-        submitButton.click();
+        inputBuyerPassword.sendKeys(Keys.ENTER);
 
         // only once per buyer account:
-        WebElement agreeButton = findElement("xpath://input[@id='agree']");
-        if (agreeButton != null) {
+        WebElement button = waitForElement("xpath://input[@id='agree']|//input[@id='continue']");
+        if (button.getAttribute("id").equals("agree")) {
             WebElement esignOptCheckbox = waitForElement("xpath://input[@id='esignOpt']");
             esignOptCheckbox.click();
             takeScreenshot();
-            agreeButton.click();
+            button.click();
         }
 
         WebElement continueButton = waitForElement("xpath://input[@id='continue']");
