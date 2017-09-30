@@ -683,7 +683,7 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>selenium-test-utils</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.opensagres.xdocreport.sfntly</groupId>
@@ -794,6 +794,11 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
                 <version>1.56</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.7.5</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -1023,12 +1028,12 @@
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-api</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-remote-driver</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

@@ -54,6 +54,11 @@ public class StringTest {
     }
 
     @Test
+    public void testStringFormatOctal() {
+        assertEquals("101", String.format("%o", 65));
+    }
+    
+    @Test
     public void testStringEqualsNull() {
         assertFalse("123".equals(null));
     }
@@ -139,12 +144,6 @@ public class StringTest {
         assertEquals(2, "    a   b   ".trim().split("\\s+").length);
     }
 
-    @Test
-    public void testStringFormatOctal() {
-        assertEquals("101", String.format("%o", 65));
-
-    }
-    
     @Test
     public void testStringCompareTo() {
         assertTrue("B".compareTo("A") > 0);

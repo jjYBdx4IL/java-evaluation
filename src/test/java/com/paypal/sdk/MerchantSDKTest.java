@@ -18,6 +18,7 @@ import com.paypal.exception.InvalidResponseDataException;
 import com.paypal.exception.MissingCredentialException;
 import com.paypal.exception.SSLConfigurationException;
 import com.paypal.sdk.exceptions.OAuthException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -111,7 +112,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
 
     @Before
     public void before() throws IOException {
-        assumeTrue(Surefire.isSingleTestExecution()); // don't run tests with
+        assumeTrue(Surefire.isSingleTestExecution() || Surefire.isEclipseDirectJUnit()); // don't run tests with
                                                       // unstable external
                                                       // dependencies in CI
 
@@ -119,6 +120,11 @@ public class MerchantSDKTest extends SeleniumTestBase {
         testAccountsConfig.read();
 
         service = new PayPalAPIInterfaceServiceService(config.getSDKProps());
+    }
+    
+    @After
+    public void after() {
+        stopDriver();
     }
 
     /**
@@ -532,10 +538,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
     }
 
     @Test
-    public void testPayPalSetExpressCheckoutSale()
-        throws WebElementNotFoundException, IOException, SSLConfigurationException, InvalidCredentialException,
-        HttpErrorException, InvalidResponseDataException, ClientActionRequiredException, MissingCredentialException,
-        OAuthException, ParserConfigurationException, InterruptedException, SAXException {
+    public void testPayPalSetExpressCheckoutSale() throws Exception {
 
         setTestName("PayPalExpressCheckoutSale");
 
@@ -939,9 +942,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
             setInputFieldValue(inputBuyerPassword, buyerPassword);
             takeScreenshot();
             inputBuyerPassword.sendKeys(Keys.ENTER);
-            WebElement continueButton = waitForElement("xpath://input[@id='continue']");
-            takeScreenshot();
-            continueButton.click();
+            click("xpath://input[@id='continue']");
         } else {
             WebElement iframe = waitForElement("xpath://iframe[@name='injectedUl']");
             getDriver().switchTo().frame(iframe);
@@ -954,17 +955,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
             inputBuyerPassword.sendKeys(Keys.ENTER);
             
             getDriver().switchTo().parentFrame();
-            WebElement continueButton = waitForElement("xpath://input[@type='submit']");
-            takeScreenshot();
-            continueButton.click();
-        }
-
-        // SEPA confirmation (not working, remove bank account from test buyer
-        // as workaround)
-        WebElement acceptButton = findElement("xpath://input[@id='accept.x']");
-        if (acceptButton != null) {
-            takeScreenshot();
-            acceptButton.click();
+            click("xpath://input[@type='submit']|//input[@id='proceedButton']");
         }
 
         waitUntil(new ExpectedCondition<Boolean>() {
@@ -1010,9 +1001,7 @@ public class MerchantSDKTest extends SeleniumTestBase {
             button.click();
         }
 
-        WebElement continueButton = waitForElement("xpath://input[@id='continue']");
-        takeScreenshot();
-        continueButton.click();
+        click("xpath://input[@id='continue']");
 
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
@@ -1024,4 +1013,5 @@ public class MerchantSDKTest extends SeleniumTestBase {
         takeScreenshot();
         LOG.info("return url: " + getDriver().getCurrentUrl());
     }
+    
 }
