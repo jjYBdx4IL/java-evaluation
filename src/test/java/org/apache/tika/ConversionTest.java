@@ -13,28 +13,30 @@ import java.io.ByteArrayInputStream;
 
 public class ConversionTest {
 
+    public static final String HTML_EXAMPLE = "<!DOCTYPE html><html>\n" +
+        "<head>\n" +
+        "<title> \n" +
+        " A Simple HTML Document\n" +
+        "</title>\n" +
+        "<meta name=\"robots\" content=\"noindex,noarchive\">\n" +
+        "<meta name=\"keywords\" content=\"abc,def\">\n" +
+        "</head>\n" +
+        "<body></div>\n" +
+        "<p>This is a very simple HTML document</p>\n" +
+        "<p>It only has two paragraphs &ouml;</p>\n" +
+        "</body>\n" +
+        "</html>";
+    
     @Test
     public void testHtmlToTextConversion() throws Exception {
-        ByteArrayInputStream bais = new ByteArrayInputStream(("<html>\n" +
-            "<head>\n" +
-            "<title> \n" +
-            " A Simple HTML Document\n" +
-            "</title>\n" +
-            "<meta name=\"robots\" content=\"noindex,noarchive\">\n" +
-            "<meta name=\"keywords\" content=\"abc,def\">\n" +
-            "</head>\n" +
-            "<body></div>\n" +
-            "<p>This is a very simple HTML document</p>\n" +
-            "<p>It only has two paragraphs</p>\n" +
-            "</body>\n" +
-            "</html>").getBytes());
+        ByteArrayInputStream bais = new ByteArrayInputStream(HTML_EXAMPLE.getBytes());
         BodyContentHandler contenthandler = new BodyContentHandler();
         Metadata metadata = new Metadata();
         AutoDetectParser parser = new AutoDetectParser();
         parser.parse(bais, contenthandler, metadata, new ParseContext());
         assertEquals("\nThis is a very simple HTML document\n" + 
             "\n" + 
-            "It only has two paragraphs\n" + 
+            "It only has two paragraphs ö\n" + 
             "\n", contenthandler.toString().replace("\r", ""));
         assertEquals("A Simple HTML Document", metadata.get("title"));
         assertEquals("A Simple HTML Document", metadata.get("dc:title"));

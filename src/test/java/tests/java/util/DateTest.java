@@ -42,13 +42,6 @@ public class DateTest {
     }
 
     @Test
-    public void testDateNewGivesCurrentTime() {
-        Date d = new Date();
-        long millis = System.currentTimeMillis();
-        assertTrue(d.getTime() <= millis && d.getTime() + 600L*1000L > millis);
-    }
-    
-    @Test
     public void testCalendarClearTimeZone() {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"), Locale.ROOT);
         cal.clear();
@@ -104,6 +97,25 @@ public class DateTest {
         assertEquals(0, c.getTimeInMillis());
         assertEquals(0, c.getTimeZone().getOffset(c.getTimeInMillis()));
         assertEquals(60*60*1000, TimeZone.getTimeZone("Europe/Berlin").getOffset(c.getTimeInMillis()));
+    }
+    
+    @Test
+    public void testClone() {
+        Date one = new Date(123);
+        Date two = (Date) one.clone();
+        assertEquals(123, two.getTime());
+        one.setTime(456);
+        assertEquals(456, one.getTime());
+        assertEquals(123, two.getTime());
+        
+        two = (Date) null;
+    }
+    
+    @Test
+    public void testDateNewGivesCurrentTime() {
+        Date d = new Date();
+        long millis = System.currentTimeMillis();
+        assertTrue(d.getTime() <= millis && d.getTime() + 600L*1000L > millis);
     }
     
     /**
