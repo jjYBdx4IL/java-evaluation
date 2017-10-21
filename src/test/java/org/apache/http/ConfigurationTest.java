@@ -7,6 +7,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.tika.io.IOUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -23,8 +24,9 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -52,6 +54,20 @@ public class ConfigurationTest extends AbstractHandler {
         server.stop();
     }
     
+    @Test
+    public void testSetClientReferer() throws IOException {
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(HttpHeaders.REFERER, "http://my.referer"));
+        try (CloseableHttpClient httpclient = HttpClients.custom().
+                setDefaultHeaders(headers).
+                build()) {
+            HttpGet httpGet = new HttpGet(getUrl("/200").toExternalForm());
+            try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
+                assertEquals(HttpServletResponse.SC_OK, response.getStatusLine().getStatusCode());
+            }
+        }
+    }
+
     @Test
     public void testSetClientTimeouts() throws IOException {
         RequestConfig requestConfig = RequestConfig.custom().

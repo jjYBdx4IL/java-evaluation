@@ -142,4 +142,19 @@ public class JsoupTest {
         assertEquals("/rez/style.css", imports.get(0).attr("href"));
         assertEquals("http://www.test.de/rez/style.css", imports.get(0).attr("abs:href"));
     }
+    
+    @Test
+    public void testText() {
+        Document doc = Jsoup.parse("<html><head>"
+            + "  <liNk type=\"text/css\" rel=\"stylesheet\" hrEf=\"/rez/style.css\" />"
+            + "  <scripT sRc=\"/rez/prettify.js\"></script>"
+            + "</head><body>"
+            + "  <script src=\"/rez/prettify2.js\"></script>"
+            + "  <iMg Src=\"somepic.png\" alt=\"desc\" />"
+            + "  <A Href=\"http://www.google.de\">google</a>"
+            + "<p>one</p><p>two</p><p>three<p>four"
+            + "</body></html>");
+        doc.setBaseUri("http://www.test.de");
+        assertEquals("google one two three four", doc.text());
+    }
 }
