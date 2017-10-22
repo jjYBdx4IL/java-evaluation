@@ -29,7 +29,7 @@ public class SitemapParserTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SitemapParserTest.class);
 
-    public static final String TEST_HOST = "https://www.ibm.com/";
+    public static final String TEST_HOST = "https://ibm.com/";
 
     private final Map<String, BaseRobotRules> robots = new HashMap<>();
 
@@ -62,6 +62,7 @@ public class SitemapParserTest {
                     + " " + hasAccess(url.getUrl().toExternalForm()));
             }
         }
+        LOG.info("TEST_HOST: " + hasAccess(TEST_HOST));
     }
 
     public List<String> getSitemaps(String urlString) throws Exception {
