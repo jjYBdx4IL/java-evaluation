@@ -74,10 +74,14 @@ public class ConfigurationTest extends AbstractHandler {
                 setConnectTimeout(30000).
                 setConnectionRequestTimeout(30000).
                 setSocketTimeout(30000).
+                setAuthenticationEnabled(false).
+                setContentCompressionEnabled(true).
+                setCircularRedirectsAllowed(false).
                 build();
 
         try (CloseableHttpClient httpclient = HttpClients.custom().
                 setDefaultRequestConfig(requestConfig).
+                disableCookieManagement().
                 build()) {
             HttpGet httpGet = new HttpGet(getUrl("/200").toExternalForm());
             try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
