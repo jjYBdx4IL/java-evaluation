@@ -669,7 +669,7 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>net-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
@@ -749,7 +749,7 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>text-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>

@@ -10,6 +10,6 @@ public class BasicURLNormalizerTest {
     @Test
     public void test() {
         BasicURLNormalizer normalizer = new BasicURLNormalizer();
-        assertEquals("http://ü", normalizer.filter("http://ü"));
+        assertEquals("http://ü/", normalizer.filter("http://ü"));
     }
 }
