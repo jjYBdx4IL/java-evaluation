@@ -37,8 +37,8 @@ public class URIBuilderTest {
     public void test2() throws URISyntaxException, MalformedURLException {
         URIBuilder b = new URIBuilder("http://host.com?a=+");
         b.addParameter("a", " ");
-        assertEquals("http://host.com/?a=+&a=+", b.toString());
-        assertEquals("http://host.com/?a=+&a=+", b.build().toString());
-        assertEquals("http://host.com/?a=+&a=+", b.build().toURL().toExternalForm());
+        assertEquals("http://host.com?a=+&a=+", b.toString());
+        assertEquals("http://host.com?a=+&a=+", b.build().toString());
+        assertEquals("http://host.com?a=+&a=+", b.build().toURL().toExternalForm());
     }
 }

@@ -172,7 +172,7 @@ public class FredClientTest extends InteractiveTestBase {
             	.series()
             	.observations()
                 .setApiKey(API_KEY)
-                .setSeriesId("GNPCA")
+                .setSeriesId("GNPA")
                 .doGet(Observations.class);
 
         Message content = observations.getMessage();
@@ -193,7 +193,7 @@ public class FredClientTest extends InteractiveTestBase {
 
         Observation obs2 = observationList.get(2);
 
-        assertEquals (new BigDecimal("912.9"), obs2.getValue());
+        assertEquals (new BigDecimal("77.906"), obs2.getValue());
     }
 
     @Test
@@ -220,7 +220,7 @@ public class FredClientTest extends InteractiveTestBase {
             	.series()
             	.observations()
                 .setApiKey(API_KEY)
-                .setSeriesId("GNPCA")
+                .setSeriesId("GNPA")
                 .doGet(Observations.class);
         
         //assertEquals(1, updateCount.get());
@@ -231,7 +231,7 @@ public class FredClientTest extends InteractiveTestBase {
         
         Observation obs2 = observationList.get(2);
         
-        assertEquals (new BigDecimal("912.9"), obs2.getValue());
+        assertEquals (new BigDecimal("77.906"), obs2.getValue());
         
         builder = new QueryBuilder(restTemplate, cacheProvider);
 
@@ -240,7 +240,7 @@ public class FredClientTest extends InteractiveTestBase {
 	        	.series()
 	        	.observations()
                 .setApiKey(API_KEY)
-                .setSeriesId("GNPCA")
+                .setSeriesId("GNPA")
                 .doGet(Observations.class);
         
         //assertEquals(1, updateCount.get());
@@ -251,7 +251,7 @@ public class FredClientTest extends InteractiveTestBase {
         
         obs2 = observationList.get(2);
         
-        assertEquals (new BigDecimal("912.9"), obs2.getValue());
+        assertEquals (new BigDecimal("77.906"), obs2.getValue());
         
         //assertEquals(1, updateCount.get());
     }

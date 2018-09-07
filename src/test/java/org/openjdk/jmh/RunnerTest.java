@@ -10,11 +10,7 @@ package org.openjdk.jmh;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -33,69 +29,78 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Github jjYBdx4IL Projects
  *
  */
 public class RunnerTest {
 
-	private static final Logger log = Logger.getLogger(RunnerTest.class);
-	
-	@Test
-	public void testRunner() throws RunnerException {
+    private static final Logger log = Logger.getLogger(RunnerTest.class);
+
+    @Test
+    public void testRunner() throws RunnerException {
+        // or set forks(0), https://github.com/melix/jmh-gradle-plugin/issues/103
+        System.setProperty("jmh.separateClasspathJAR", "true");
+        
         Options opt = new OptionsBuilder()
-                // Specify which benchmarks to run. 
-                // You can be more specific if you'd like to run only one benchmark per test.
-                .include(this.getClass().getName() + ".*")
-                // Set the following options as needed
-                .mode (Mode.AverageTime)
-                .timeUnit(TimeUnit.MICROSECONDS)
-                .warmupTime(TimeValue.milliseconds(100))
-                .warmupIterations(2)
-                .measurementTime(TimeValue.milliseconds(100))
-                .measurementIterations(10)
-                .threads(2)
-                .forks(1)
-                .shouldFailOnError(true)
-                .shouldDoGC(true)
-                //.jvmArgs("-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining")
-                //.addProfiler(WinPerfAsmProfiler.class)
-                .build();
+            // Specify which benchmarks to run.
+            // You can be more specific if you'd like to run only one benchmark
+            // per test.
+            .include(this.getClass().getName() + ".*")
+            // Set the following options as needed
+            .mode(Mode.AverageTime)
+            .timeUnit(TimeUnit.MICROSECONDS)
+            .warmupTime(TimeValue.milliseconds(100))
+            .warmupIterations(2)
+            .measurementTime(TimeValue.milliseconds(100))
+            .measurementIterations(10)
+            .threads(2)
+            .forks(1)
+            .shouldFailOnError(true)
+            .shouldDoGC(true)
+            // .jvmArgs("-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining")
+            // .addProfiler(WinPerfAsmProfiler.class)
+            .build();
 
         Runner r = new Runner(opt);
         RunResult result = r.runSingle();
         assertNotNull(result);
         for (BenchmarkResult br : result.getBenchmarkResults()) {
-        	log.info(br.getPrimaryResult());
-        	for (IterationResult res : br.getIterationResults()) {
-        		log.info(res.getPrimaryResult());
-        	}
+            log.info(br.getPrimaryResult());
+            for (IterationResult res : br.getIterationResults()) {
+                log.info(res.getPrimaryResult());
+            }
         }
-	}
-	
-	// The JMH samples are the best documentation for how to use it
-	// http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/
-	@State(Scope.Thread)
-	public static class BenchmarkState {
-		List<Integer> list;
+    }
 
-		@Setup(Level.Trial)
-		public void initialize() {
+    // The JMH samples are the best documentation for how to use it
+    // http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/
+    @State(Scope.Thread)
+    public static class BenchmarkState {
+        List<Integer> list;
 
-			Random rand = new Random();
+        @Setup(Level.Trial)
+        public void initialize() {
 
-			list = new ArrayList<>();
-			for (int i = 0; i < 1000; i++)
-				list.add(rand.nextInt());
-		}
-	}
+            Random rand = new Random();
 
-	@Benchmark
-	public void benchmark1(BenchmarkState state, Blackhole bh) {
+            list = new ArrayList<>();
+            for (int i = 0; i < 1000; i++)
+                list.add(rand.nextInt());
+        }
+    }
 
-		List<Integer> list = state.list;
+    @Benchmark
+    public void benchmark1(BenchmarkState state, Blackhole bh) {
 
-		for (int i = 0; i < 1000; i++)
-			bh.consume(list.get(i));
-	}
+        List<Integer> list = state.list;
+
+        for (int i = 0; i < 1000; i++)
+            bh.consume(list.get(i));
+    }
 }

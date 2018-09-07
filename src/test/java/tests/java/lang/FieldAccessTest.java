@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +25,9 @@ public class FieldAccessTest extends Compile {
 
     @Before
     public void before() throws IOException {
+        // too long commands on Windows...
+        Assume.assumeTrue(SystemUtils.IS_OS_UNIX);
+        
         FileUtils.cleanDirectory(tempDir);
         setClassOutputDir(tempDir);
     }

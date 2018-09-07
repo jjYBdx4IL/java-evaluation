@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -172,11 +173,14 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
 
         MethodAnnotationMatchProcessor matchProcessor = new MethodAnnotationMatchProcessor() {
             @Override
-            public void processMatch(Class<?> classRef, Method method) {
+            public void processMatch(Class<?> classRef, Executable method) {
                 try {
+                    if (method instanceof Method) {
+                        return;
+                    }
                     String fullResourcePath = getResourceUri(classRef);
                     if (fullResourcePath.startsWith(moduleUriPrefix)) {
-                        foundMethods.add(new MethodRef(classRef, method));
+                        foundMethods.add(new MethodRef(classRef, (Method) method));
                     }
                 } catch (Exception ex) {
                     LOG.error("", ex);
