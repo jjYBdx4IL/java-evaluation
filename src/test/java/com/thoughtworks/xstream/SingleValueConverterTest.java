@@ -32,6 +32,11 @@ public class SingleValueConverterTest extends XStreamTestBase {
 
         SingleValueConverterTest tester = new SingleValueConverterTest();
         XStream xstream = new XStream(new StaxDriver());
+        
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {
+            getClass().getPackage().getName() + ".**"
+        });
 
         Student student = tester.getStudentDetails();
 

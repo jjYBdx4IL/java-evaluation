@@ -27,6 +27,11 @@ public class SimpleTest extends XStreamTestBase {
         SimpleTest tester = new SimpleTest();
         XStream xstream = new XStream(new StaxDriver());
 
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {
+            getClass().getPackage().getName() + ".**"
+        });
+        
         Student student = tester.getStudentDetails();
 
         //Object to XML Conversion
@@ -48,6 +53,11 @@ public class SimpleTest extends XStreamTestBase {
         SimpleTest tester = new SimpleTest();
         XStream xstream = new XStream(new StaxDriver());
 
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {
+            getClass().getPackage().getName() + ".**"
+        });
+        
         Student student = tester.getStudentDetails();
         student.setRollNo(null);
 

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
+import com.github.jjYBdx4IL.utils.cfg.AbstractConfig;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,11 @@ public class AdvancedConverterTest extends XStreamTestBase {
 
         Student student = tester.getStudentDetails();
 
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {
+            getClass().getPackage().getName() + ".**"
+        });
+        
         xstream.autodetectAnnotations(true);
         xstream.registerConverter(new AdvancedAddressConverter());
 
