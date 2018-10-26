@@ -18,8 +18,6 @@ public class SingleTriangle3dTest extends LwjglTestBase {
 
     @Test
     public void test() throws Exception {
-        assumeTrue(Surefire.isSingleTestExecution());
-
         run();
     }
 

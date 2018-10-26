@@ -16,6 +16,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import com.github.jjYBdx4IL.utils.env.Surefire;
+
 /**
  * from
  * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/opengl/SimpleDrawElements.java
@@ -34,7 +36,7 @@ public abstract class LwjglTestBase {
 
     // The window handle
     private long window;
-    private int width, height;
+    private int width = 300, height = 300;
 
     // statistics
     private volatile int frameCount = 0;
@@ -80,11 +82,8 @@ public abstract class LwjglTestBase {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
                                                    // resizable
 
-        int WIDTH = 300;
-        int HEIGHT = 300;
-
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(width, height, "Hello World!", NULL, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -149,22 +148,29 @@ public abstract class LwjglTestBase {
     public abstract void loopInit();
 
     public abstract void loopIteration();
+    
+    public void loopExit() {};
 
     private void loop() {
         loopInit();
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
-            frameCount++;
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
-                                                                // framebuffer
-            glViewport(0, 0, getWidth(), getHeight());
-
-            loopIteration();
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
+        final long loopStopTime = Surefire.isSingleTestExecution() ? 0 : System.currentTimeMillis() + 1000L;
+        try {
+            // Run the rendering loop until the user has attempted to close
+            // the window or has pressed the ESCAPE key.
+            while (!glfwWindowShouldClose(window) && (loopStopTime == 0 || System.currentTimeMillis() < loopStopTime)) {
+                frameCount++;
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
+                                                                    // framebuffer
+                glViewport(0, 0, getWidth(), getHeight());
+    
+                loopIteration();
+    
+                // Poll for window events. The key callback above will only be
+                // invoked during this call.
+                glfwPollEvents();
+            }
+        } finally {
+            loopExit();
         }
     }
 

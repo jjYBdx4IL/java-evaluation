@@ -1,5 +1,6 @@
 package org.lwjgl;
 
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,9 @@ import static org.junit.Assume.assumeTrue;
 import org.junit.Test;
 
 /**
+ * Using Swing/AWT with lwjgl is NOT supported and will never work on MacOS and produce random problems elsewhere.
+ * DO NOT USE SWING/AWT/JavaFX with LWJGL.
+ * https://github.com/LWJGL/lwjgl3/issues/149
  *
  * @author jjYBdx4IL
  */
@@ -28,8 +32,6 @@ public class SingleTriangle2dWithJFrameTest extends SingleTriangle2dTest impleme
     @Test
     @Override
     public void test() throws InterruptedException, InvocationTargetException {
-        assumeTrue(Surefire.isSingleTestExecution());
-
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
@@ -57,6 +59,12 @@ public class SingleTriangle2dWithJFrameTest extends SingleTriangle2dTest impleme
             pack();
             setVisible(true);
         }
+    }
+    
+    @Override
+    public void loopExit() {
+        AWTUtils.close(frame);
+        super.loopExit();
     }
 
 }
