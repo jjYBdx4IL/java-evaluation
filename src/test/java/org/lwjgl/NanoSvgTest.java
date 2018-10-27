@@ -100,19 +100,21 @@ public class NanoSvgTest extends LwjglTestBase {
         glLoadIdentity();
         glOrtho(-aspect, aspect, -1, 1, -1, 1);
         
+        float zoom = (float) Math.sin(getElapsedTime()/100f);
+        
         glBegin(GL_QUADS);
         {
             glTexCoord2f(0.0f, 0.0f);
-            glVertex2f(-.8f, -.8f);
+            glVertex2f(-.8f*zoom, -.8f*zoom);
 
             glTexCoord2f(1.0f, 0.0f);
-            glVertex2f(.8f, -.8f);
+            glVertex2f(.8f*zoom, -.8f*zoom);
 
             glTexCoord2f(1.0f, 1.0f);
-            glVertex2f(0.8f, .8f);
+            glVertex2f(0.8f*zoom, .8f*zoom);
 
             glTexCoord2f(0.0f, 1.0f);
-            glVertex2f(-.8f, .8f);
+            glVertex2f(-.8f*zoom, .8f*zoom);
         }
         glEnd();
         
