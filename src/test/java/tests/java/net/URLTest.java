@@ -2,6 +2,7 @@ package tests.java.net;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -53,12 +54,14 @@ public class URLTest {
 
     @Test
     public void testUrlDecomposition() throws MalformedURLException {
-        URL url = new URL("http://some.server.de/pub/");
+        URL url = new URL("http://some.server.de/pub/?q&a=1");
         assertEquals(-1, url.getPort());
         assertEquals(80, url.getDefaultPort());
         assertEquals("some.server.de", url.getHost());
         assertEquals("/pub/", url.getPath());
         assertEquals("http", url.getProtocol());
+        assertEquals("q&a=1", url.getQuery());
+        assertEquals("/pub/?q&a=1", url.getFile());
 
         url = new URL("hTTp://some.server.DE/Pub/");
         assertEquals(-1, url.getPort());
@@ -66,7 +69,14 @@ public class URLTest {
         assertEquals("some.server.DE", url.getHost());
         assertEquals("/Pub/", url.getPath());
         assertEquals("http", url.getProtocol());
+        assertNull(url.getQuery());
 
+        url = new URL("http://some.server.de");
+        assertEquals("", url.getFile());
+        
+        url = new URL("http://some.server.de/");
+        assertEquals("/", url.getFile());
+        
         url = new URL("http://some.server.de:81/pub/");
         assertEquals(81, url.getPort());
         assertEquals(80, url.getDefaultPort());

@@ -2,6 +2,7 @@ package tests.java.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,5 +43,11 @@ public class FileTest {
         File targetDir = new File(Maven.getMavenTargetDir().getCanonicalPath() + File.separator);
         LOG.debug(targetDir.getCanonicalPath());
         assertFalse(targetDir.getCanonicalPath().endsWith(File.separator));
+    }
+    
+    @Test
+    public void testGetParent() {
+        assertEquals("a", new File("a/b").getParent());
+        assertNull(new File("b").getParent());
     }
 }

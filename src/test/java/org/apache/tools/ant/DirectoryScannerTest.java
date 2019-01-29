@@ -30,6 +30,7 @@ public class DirectoryScannerTest {
         scanner.setCaseSensitive(false);
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
+        assertTrue(files.length > 100);
         for (String s : files) {
             LOG.debug(s);
         }

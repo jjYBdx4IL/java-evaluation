@@ -36,13 +36,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author jjYBdx4IL
  */
-public class WebConsoleTest {
+public class EmbeddedTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebConsoleTest.class); 
+    private static final Logger LOG = LoggerFactory.getLogger(EmbeddedTest.class); 
     
-    private static final File TEST_DIR = Maven.getTempTestDir(WebConsoleTest.class);
+    private static final File TEST_DIR = Maven.getTempTestDir(EmbeddedTest.class);
     private static final File TEST_DB = new File(TEST_DIR, "h2db");
-    private static final File H2_WEB_PROPS_FILE = new File(TEST_DIR, Constants.SERVER_PROPERTIES_NAME);
     private static final String DB_URL = "jdbc:h2:" + TEST_DB.getAbsolutePath();
     private Connection conn = null;
 
@@ -52,7 +51,7 @@ public class WebConsoleTest {
         // this must be set before loading the h2 driver or any of its classes:
         System.setProperty("h2.bindAddress", "localhost");
         Class.forName(Driver.class.getName());
-        conn = DriverManager.getConnection(DB_URL);
+        conn = DriverManager.getConnection(DB_URL, "sa", "sa");
         conn.setAutoCommit(true);
     }
 
@@ -65,8 +64,6 @@ public class WebConsoleTest {
     
     @Test
     public void test() throws Exception {
-        assumeTrue(Surefire.isSingleTestExecution());
-        
         // first, make sure we have an existing database
         Statement stmt = conn.createStatement();
         // http://www.h2database.com/html/grammar.html#create_table
@@ -83,37 +80,5 @@ public class WebConsoleTest {
         assertEquals(1, rs.getInt(1));
         assertEquals("one", rs.getString(2));
         stmt.close();
-        
-        // inject connection settings into frontend config
-        Properties webServerProps = new Properties();
-        webServerProps.put("0", String.format(Locale.ROOT, "Generic H2 (Embedded)|org.h2.Driver|jdbc\\:h2\\:%s",
-                TEST_DB.getAbsolutePath().replace("\\", "\\\\").replace(":", "\\:")));
-        try (OutputStream os = new FileOutputStream(H2_WEB_PROPS_FILE)) {
-            webServerProps.store(os, "");
-        }
-         
-        Server server = new Server();
-        server.runTool("-web", "-webPort", "8083", "-ifExists", "-baseDir", TEST_DIR.getAbsolutePath(),
-                "-properties", TEST_DIR.getAbsolutePath());
-
-        URL url = new URL("http://localhost:8083");
-        Desktop.getDesktop().browse(url.toURI());
-        
-        LOG.info("end the test by shutting down the web server from the web server console!");
-        
-        while(isRunning(url)) {
-            Thread.sleep(1000L); 
-        }
-        server.stop();
     }
-    
-    private boolean isRunning(URL url) {
-        try {
-            IOUtils.toString(url, "UTF-8");
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-
 }

@@ -1,12 +1,4 @@
 package net.sourceforge.htmlunit;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import com.gargoylesoftware.htmlunit.AlertHandler;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.ScriptException;
-
 /*
  * #%L
  * Evaluation
@@ -15,6 +7,16 @@ import com.gargoylesoftware.htmlunit.ScriptException;
  * %%
  * #L%
  */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import com.gargoylesoftware.css.parser.CSSErrorHandler;
+import com.gargoylesoftware.css.parser.CSSException;
+import com.gargoylesoftware.css.parser.CSSParseException;
+import com.gargoylesoftware.htmlunit.AlertHandler;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.ScriptException;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -29,8 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.ErrorHandler;
 
 import java.net.InetAddress;
@@ -110,7 +110,7 @@ public class HtmlUnitTest {
                     LOG.error("loadScriptError(): ", exception);
                 }
             });
-            webClient.setCssErrorHandler(new ErrorHandler() {
+            webClient.setCssErrorHandler(new CSSErrorHandler() {
                 
                 @Override
                 public void warning(CSSParseException exception) throws CSSException {

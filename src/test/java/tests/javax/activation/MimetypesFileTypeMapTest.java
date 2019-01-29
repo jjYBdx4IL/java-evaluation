@@ -15,7 +15,7 @@ public class MimetypesFileTypeMapTest {
     public void test() throws IOException {
         MimetypesFileTypeMap map = new MimetypesFileTypeMap(getClass().getResourceAsStream("/META-INF/mimetypes.default"));
         FileTypeMap def = MimetypesFileTypeMap.getDefaultFileTypeMap();
-        assertEquals("application/octet-stream", def.getContentType("asd.png"));
+        assertEquals("image/png", def.getContentType("asd.png"));
         assertEquals("image/jpeg", def.getContentType("asd.jpg"));
         assertEquals("image/jpeg", def.getContentType("asd.jpeg"));
         assertEquals("image/jpeg", def.getContentType("asd.JPG"));

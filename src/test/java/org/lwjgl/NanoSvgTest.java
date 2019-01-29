@@ -172,7 +172,7 @@ public class NanoSvgTest extends LwjglTestBase {
         long t = System.nanoTime();
         nsvgRasterize(rast, svg, 0, 0, 1, img, w, h, w * 4);
         t = System.nanoTime() - t;
-        LOG.info(String.format(Locale.ROOT, "%dms\n", t / 1000 / 1000));
+        LOG.info(String.format(Locale.ROOT, "%.2fms", t * 1e-6));
         
         return img;
     }
@@ -222,7 +222,7 @@ public class NanoSvgTest extends LwjglTestBase {
         memFree(input_pixels);
 
         t = System.nanoTime() - t;
-        LOG.info(String.format(Locale.ROOT, "%dms\n", t / 1000 / 1000));
+        LOG.info(String.format(Locale.ROOT, "%.2fms\n", t * 1e-6));
 
         return texID;
     }    
