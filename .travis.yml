@@ -3,6 +3,7 @@ env:
   - PUBLIC_CI=true
 jdk:
   - oraclejdk8
+  - openjdk11
 before_install:
   - git clone https://github.com/jjYBdx4IL/misc
   - mvn install -f misc/release-parent >& log || tail -n1000 log
