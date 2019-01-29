@@ -1,5 +1,9 @@
 package tests.javax.sound.sampled;
 
+import static org.junit.Assume.assumeFalse;
+
+import com.github.jjYBdx4IL.utils.env.CI;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,11 @@ import javax.sound.sampled.Port;
 public class MixerInfoTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MixerInfoTest.class);
+    
+    @Before
+    public void before() {
+        assumeFalse(CI.isPublic());
+    }
     
     @Test
     public void testGetMixerInfo() throws LineUnavailableException {

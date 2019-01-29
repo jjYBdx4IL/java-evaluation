@@ -1,5 +1,6 @@
 package org.lwjgl;
 
+import org.junit.Before;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
@@ -12,10 +13,12 @@ import java.util.Locale;
 
 import javax.swing.Timer;
 
+import static org.junit.Assume.assumeFalse;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import com.github.jjYBdx4IL.utils.env.CI;
 import com.github.jjYBdx4IL.utils.env.Surefire;
 
 /**
@@ -43,6 +46,11 @@ public abstract class LwjglTestBase {
     private long startTimeMs = 0;
     private static final int LOG_FPS_IVAL_MS = 10000;
 
+    @Before
+    public void before() {
+        assumeFalse(CI.isPublic());
+    }
+    
     public void run() {
         try {
             init();
