@@ -13,6 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Mode;
@@ -28,6 +29,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import testgroup.RequiresIsolatedVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +40,10 @@ import java.util.concurrent.TimeUnit;
  * @author Github jjYBdx4IL Projects
  *
  */
+@Category(RequiresIsolatedVM.class)
 public class RunnerTest {
 
-    private static final Logger log = Logger.getLogger(RunnerTest.class);
+    private static final Logger LOG = Logger.getLogger(RunnerTest.class);
 
     @Test
     public void testRunner() throws RunnerException {
@@ -71,9 +74,9 @@ public class RunnerTest {
         RunResult result = r.runSingle();
         assertNotNull(result);
         for (BenchmarkResult br : result.getBenchmarkResults()) {
-            log.info(br.getPrimaryResult());
+            LOG.info(br.getPrimaryResult());
             for (IterationResult res : br.getIterationResults()) {
-                log.info(res.getPrimaryResult());
+                LOG.info(res.getPrimaryResult());
             }
         }
     }

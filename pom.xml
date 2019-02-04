@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jjYBdx4IL.evaluation</groupId>
@@ -57,14 +56,82 @@
                     <verbose>false</verbose>
                 </configuration>
             </plugin>
-                    
+
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                    <execution>
+                        <id>default-verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                    <skipTests>${skipITs}</skipTests>
+                    <failIfNoTests>true</failIfNoTests>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <reuseForks>true</reuseForks>
+                            <excludedGroups>testgroup.RequiresIsolatedVM,testgroup.IgnoreFailure</excludedGroups>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ignore-failure</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <reuseForks>false</reuseForks>
+                            <groups>testgroup.IgnoreFailure</groups>
+                            <excludedGroups>testgroup.RequiresIsolatedVM</excludedGroups>
+                            <testFailureIgnore>true</testFailureIgnore>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-isolated</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                                <!-- required because lwjgl and swing/awt don't work 
+                                    together: -->
+                            <reuseForks>false</reuseForks>
+                            <groups>testgroup.RequiresIsolatedVM</groups>
+                            <excludedGroups>testgroup.IgnoreFailure</excludedGroups>
+                            <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <systemPropertyVariables>
                         <jna.debug_load>true</jna.debug_load>
                     </systemPropertyVariables>
                     <argLine>-Djava.library.path=${project.build.directory}/natives</argLine>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <reportFormat>plain</reportFormat>
+                    <reuseForks>false</reuseForks>
+                    <forkCount>1</forkCount>
+                    <failIfNoTests>true</failIfNoTests>
+                    <excludedGroups>testgroup.IT</excludedGroups>
                 </configuration>
             </plugin>
 
@@ -153,7 +220,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.9</version>
+                    <version>3.0.0-M1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
@@ -161,7 +228,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.22.1</version>
+                    <version>3.0.0-M3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -224,13 +291,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.1</version>
-                    <configuration>
-                        <forkCount>1C</forkCount>
-                        <!-- required because lwjgl and swing/awt don't work 
-                            together: -->
-                        <reuseForks>false</reuseForks>
-                    </configuration>
+                    <version>3.0.0-M3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
@@ -380,7 +441,7 @@
             <groupId>com.iterable</groupId>
             <artifactId>guava-bursty-rate-limiter</artifactId>
             <version>0.1.1</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -841,6 +902,12 @@
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.surefire/surefire-report-parser -->
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-report-parser</artifactId>
+            <version>3.0.0-M3</version>
         </dependency>
         <dependency>
             <groupId>org.tmatesoft.svnkit</groupId>
@@ -1307,7 +1374,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>    
+    <profiles>
         <profile>
             <id>only-eclipse</id>
             <activation>

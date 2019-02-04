@@ -10,9 +10,13 @@ package tests.java.lang;
  */
 
 import org.junit.Test;
+
+import java.util.Properties;
+
 import static org.junit.Assert.*;
 
 public class SysPropsTest {
+    
     @Test
     public void test() {
         final String propname = "de.mGithub jjYBdx4IL Projects.test.set.prop.to.null";
@@ -24,5 +28,11 @@ public class SysPropsTest {
         assertEquals("123", System.getProperty(propname));
         System.clearProperty(propname);
         assertNull(System.getProperty(propname));
+    }
+    
+    @Test
+    public void testListProperties() {
+        Properties p = System.getProperties();
+        p.list(System.out);
     }
 }

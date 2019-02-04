@@ -1,9 +1,8 @@
 package tests.javax.sound.sampled;
 
-import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
-import com.github.jjYBdx4IL.utils.env.CI;
-import org.junit.Before;
+import com.github.jjYBdx4IL.utils.env.Surefire;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +19,10 @@ public class MixerInfoTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MixerInfoTest.class);
     
-    @Before
-    public void before() {
-        assumeFalse(CI.isPublic());
-    }
-    
     @Test
     public void testGetMixerInfo() throws LineUnavailableException {
+        assumeTrue(Surefire.isSingleTestExecution());
+        
         for (Info info : AudioSystem.getMixerInfo()) {
             LOG.info("" + info);
             for (Line.Info i : AudioSystem.getMixer(info).getSourceLineInfo()) {

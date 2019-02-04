@@ -16,9 +16,13 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TestRule;
+import testgroup.RequiresIsolatedVM;
+
 import static org.junit.runner.JUnitCore.runClasses;
 
+@Category(RequiresIsolatedVM.class)
 public class TestWatcherTest {
 
     public static class TestWatcherTestProper {
