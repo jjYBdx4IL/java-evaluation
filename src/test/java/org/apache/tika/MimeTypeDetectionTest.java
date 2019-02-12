@@ -28,5 +28,6 @@ public class MimeTypeDetectionTest {
         File jpegFile = new File(
                 new File(CssBoxTest.getLocalExampleHomepageRoot(), "cssbox_homepage_files"), "137");
         assertEquals("image/jpeg", tika.detect(jpegFile));
+        assertEquals("application/rtf", tika.detect(new File("src/test/resources/message.rtf")));
     }
 }

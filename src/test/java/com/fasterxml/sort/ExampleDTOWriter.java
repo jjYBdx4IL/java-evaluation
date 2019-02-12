@@ -3,7 +3,6 @@ package com.fasterxml.sort;
 import org.apache.tika.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 

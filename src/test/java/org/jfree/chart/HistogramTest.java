@@ -8,18 +8,15 @@
  */
 package org.jfree.chart;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import org.apache.commons.math3.random.GaussianRandomGenerator;
 import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.github.jjYBdx4IL.utils.junit4.Screenshot;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -27,7 +24,7 @@ import com.github.jjYBdx4IL.utils.junit4.Screenshot;
  */
 public class HistogramTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HistogramTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(HistogramTest.class);
 	private static final int NUM_VALUES = 10000;
 	
 	@Test
@@ -46,8 +43,7 @@ public class HistogramTest {
 				dataset,
 				PlotOrientation.VERTICAL,
 				false, false, false);
-		File output = new File(Screenshot.getMavenScreenshotOutputDir(), getClass().getName()+".png");
-		LOG.info("" + output);
-		ChartUtilities.saveChartAsPNG(output, chart, 1024, 768);
+		ChartUtilities.saveChartAsPNG(new File(TEMP_DIR, "HistogramTest.png"), chart, 640, 480);
+		// @insert:image:HistogramTest.png@
 	}
 }

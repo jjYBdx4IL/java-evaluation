@@ -8,9 +8,14 @@
  */
 package com.coherentlogic.fred;
 
+import static com.coherentlogic.coherent.data.model.core.util.Utils.using;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.coherentlogic.coherent.data.model.core.cache.CacheServiceProviderSpecification;
 import com.coherentlogic.coherent.data.model.core.cache.MapCompliantCacheServiceProvider;
-import static com.coherentlogic.coherent.data.model.core.util.Utils.*;
 import com.coherentlogic.fred.client.core.builders.QueryBuilder;
 import com.coherentlogic.fred.client.core.domain.Categories;
 import com.coherentlogic.fred.client.core.domain.Category;
@@ -29,17 +34,6 @@ import com.coherentlogic.fred.client.core.domain.Unit;
 import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
@@ -50,50 +44,58 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
-import org.mapdb.MapModificationListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
- * Based on: http://sourceforge.net/p/clfredclient/code/259/tree/trunk/fred-client-core-it/src/test/java/com/coherentlogic/fred/client/core/builders/QueryBuilderTest.java
+ * Based on:
+ * http://sourceforge.net/p/clfredclient/code/259/tree/trunk/fred-client-core-it/src/test/java/com/coherentlogic/fred/client/core/builders/QueryBuilderTest.java
  *
  * @author Github jjYBdx4IL Projects
  */
+// @disable:output@
 @SuppressWarnings("unused")
 public class FredClientTest extends InteractiveTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FredClientTest.class);
+    private static final File TEMP_DIR = Maven.getTempTestDir(FredClientTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FredClientTest.class);
     public final static String FRED_API_KEY = "FRED_API_KEY";
     public final static String FRED_API_TESTKEY = "e3aa92f92406f8d46fd1ce8341e40eb8";
     public final static String FRED_REST_TEMPLATE_ID = "fredRestTemplate";
     private final static String API_KEY;
     private final static Date REALTIME_START = using(2001, Calendar.JANUARY, 20);
     private final static Date REALTIME_END = using(2004, Calendar.MAY, 17);
-	
+
     static {
         API_KEY = System.getenv(FRED_API_KEY) != null
-                ? System.getenv(FRED_API_KEY)
-                : FRED_API_TESTKEY;
+            ? System.getenv(FRED_API_KEY)
+            : FRED_API_TESTKEY;
     }
-    private final ApplicationContext context
-            = new FileSystemXmlApplicationContext(
-                    "src/test/resources/com/coherentlogic/fred/application-context.xml");
+    private final ApplicationContext context = new FileSystemXmlApplicationContext(
+        "src/test/resources/com/coherentlogic/fred/application-context.xml");
 
     private RestTemplate restTemplate = null;
 
     @Before
     public void setUp() throws Exception {
         restTemplate = (RestTemplate) context.getBean(FRED_REST_TEMPLATE_ID);
-
     }
 
     @After
@@ -106,14 +108,14 @@ public class FredClientTest extends InteractiveTestBase {
         assertNotNull(restTemplate);
 
         QueryBuilder builder = new QueryBuilder(restTemplate);
-        
+
         Seriess result = builder
-        		.series()
-                .setApiKey(API_KEY)
-                .setSeriesId("GNPCA")
-                .setRealtimeStart(REALTIME_START)
-                .setRealtimeEnd(REALTIME_END)
-                .doGet(Seriess.class);
+            .series()
+            .setApiKey(API_KEY)
+            .setSeriesId("GNPCA")
+            .setRealtimeStart(REALTIME_START)
+            .setRealtimeEnd(REALTIME_END)
+            .doGet(Seriess.class);
 
         Date realtimeStartDate = result.getRealtimeStart();
         Date realtimeEndDate = result.getRealtimeEnd();
@@ -131,7 +133,7 @@ public class FredClientTest extends InteractiveTestBase {
         assertEquals("Billions of Chained 2000 Dollars", seriesOne.getUnits());
         assertEquals("Bil. of Chn. 2000 $", seriesOne.getUnitsShort());
         assertEquals(
-                "Not Seasonally Adjusted", seriesOne.getSeasonalAdjustment());
+            "Not Seasonally Adjusted", seriesOne.getSeasonalAdjustment());
         assertEquals("NSA", seriesOne.getSeasonalAdjustmentShort());
         // Popularity may change so we'll just check for null.
         assertNotNull(seriesOne.getPopularity());
@@ -143,13 +145,13 @@ public class FredClientTest extends InteractiveTestBase {
         QueryBuilder builder = new QueryBuilder(restTemplate);
 
         Categories categories = builder
-        		.series()
-        		.categories()
-                .setApiKey(API_KEY)
-                .setSeriesId("EXJPUS")
-                .setRealtimeStart(REALTIME_START)
-                .setRealtimeEnd(REALTIME_END)
-                .doGet(Categories.class);
+            .series()
+            .categories()
+            .setApiKey(API_KEY)
+            .setSeriesId("EXJPUS")
+            .setRealtimeStart(REALTIME_START)
+            .setRealtimeEnd(REALTIME_END)
+            .doGet(Categories.class);
 
         List<Category> categoryList = categories.getCategoryList();
 
@@ -163,21 +165,20 @@ public class FredClientTest extends InteractiveTestBase {
     }
 
     @Test
-    public void getSeriesObservationsExpectingXML () {
+    public void getSeriesObservationsExpectingXML() {
 
         QueryBuilder builder = new QueryBuilder(restTemplate);
 
-        Observations observations =
-            builder
-            	.series()
-            	.observations()
-                .setApiKey(API_KEY)
-                .setSeriesId("GNPA")
-                .doGet(Observations.class);
+        Observations observations = builder
+            .series()
+            .observations()
+            .setApiKey(API_KEY)
+            .setSeriesId("GNPA")
+            .doGet(Observations.class);
 
         Message content = observations.getMessage();
 
-        assertNull (content);
+        assertNull(content);
 
         assertEquals(Unit.lin, observations.getUnits());
         assertEquals(
@@ -193,71 +194,69 @@ public class FredClientTest extends InteractiveTestBase {
 
         Observation obs2 = observationList.get(2);
 
-        assertEquals (new BigDecimal("77.906"), obs2.getValue());
+        assertEquals(new BigDecimal("77.906"), obs2.getValue());
     }
 
     @Test
-    public void getSeriesObservationsExpectingXMLAndUsingACache () {
+    public void getSeriesObservationsExpectingXMLAndUsingACache() {
 
         final AtomicInteger updateCount = new AtomicInteger(0);
 
-        File dbFile = new File(Maven.getTempTestDir(FredClientTest.class), "db");
+        File dbFile = new File(TEMP_DIR, "db");
 
         DB db = DBMaker
-                .fileDB(dbFile)
-                .closeOnJvmShutdown()
-                .make();
+            .fileDB(dbFile)
+            .closeOnJvmShutdown()
+            .make();
         final HTreeMap<String, Object> cacheMap = (HTreeMap<String, Object>) db.hashMap("map").createOrOpen();
-        CacheServiceProviderSpecification<String, Object> cacheProvider =
-            new MapCompliantCacheServiceProvider<> (cacheMap);
+        CacheServiceProviderSpecification<String, Object> cacheProvider = new MapCompliantCacheServiceProvider<>(
+            cacheMap);
 
         QueryBuilder builder = new QueryBuilder(restTemplate, cacheProvider);
 
         assertEquals(0, updateCount.get());
-        
-        Observations observations =
-            builder
-            	.series()
-            	.observations()
-                .setApiKey(API_KEY)
-                .setSeriesId("GNPA")
-                .doGet(Observations.class);
-        
-        //assertEquals(1, updateCount.get());
+
+        Observations observations = builder
+            .series()
+            .observations()
+            .setApiKey(API_KEY)
+            .setSeriesId("GNPA")
+            .doGet(Observations.class);
+
+        // assertEquals(1, updateCount.get());
 
         assertTrue(observations.getCount() >= 87);
 
         List<Observation> observationList = observations.getObservationList();
-        
+
         Observation obs2 = observationList.get(2);
-        
-        assertEquals (new BigDecimal("77.906"), obs2.getValue());
-        
+
+        assertEquals(new BigDecimal("77.906"), obs2.getValue());
+
         builder = new QueryBuilder(restTemplate, cacheProvider);
 
-        observations =
-            builder
-	        	.series()
-	        	.observations()
-                .setApiKey(API_KEY)
-                .setSeriesId("GNPA")
-                .doGet(Observations.class);
-        
-        //assertEquals(1, updateCount.get());
+        observations = builder
+            .series()
+            .observations()
+            .setApiKey(API_KEY)
+            .setSeriesId("GNPA")
+            .doGet(Observations.class);
+
+        // assertEquals(1, updateCount.get());
 
         assertTrue(observations.getCount() >= 87);
 
         observationList = observations.getObservationList();
-        
+
         obs2 = observationList.get(2);
-        
-        assertEquals (new BigDecimal("77.906"), obs2.getValue());
-        
-        //assertEquals(1, updateCount.get());
+
+        assertEquals(new BigDecimal("77.906"), obs2.getValue());
+
+        // assertEquals(1, updateCount.get());
     }
 
     @Test
-    public void getSeriesSearch () {
+    public void getSeriesSearch() {
 
         QueryBuilder builder = new QueryBuilder(restTemplate);
 
@@ -265,87 +264,88 @@ public class FredClientTest extends InteractiveTestBase {
             .series()
             .search()
             .setApiKey(API_KEY)
-//            .setSearchText("money stock")
-//            .setSearchType(SearchType.fullText)
+            // .setSearchText("money stock")
+            // .setSearchType(SearchType.fullText)
             .setSearchText("GOLD")
             .setSearchType(SearchType.seriesId)
             // https://research.stlouisfed.org/docs/api/fred/realtime_period.html
-//            .setRealtimeStart("1800-01-01")
-//            .setRealtimeEnd("9999-12-31")
+            // .setRealtimeStart("1800-01-01")
+            // .setRealtimeEnd("9999-12-31")
             .setLimit(1000)
             .setOffset(0)
             .setOrderBy(OrderBy.searchRank)
             .setSortOrder(SortOrder.desc)
-//            .setFilterVariable(FilterVariable.frequency)
-//            .setFilterValue(FilterValue.all)
+            // .setFilterVariable(FilterVariable.frequency)
+            // .setFilterValue(FilterValue.all)
             .doGet(Seriess.class);
 
-        assertNotNull (seriess);
-        //assertEquals(FilterValue.all, seriess.getFilterValue());
+        assertNotNull(seriess);
+        // assertEquals(FilterValue.all, seriess.getFilterValue());
         assertEquals(OrderBy.searchRank, seriess.getOrderBy());
         assertEquals(SortOrder.desc, seriess.getSortOrder());
         assertTrue(seriess.getCount() > 20);
-        //assertEquals(FilterValue.all, seriess.getFilterValue());
+        // assertEquals(FilterValue.all, seriess.getFilterValue());
         assertEquals(0, seriess.getOffset());
         assertEquals(1000, seriess.getLimit());
-        
+
         assertTrue(seriess.getSeriesList().size() > 20);
     }
-    
+
     @Test
     public void plotRussell2000TotalMarketIndex() throws InvocationTargetException, InterruptedException, IOException {
-    	openWindow();
+        openWindow();
 
-    	final String seriesId = "RU2000TR";
-    	
+        final String seriesId = "RU2000TR";
+
         QueryBuilder builder = new QueryBuilder(restTemplate);
 
-        Observations observations =
-            builder
-            	.series()
-            	.observations()
-                .setApiKey(API_KEY)
-                .setSeriesId(seriesId)
-                .setSortOrder(SortOrder.asc)
-                .setOrderBy(OrderBy.observationDate)
-                .doGet(Observations.class);
-        
+        Observations observations = builder
+            .series()
+            .observations()
+            .setApiKey(API_KEY)
+            .setSeriesId(seriesId)
+            .setSortOrder(SortOrder.asc)
+            .setOrderBy(OrderBy.observationDate)
+            .doGet(Observations.class);
+
         assertTrue(observations.getCount() > 100);
 
         List<Observation> observationList = observations.getObservationList();
-        
+
         Observation obs1 = observationList.get(0);
         Observation obs2 = observationList.get(1);
-        
-        assertEquals (new BigDecimal("100.00"), obs1.getValue());
-        assertEquals (null, obs2.getValue());
-        
-        final TimeSeries series = new TimeSeries( seriesId );
-        RegularTimePeriod current = new Day( );
+
+        assertEquals(new BigDecimal("100.00"), obs1.getValue());
+        assertEquals(null, obs2.getValue());
+
+        final TimeSeries series = new TimeSeries(seriesId);
+        RegularTimePeriod current = new Day();
         double startValue = observations.getObservationList().get(0).getValue().doubleValue();
         for (Observation obs : observations.getObservationList()) {
-        	if (obs.getValue() == null) {
-        		continue;
-        	}
-        	series.add( new Day(obs.getDate()), obs.getValue().doubleValue() );
+            if (obs.getValue() == null) {
+                continue;
+            }
+            series.add(new Day(obs.getDate()), obs.getValue().doubleValue());
         }
-        
+
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-        		seriesId,
-        		"Time",
-        		String.format("Value (Start=%.2f)", startValue),
-        		(XYDataset) new TimeSeriesCollection(series),
-        		false,
-        		false,
-        		false);
+            seriesId,
+            "Time",
+            String.format("Value (Start=%.2f)", startValue),
+            (XYDataset) new TimeSeriesCollection(series),
+            false,
+            false,
+            false);
+        
+        File output = new File(TEMP_DIR, "plotRussell2000TotalMarketIndexDirect.png");
+        ChartUtilities.saveChartAsPNG(output, chart, 640, 480);
+        // @insert:image:plotRussell2000TotalMarketIndexDirect.png@
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         append(chartPanel);
-        
+
         Screenshot.takeDesktopScreenshot("plotRussell2000TotalMarketIndex", true);
-        File output = new File(Screenshot.getMavenScreenshotOutputDir(), "plotRussell2000TotalMarketIndexDirect.png");
-        ChartUtilities.saveChartAsPNG(output, chart, 1024, 768);
         waitForWindowClosingManual();
     }
 }

@@ -10,6 +10,7 @@ package org.jfree.chart;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jfree.chart.title.LegendTitle;
@@ -18,7 +19,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.junit.Test;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
@@ -26,19 +27,20 @@ import com.github.jjYBdx4IL.utils.junit4.Screenshot;
  * @author Github jjYBdx4IL Projects
  */
 public class LegendTest extends TestBase {
+    private static final File TEMP_DIR = Maven.getTempTestDir(LegendTest.class);
 
     @Test
     public void testManualLegendCreation() throws InvocationTargetException, InterruptedException {
         openWindow();
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(getClass().getCanonicalName(),
-      	      "Time",
-      	      "Value",
-      	      (XYDataset) new TimeSeriesCollection(getTimeSeries()),
-      	      false,
-      	      false,
-      	      false);
-        
+            "Time",
+            "Value",
+            (XYDataset) new TimeSeriesCollection(getTimeSeries()),
+            false,
+            false,
+            false);
+
         LegendTitle legend = new LegendTitle(chart.getPlot());
         legend.setItemFont(new Font("Arial", Font.PLAIN, 12));
         legend.setBorder(0, 0, 0, 0);
@@ -55,7 +57,9 @@ public class LegendTest extends TestBase {
         append(chartPanel);
 
         Screenshot.takeDesktopScreenshot("testTimeSeriesChart", true);
-        waitForWindowClosingManual();
+        writeWindowAsPng(new File(TEMP_DIR, "testManualLegendCreation.png"));
+        // @insert:image:testManualLegendCreation.png@
+        waitForWindowClosing();
     }
 
     @Test
@@ -63,18 +67,20 @@ public class LegendTest extends TestBase {
         openWindow();
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(getClass().getCanonicalName(),
-      	      "Time",
-      	      "Value",
-      	      (XYDataset) new TimeSeriesCollection(getTimeSeries()),
-      	      true,
-      	      false,
-      	      false);
-        
+            "Time",
+            "Value",
+            (XYDataset) new TimeSeriesCollection(getTimeSeries()),
+            true,
+            false,
+            false);
+
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         append(chartPanel);
 
         Screenshot.takeDesktopScreenshot("testTimeSeriesChart", true);
-        waitForWindowClosingManual();
+        writeWindowAsPng(new File(TEMP_DIR, "testImplicitLegendCreation.png"));
+        // @insert:image:testImplicitLegendCreation.png@
+        waitForWindowClosing();
     }
 }

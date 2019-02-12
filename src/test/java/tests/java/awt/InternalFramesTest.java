@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeFalse;
 
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.math.LineFeedPacking;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.JDesktopPane;
@@ -23,6 +25,7 @@ import javax.swing.JInternalFrame;
 
 public class InternalFramesTest {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(InternalFramesTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(InternalFramesTest.class);
 
     @Before
@@ -54,7 +57,9 @@ public class InternalFramesTest {
             }
         }); 
         
-        AWTUtils.showFrameAndWaitForCloseByUserTest(outerFrame);
+        File png = new File(TEMP_DIR, "InternalFramesTest.png");
+        AWTUtils.showFrameAndWaitForCloseByUserTest(outerFrame, png);
+        //@insert:image:InternalFramesTest.png@
     }
 
     JInternalFrame create(String title, int w, int h) {

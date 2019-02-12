@@ -22,11 +22,13 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.github.jjYBdx4IL.utils.awt.FontScanner;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 public class FontTest extends InteractiveTestBase {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(FontTest.class);
     private static final Logger log = Logger.getLogger(FontTest.class.getName());
     private static final int MAX_COUNT = 100;
 
@@ -61,6 +63,8 @@ public class FontTest extends InteractiveTestBase {
         }
 
         Screenshot.takeDesktopScreenshot(FontTest.class.getName() + ".png", true);
+        writeWindowAsPng(new File(TEMP_DIR, "FontTest.png"));
+        // @insert:image:FontTest.png@
         waitForWindowClosing();
     }
 }

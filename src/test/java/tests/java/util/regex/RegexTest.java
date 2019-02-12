@@ -27,6 +27,8 @@ public class RegexTest extends RegularExpressionTestBase {
     public void testBrackets() {
         assertTrue(Pattern.compile("^[,\\s]+$").matcher("\t ,").find());
         assertFalse(Pattern.compile("^[,\\s]+$").matcher("\ta ,").find());
+        assertFalse(Pattern.compile("^[.]+$").matcher("a").find());
+        assertTrue(Pattern.compile("^[.]+$").matcher(".").find());
     }
     
     @Test

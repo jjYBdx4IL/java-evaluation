@@ -1,7 +1,5 @@
 package com.fasterxml.sort;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;

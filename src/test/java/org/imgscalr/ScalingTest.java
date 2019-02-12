@@ -6,6 +6,7 @@ import com.github.jjYBdx4IL.test.GraphicsResource;
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import com.github.jjYBdx4IL.utils.awt.MdiAutoScaleFrame;
 import com.github.jjYBdx4IL.utils.awt.MdiInternalImageFrame;
+import com.github.jjYBdx4IL.utils.env.Maven;
 import org.imgscalr.Scalr.Method;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +14,10 @@ import org.junit.Test;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class ScalingTest {
+    private static final File TEMP_DIR = Maven.getTempTestDir(ScalingTest.class);
 
     @Before
     public void before() {
@@ -33,7 +36,8 @@ public class ScalingTest {
         frame.add(create("input", img));
         frame.add(create("output", output));
 
-        AWTUtils.showFrameAndWaitForCloseByUserTest(frame);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(frame, new File(TEMP_DIR, "testScaling.png"));
+        // @insert:image:testScaling.png@
     }
 
     MdiInternalImageFrame create(String title, BufferedImage img) {

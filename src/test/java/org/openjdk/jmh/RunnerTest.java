@@ -10,7 +10,6 @@ package org.openjdk.jmh;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -24,14 +23,18 @@ import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.BenchmarkResult;
 import org.openjdk.jmh.results.IterationResult;
 import org.openjdk.jmh.results.RunResult;
+import org.openjdk.jmh.results.format.ResultFormatFactory;
+import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.options.VerboseMode;
 import testgroup.RequiresIsolatedVM;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -66,6 +69,7 @@ public class RunnerTest {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
+            .verbosity(VerboseMode.SILENT)
             // .jvmArgs("-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining")
             // .addProfiler(WinPerfAsmProfiler.class)
             .build();
@@ -73,6 +77,12 @@ public class RunnerTest {
         Runner r = new Runner(opt);
         RunResult result = r.runSingle();
         assertNotNull(result);
+        
+        ResultFormatFactory.getInstance(ResultFormatType.TEXT, System.out).writeOut(Arrays.asList(result));
+        ResultFormatFactory.getInstance(ResultFormatType.JSON, System.out).writeOut(Arrays.asList(result));
+        ResultFormatFactory.getInstance(ResultFormatType.CSV, System.out).writeOut(Arrays.asList(result));
+        ResultFormatFactory.getInstance(ResultFormatType.SCSV, System.out).writeOut(Arrays.asList(result));
+        
         for (BenchmarkResult br : result.getBenchmarkResults()) {
             LOG.info(br.getPrimaryResult());
             for (IterationResult res : br.getIterationResults()) {

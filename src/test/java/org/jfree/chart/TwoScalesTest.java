@@ -9,6 +9,7 @@
 package org.jfree.chart;
 
 import java.awt.Color;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jfree.chart.axis.NumberAxis;
@@ -17,7 +18,7 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.junit.Test;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 /**
@@ -25,7 +26,8 @@ import com.github.jjYBdx4IL.utils.junit4.Screenshot;
  * @author Github jjYBdx4IL Projects
  */
 public class TwoScalesTest extends TestBase {
-
+    private static final File TEMP_DIR = Maven.getTempTestDir(TwoScalesTest.class);
+    
     @Test
     public void testTimeSeriesChart() throws InvocationTargetException, InterruptedException {
         openWindow();
@@ -53,6 +55,8 @@ public class TwoScalesTest extends TestBase {
         append(chartPanel);
 
         Screenshot.takeDesktopScreenshot("testTimeSeriesChart", true);
+        writeWindowAsPng(new File(TEMP_DIR, "testTimeSeriesChart.png"));
+        // @insert:image:testTimeSeriesChart.png@
         waitForWindowClosingManual();
     }
 }

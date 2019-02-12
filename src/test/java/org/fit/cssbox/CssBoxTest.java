@@ -10,10 +10,31 @@ package org.fit.cssbox;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
+
+import com.github.jjYBdx4IL.test.AdHocHttpServer;
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.env.Surefire;
+import org.fit.cssbox.css.CSSNorm;
+import org.fit.cssbox.css.DOMAnalyzer;
+import org.fit.cssbox.io.DOMSource;
+import org.fit.cssbox.io.DefaultDOMSource;
+import org.fit.cssbox.io.DefaultDocumentSource;
+import org.fit.cssbox.io.DocumentSource;
+import org.fit.cssbox.io.StreamDocumentSource;
+import org.fit.cssbox.layout.BrowserCanvas;
+import org.junit.After;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
@@ -33,26 +54,6 @@ import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.fit.cssbox.css.CSSNorm;
-import org.fit.cssbox.css.DOMAnalyzer;
-import org.fit.cssbox.io.DOMSource;
-import org.fit.cssbox.io.DefaultDOMSource;
-import org.fit.cssbox.io.DefaultDocumentSource;
-import org.fit.cssbox.io.DocumentSource;
-import org.fit.cssbox.io.StreamDocumentSource;
-import org.fit.cssbox.layout.BrowserCanvas;
-import org.junit.After;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.github.jjYBdx4IL.test.AdHocHttpServer;
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
-import com.github.jjYBdx4IL.utils.junit4.Screenshot;
-
 /**
  * http://cssbox.sourceforge.net/manual/
  *
@@ -60,6 +61,7 @@ import com.github.jjYBdx4IL.utils.junit4.Screenshot;
  */
 public class CssBoxTest {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(CssBoxTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(CssBoxTest.class);
     private static AdHocHttpServer server = null;
 
@@ -98,8 +100,8 @@ public class CssBoxTest {
         browser.setImage(new BufferedImage(1000, 600, BufferedImage.TYPE_INT_ARGB));
         browser.createLayout(new java.awt.Dimension(1000, 600));
 
-        ImageIO.write(browser.getImage(), "png",
-                new File(Screenshot.getMavenScreenshotOutputDir(getClass()), "test.png"));
+        ImageIO.write(browser.getImage(), "png", new File(TEMP_DIR, "testTransparentBackground.png"));
+        // @insert:image:testTransparentBackground.png@
 
         // no auto-resize when explicitly setting an image
         assertEquals(1000, browser.getImage().getWidth());
@@ -125,8 +127,8 @@ public class CssBoxTest {
                         da,
                         new java.awt.Dimension(1024, 1),
                         url);
-        ImageIO.write(browser.getImage(), "png",
-                new File(Screenshot.getMavenScreenshotOutputDir(getClass()), "testAutoSize.png"));
+        ImageIO.write(browser.getImage(), "png", new File(TEMP_DIR, "testAutoSize.png"));
+        // @insert:image:testAutoSize.png@
 
         assertEquals(1024, browser.getImage().getWidth());
         assertTrue(browser.getImage().getHeight() > 8);
@@ -134,8 +136,8 @@ public class CssBoxTest {
 
     @Test
     public void testPreview() throws MalformedURLException, IOException, SAXException, InterruptedException, Exception {
-        assumeTrue(Surefire.isSingleTestExecution());
-
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        
         JFrame frame = new JFrame("HTML Editor With Preview Provided by CSSBox");
         frame.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -187,7 +189,8 @@ public class CssBoxTest {
         frame.pack();
         frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight() * 2));
 
-        AWTUtils.showFrameAndWaitForCloseByUser(frame);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(frame, new File(TEMP_DIR, "testPreview.png"));
+        // @insert:image:testPreview.png@
     }
 
     public static BrowserCanvas getBrowser(String html) throws UnsupportedEncodingException, IOException, SAXException {

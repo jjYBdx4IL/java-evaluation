@@ -1,30 +1,30 @@
 package tests.java.awt;
 
-import static org.junit.Assume.assumeFalse;
-
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import org.junit.Test;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-
-import javax.swing.JFrame;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("serial")
-public class ColorHsbTest {
+public class ColorHsbTest extends InteractiveTestBase {
 
-    public static class TestFrame extends JFrame {
+    private static final File TEMP_DIR = Maven.getTempTestDir(ColorHsbTest.class);
+    private static final CountDownLatch countdown = new CountDownLatch(1);
+
+    public static class TestFrame extends Container {
 
         public TestFrame() {
-            super(ColorHsbTest.class.getSimpleName());
-
-            setPreferredSize(new Dimension(800, 600));
-            pack();
+            setPreferredSize(new Dimension(640, 480));
         }
 
         @Override
@@ -42,13 +42,19 @@ public class ColorHsbTest {
                     g2.fillRect(r.x + x, r.y + y, 1, 1);
                 }
             }
+            countdown.countDown();
         }
     }
 
     @Test
-    public void test() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        AWTUtils.showFrameAndWaitForCloseByUserTest(new TestFrame());
+    public void test() throws InterruptedException, InvocationTargetException {
+        openWindow();
+
+        append(new TestFrame());
+        countdown.await(5, TimeUnit.SECONDS);
+        writeWindowAsPng(new File(TEMP_DIR, "ColorHsbTest.png"));
+        // @insert:image:ColorHsbTest.png@
+        waitForWindowClosing();
     }
 
 }

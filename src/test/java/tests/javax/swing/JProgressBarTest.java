@@ -2,12 +2,14 @@ package tests.javax.swing;
 
 import static org.junit.Assume.assumeFalse;
 
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JProgressBar;
@@ -19,6 +21,8 @@ import javax.swing.SwingUtilities;
  */
 public class JProgressBarTest extends InteractiveTestBase {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(JProgressBarTest.class);
+    
     @Before
     public void before() {
         assumeFalse(GraphicsEnvironment.isHeadless());
@@ -43,6 +47,8 @@ public class JProgressBarTest extends InteractiveTestBase {
             Thread.sleep(30L);
         }
 
+        writeWindowAsPng(new File(TEMP_DIR, "test.png"));
+        // @insert:image:test.png@
         waitForWindowClosing();
     }
 }

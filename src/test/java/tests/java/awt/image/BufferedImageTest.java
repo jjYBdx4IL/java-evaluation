@@ -5,23 +5,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
+import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
-import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 /**
  *
@@ -29,6 +30,7 @@ import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
  */
 public class BufferedImageTest extends InteractiveTestBase {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(BufferedImageTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(BufferedImageTest.class);
     private Random r;
 
@@ -60,7 +62,8 @@ public class BufferedImageTest extends InteractiveTestBase {
         img2 = downsample(img, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         append(img2, "downsampling, bicubic");
 
-        saveWindowAsImage("testDownsampling");
+        writeWindowAsPng(new File(TEMP_DIR, "BufferedImageTest.png"));
+        // @insert:image:BufferedImageTest.png@
         waitForWindowClosing();
     }
 
@@ -73,11 +76,11 @@ public class BufferedImageTest extends InteractiveTestBase {
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
         g.drawImage(input, img.getWidth() / 12, img.getHeight() / 3, img.getWidth() * 5 / 12, img.getHeight() * 2 / 3,
-                0, 0, input.getWidth(), input.getHeight(), null);
+            0, 0, input.getWidth(), input.getHeight(), null);
         ((Graphics2D) img.getGraphics()).drawImage(img,
-                img.getWidth() * 6 / 12, img.getHeight() * 3 / 12, img.getWidth(), img.getHeight() * 9 / 12,
-                img.getWidth() * 4 / 24, img.getHeight() * 10 / 24, img.getWidth() * 8 / 24, img.getHeight() * 14 / 24,
-                null);
+            img.getWidth() * 6 / 12, img.getHeight() * 3 / 12, img.getWidth(), img.getHeight() * 9 / 12,
+            img.getWidth() * 4 / 24, img.getHeight() * 10 / 24, img.getWidth() * 8 / 24, img.getHeight() * 14 / 24,
+            null);
         return img;
     }
 
@@ -100,7 +103,7 @@ public class BufferedImageTest extends InteractiveTestBase {
         }
         assertEquals(183, effectiveColors.size());
         LOG.info("number of effective colors for color model: " + effectiveColors.size()
-                + " [" + img.getColorModel() + "]");
+            + " [" + img.getColorModel() + "]");
     }
 
     @Test
@@ -125,7 +128,7 @@ public class BufferedImageTest extends InteractiveTestBase {
         assertEquals(254, effectiveColors.size());
         assertFalse(img.getColorModel().hasAlpha());
         LOG.info("number of effective colors for color model: " + effectiveColors.size()
-                + " [" + img.getColorModel() + "]");
+            + " [" + img.getColorModel() + "]");
     }
 
     @Test
@@ -148,7 +151,7 @@ public class BufferedImageTest extends InteractiveTestBase {
         assertEquals(256, effectiveColors.size());
         assertFalse(img.getColorModel().hasAlpha());
         LOG.info("number of effective colors for color model: " + effectiveColors.size()
-                + " [" + img.getColorModel() + "]");
+            + " [" + img.getColorModel() + "]");
     }
 
     @Test
@@ -164,7 +167,7 @@ public class BufferedImageTest extends InteractiveTestBase {
 
         icm = (IndexColorModel) img.getColorModel();
         assertEquals(icmValues.length, icm.getMapSize());
-        assertArrayEquals(new int[]{8, 8, 8}, icm.getComponentSize());
+        assertArrayEquals(new int[] { 8, 8, 8 }, icm.getComponentSize());
 
         byte[] testValues = new byte[icmValues.length];
         icm.getReds(testValues);

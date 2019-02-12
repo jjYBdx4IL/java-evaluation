@@ -1,152 +1,302 @@
 package org.apache.log4j;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
+import static java.util.logging.Level.FINEST;
+import static org.junit.Assert.assertNotNull;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.results.RunResult;
+import org.openjdk.jmh.results.format.ResultFormatFactory;
+import org.openjdk.jmh.results.format.ResultFormatType;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.options.VerboseMode;
+import testgroup.RequiresIsolatedVM;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+@Category(RequiresIsolatedVM.class)
 public class IsTraceEnabledPerformanceTest {
 
     private static final Logger LOG = Logger.getLogger(IsTraceEnabledPerformanceTest.class.getName());
-    private static final long test_duration_millis = 4L * 100L;
-    private static final String finalStaticString = "test string";
-    private static String nonFinalStatisString = "some string";
-    private static final int n_per_loop = 1000;
+    private static final java.util.logging.Logger JUL = java.util.logging.Logger
+        .getLogger(IsTraceEnabledPerformanceTest.class.getName());
+    private static final int OPS_PER_INVOCATION = 1000;
 
     /**
-     * Result: the use of isTraceEnabled() speeds up suppressed logging stmts by a factor of 6 to 7
-     * if the log msg gets composited from a final static and a non-final static string.
+     * Result: the use of isTraceEnabled() speeds up suppressed logging stmts by
+     * a factor of 6 to 7 if the log msg gets composited from strings of which
+     * one is not final static.
      */
-    
-    @Test
-    public void test1a() {
-        long duration;
-        long n_loops = 0;
 
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-                LOG.log(Level.TRACE, "some msg" + finalStaticString);
+    @Benchmark
+    public void testLog4jFinalConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (LOG.isTraceEnabled()) {
+                LOG.log(Level.TRACE, "some msg" + state.finalStr);
             }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
+        }
 
-        System.out.println("suppressed log stmts per millisecond without isTraceEnabled(): " + ((n_loops * n_per_loop) / duration));
+        bh.consume(state.list.get(0));
     }
 
-    @Test
-    public void test1b() {
-        long duration;
-        long n_loops = 0;
-
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-                LOG.log(Level.TRACE, "some msg" + nonFinalStatisString);
+    @Benchmark
+    public void testLog4jConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (LOG.isTraceEnabled()) {
+                LOG.log(Level.TRACE, "some msg" + state.str);
             }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
+        }
 
-        System.out.println("suppressed log stmts per millisecond without isTraceEnabled() and non-final static string: " + ((n_loops * n_per_loop) / duration));
+        bh.consume(state.list.get(0));
     }
 
-    @Test
-    public void test1c() {
-        long duration;
-        long n_loops = 0;
+    @Benchmark
+    public void testLog4jFinalConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            LOG.log(Level.TRACE, "some msg" + state.finalStr);
+        }
 
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            LOG.log(Level.TRACE, "some msg" + state.str);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jFinalStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            LOG.log(Level.TRACE, "some msg" + BenchmarkState.FINAL_STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            LOG.log(Level.TRACE, "some msg" + BenchmarkState.STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jNoConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            LOG.log(Level.TRACE, "some msg");
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jFinalStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (LOG.isTraceEnabled()) {
+                LOG.log(Level.TRACE, "some msg" + BenchmarkState.FINAL_STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (LOG.isTraceEnabled()) {
+                LOG.log(Level.TRACE, "some msg" + BenchmarkState.STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testLog4jNoConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (LOG.isTraceEnabled()) {
                 LOG.log(Level.TRACE, "some msg");
             }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
+        }
 
-        System.out.println("suppressed log stmts per millisecond without isTraceEnabled() and just one string constant: " + ((n_loops * n_per_loop) / duration));
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulFinalConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (JUL.isLoggable(FINEST)) {
+                JUL.log(FINEST, "some msg" + state.finalStr);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (JUL.isLoggable(FINEST)) {
+                JUL.log(FINEST, "some msg" + state.str);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulFinalConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            JUL.log(FINEST, "some msg" + state.finalStr);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            JUL.log(FINEST, "some msg" + state.str);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulFinalStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            JUL.log(FINEST, "some msg" + BenchmarkState.FINAL_STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            JUL.log(FINEST, "some msg" + BenchmarkState.STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulNoConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            JUL.log(FINEST, "some msg");
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulFinalStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (JUL.isLoggable(FINEST)) {
+                JUL.log(FINEST, "some msg" + BenchmarkState.FINAL_STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (JUL.isLoggable(FINEST)) {
+                JUL.log(FINEST, "some msg" + BenchmarkState.STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJulNoConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (JUL.isLoggable(FINEST)) {
+                JUL.log(FINEST, "some msg");
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testJustLoop(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    // The JMH samples are the best documentation for how to use it
+    // http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/
+    @State(Scope.Thread)
+    public static class BenchmarkState {
+        List<Integer> list;
+        String str = "some string";
+        final String finalStr = "test string";
+        static final String FINAL_STATIC_STR = "test string";
+        static String STATIC_STR = "some string";
+
+        @Setup(org.openjdk.jmh.annotations.Level.Trial)
+        public void initialize() {
+
+            Random rand = new Random();
+
+            list = new ArrayList<>();
+            for (int i = 0; i < 1000; i++)
+                list.add(rand.nextInt());
+        }
     }
 
     @Test
-    public void test2a() {
-        long duration;
-        long n_loops = 0;
+    public void testRunner() throws RunnerException {
+        // or set forks(0),
+        // https://github.com/melix/jmh-gradle-plugin/issues/103
+        System.setProperty("jmh.separateClasspathJAR", "true");
 
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.log(Level.TRACE, "some msg" + finalStaticString);
-                }
-            }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
+        Options opt = new OptionsBuilder()
+            .include(this.getClass().getName() + ".*")
+            .mode(Mode.AverageTime)
+            .timeUnit(TimeUnit.NANOSECONDS)
+            .warmupTime(TimeValue.milliseconds(100))
+            .warmupIterations(1)
+            .measurementTime(TimeValue.milliseconds(100))
+            .measurementIterations(1)
+            .threads(1)
+            .forks(1)
+            .shouldFailOnError(true)
+            .shouldDoGC(true)
+            .operationsPerInvocation(OPS_PER_INVOCATION)
+            .verbosity(VerboseMode.SILENT)
+            .build();
 
-        System.out.println("suppressed log stmts per millisecond with isTraceEnabled(): " + ((n_loops * n_per_loop) / duration));
+        Runner r = new Runner(opt);
+        Collection<RunResult> results = r.run();
+        assertNotNull(results);
+        ResultFormatFactory.getInstance(ResultFormatType.TEXT, System.out).writeOut(results);
     }
 
-    @Test
-    public void test2b() {
-        long duration;
-        long n_loops = 0;
-
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.log(Level.TRACE, "some msg" + nonFinalStatisString);
-                }
-            }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
-
-        System.out.println("suppressed log stmts per millisecond with isTraceEnabled() and non-final static string: " + ((n_loops * n_per_loop) / duration));
-    }
-    
-    @Test
-    public void test2c() {
-        long duration;
-        long n_loops = 0;
-
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.log(Level.TRACE, "some msg");
-                }
-            }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
-
-        System.out.println("suppressed log stmts per millisecond with isTraceEnabled() and just one string constant: " + ((n_loops * n_per_loop) / duration));
-    }
-    
-    @Test
-    public void test3() {
-        long duration;
-        long n_loops = 0;
-
-        long start = System.currentTimeMillis();
-        do {
-            for (int i = 0; i < n_per_loop; i++) {
-            }
-            n_loops++;
-            duration = System.currentTimeMillis() - start;
-        } while (duration < test_duration_millis);
-
-        System.out.println("suppressed log stmts per millisecond without any stmt at all!: " + ((n_loops * n_per_loop) / duration));
-    }
 }

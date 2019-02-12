@@ -61,7 +61,7 @@ public class TemplateTest {
         Writer out = new OutputStreamWriter(baos);
         tpl.process(root, out);
 
-        return baos.toString();
+        return baos.toString("UTF-8");
     }
 
     @Test

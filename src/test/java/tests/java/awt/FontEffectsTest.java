@@ -4,19 +4,23 @@ import static org.junit.Assert.assertFalse;
 
 import java.awt.EventQueue;
 import java.awt.FontFormatException;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.gfx.FontEffects;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
 public class FontEffectsTest extends InteractiveTestBase {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(FontEffectsTest.class);
+
     @Test
-    public void testFontEffects() throws InterruptedException, InvocationTargetException, FontFormatException, IOException {
+    public void testFontEffects()
+        throws InterruptedException, InvocationTargetException, FontFormatException, IOException {
         openWindow();
 
         assertFalse(EventQueue.isDispatchThread());
@@ -54,6 +58,8 @@ public class FontEffectsTest extends InteractiveTestBase {
         appendImage(effects.getImage());
 
         Screenshot.takeDesktopScreenshot(FontEffectsTest.class.getName() + ".png", true);
+        writeWindowAsPng(new File(TEMP_DIR, "FontEffectsTest.png"));
+        // @insert:image:FontEffectsTest.png@
         waitForWindowClosing();
     }
 }

@@ -1,16 +1,16 @@
 package org.lwjgl;
 
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Surefire;
+import org.junit.Test;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import static org.junit.Assume.assumeTrue;
-import org.junit.Test;
 
 /**
  * Using Swing/AWT with lwjgl is NOT supported and will never work on MacOS and produce random problems elsewhere.

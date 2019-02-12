@@ -598,6 +598,10 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
+            <groupId>org.codelibs</groupId>
+            <artifactId>jhighlight</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.maven-play-plugin.org.playframework</groupId>
             <artifactId>jj-simplecaptcha</artifactId>
             <version>1.1</version>
@@ -860,11 +864,15 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>20170515.1</version>
+            <version>20181114.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mozilla</groupId>
@@ -1029,12 +1037,12 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.10</version>
+                <version>1.11</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.12</version>
+                <version>1.18</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -1227,6 +1235,11 @@
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.codelibs</groupId>
+                <artifactId>jhighlight</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
                 <version>4.4.0</version>
@@ -1270,6 +1283,21 @@
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>pdfbox</artifactId>
                 <version>2.0.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>4.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>4.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>4.0.1</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>

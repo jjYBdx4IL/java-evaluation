@@ -3,7 +3,7 @@ package org.j3d;
 import static org.junit.Assume.assumeFalse;
 
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import org.j3d.texture.procedural.TextureGenerator;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,6 +17,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -30,6 +31,7 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class TextureGeneratorTest {
 
+    private static final File TEMP_DIR = Maven.getTempTestDir(TextureGeneratorTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(TextureGeneratorTest.class);
 
     @Test
@@ -37,7 +39,8 @@ public class TextureGeneratorTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         TestFrame frame = new TestFrame();
         frame.regenTexture();
-        AWTUtils.showFrameAndWaitForCloseByUserTest(frame);
+        AWTUtils.showFrameAndWaitForCloseByUserTest(frame, new File(TEMP_DIR, "test.png"));
+        // @insert:image:test.png@
     }
 
     public static class TestFrame extends JFrame implements ChangeListener {

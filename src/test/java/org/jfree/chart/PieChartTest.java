@@ -1,12 +1,13 @@
 package org.jfree.chart;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.util.Rotation;
 import org.junit.Test;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
 
@@ -15,7 +16,8 @@ import com.github.jjYBdx4IL.utils.junit4.Screenshot;
  * @author Github jjYBdx4IL Projects
  */
 public class PieChartTest extends InteractiveTestBase {
-
+    private static final File TEMP_DIR = Maven.getTempTestDir(PieChartTest.class);
+    
     @Test
     public void testPieChart() throws InvocationTargetException, InterruptedException {
         openWindow();
@@ -40,6 +42,8 @@ public class PieChartTest extends InteractiveTestBase {
         append(chartPanel);
 
         Screenshot.takeDesktopScreenshot("testPieChart", true);
-        waitForWindowClosingManual();
+        writeWindowAsPng(new File(TEMP_DIR, "testPieChart.png"));
+        // @insert:image:testPieChart.png@
+        waitForWindowClosing();
     }
 }
