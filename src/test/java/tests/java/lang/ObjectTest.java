@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
  */
 public class ObjectTest {
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testToStringMethod() {
         Object o = new Object();

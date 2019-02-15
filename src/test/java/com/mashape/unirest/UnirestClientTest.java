@@ -3,8 +3,6 @@ package com.mashape.unirest;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.net.MediaType;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 import com.mashape.unirest.http.Unirest;
 import org.apache.tika.io.IOUtils;
 import org.eclipse.jetty.server.Request;

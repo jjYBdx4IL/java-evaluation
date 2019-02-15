@@ -54,10 +54,10 @@ public class CompressionTest {
         String s;
 
         try (OutputStream os = getCompressorOutputStream(algo, file)) {
-            IOUtils.write(EXPECTED_CONTENT, os);
+            IOUtils.write(EXPECTED_CONTENT, os, "UTF-8");
         }
         try (InputStream is = getDecompressionStreamForFile(file)) {
-            s = IOUtils.toString(is);
+            s = IOUtils.toString(is, "UTF-8");
         }
 
         assertEquals(EXPECTED_CONTENT, s);

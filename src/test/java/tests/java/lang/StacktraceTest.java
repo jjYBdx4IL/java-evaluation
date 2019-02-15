@@ -8,18 +8,16 @@
  */
 package tests.java.lang;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class StacktraceTest {
-
-    private static final Logger log = LoggerFactory.getLogger(StacktraceTest.class);
 
     public class One {
 

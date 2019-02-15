@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class InstanceLifetimeTest {
 
+    @SuppressWarnings("unused")
     @Ignore
     @Test
     public void testFinalizeCall() throws InterruptedException {
@@ -22,6 +23,7 @@ public class InstanceLifetimeTest {
         }
     }
     
+    @SuppressWarnings("unused")
     @Ignore
     @Test
     public void testFinalizeCallAfterConstructorFailure() throws InterruptedException {

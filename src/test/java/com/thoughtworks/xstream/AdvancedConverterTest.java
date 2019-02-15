@@ -9,12 +9,10 @@ package com.thoughtworks.xstream;
  * #L%
  */
 import static org.junit.Assert.assertEquals;
-
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-import com.github.jjYBdx4IL.utils.cfg.AbstractConfig;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

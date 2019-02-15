@@ -34,6 +34,7 @@ public class ServerSocketFindPortTest {
         ss.close();
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testPortConflict() throws IOException {
         ServerSocket ss = new ServerSocket(0);

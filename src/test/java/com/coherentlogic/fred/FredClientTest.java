@@ -208,6 +208,7 @@ public class FredClientTest extends InteractiveTestBase {
             .fileDB(dbFile)
             .closeOnJvmShutdown()
             .make();
+        @SuppressWarnings("unchecked")
         final HTreeMap<String, Object> cacheMap = (HTreeMap<String, Object>) db.hashMap("map").createOrOpen();
         CacheServiceProviderSpecification<String, Object> cacheProvider = new MapCompliantCacheServiceProvider<>(
             cacheMap);

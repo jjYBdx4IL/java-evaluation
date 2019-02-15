@@ -24,6 +24,7 @@ public class MyInterceptionService implements org.glassfish.hk2.api.Interception
     private static final ProviderInterceptor PROVIDER_INTERCEPTOR = new ProviderInterceptor();
     private static final ResourceInterceptor RESOURCE_INTERCEPTOR = new ResourceInterceptor();
 
+    @SuppressWarnings("unused")
     private static final List<MethodInterceptor> PROVIDER_METHOD_INTERCEPTORS =
             Collections.<MethodInterceptor>singletonList(PROVIDER_INTERCEPTOR);
     private static final List<ConstructorInterceptor> PROVIDER_CONSTRUCTOR_INTERCEPTORS =
@@ -49,6 +50,7 @@ public class MyInterceptionService implements org.glassfish.hk2.api.Interception
         // Apply interceptors only to methods annotated with @Intercept.
         if (method.isAnnotationPresent(Intercept.class)) {
             LOG.info("getMethodInterceptors(): " + method);
+            @SuppressWarnings("unused")
             final Class<?> clazz = method.getDeclaringClass();
             
 //            if (clazz == StringProvider.class) {

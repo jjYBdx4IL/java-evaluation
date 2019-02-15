@@ -50,7 +50,7 @@ public class MavenSurefireInspectTest {
                 return;
         }
         try (OutputStream os = new FileOutputStream(dumpFile)) {
-            IOUtils.write(sb.toString(), os);
+            IOUtils.write(sb.toString(), os, "UTF-8");
         }
     }
 }

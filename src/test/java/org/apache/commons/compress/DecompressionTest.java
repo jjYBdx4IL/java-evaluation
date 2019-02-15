@@ -32,7 +32,7 @@ public class DecompressionTest {
     public void testGZip() throws CompressorException, IOException {
         String s;
         try (InputStream input = CompressionTest.getDecompressionStreamForResource("test.gz")) {
-            s = IOUtils.toString(input);
+            s = IOUtils.toString(input, "UTF-8");
         }
         assertEquals(EXPECTED_CONTENT, s);
     }
@@ -41,7 +41,7 @@ public class DecompressionTest {
     public void testBZip2() throws CompressorException, IOException {
         String s;
         try (InputStream input = CompressionTest.getDecompressionStreamForResource("test.bz2")) {
-            s = IOUtils.toString(input);
+            s = IOUtils.toString(input, "UTF-8");
         }
         assertEquals(EXPECTED_CONTENT, s);
     }
@@ -50,7 +50,7 @@ public class DecompressionTest {
     public void testXZ() throws CompressorException, IOException {
         String s;
         try (InputStream input = CompressionTest.getDecompressionStreamForResource("test.xz")) {
-            s = IOUtils.toString(input);
+            s = IOUtils.toString(input, "UTF-8");
         }
         assertEquals(EXPECTED_CONTENT, s);
     }

@@ -21,6 +21,7 @@ public class CommandLineParserTest {
 
     @Test
     public void test1() throws ParseException {
+        @SuppressWarnings("deprecation")
         CommandLineParser parser = new GnuParser();
 
         Options options = new Options();

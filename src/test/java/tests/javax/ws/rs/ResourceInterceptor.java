@@ -22,6 +22,7 @@ public class ResourceInterceptor implements MethodInterceptor {
     public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
         LOG.info("" + methodInvocation);
 
+        @SuppressWarnings("unused")
         EntityManager em = null; // get entity manager
         try {
             // methodInvocation.getThis() to inject entity manager

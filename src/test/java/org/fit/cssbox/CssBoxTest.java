@@ -11,12 +11,10 @@ package org.fit.cssbox;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
 
 import com.github.jjYBdx4IL.test.AdHocHttpServer;
 import com.github.jjYBdx4IL.utils.awt.AWTUtils;
 import com.github.jjYBdx4IL.utils.env.Maven;
-import com.github.jjYBdx4IL.utils.env.Surefire;
 import org.fit.cssbox.css.CSSNorm;
 import org.fit.cssbox.css.DOMAnalyzer;
 import org.fit.cssbox.io.DOMSource;

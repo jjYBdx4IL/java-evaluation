@@ -29,6 +29,7 @@ public class H264EncoderTest {
 
     @Test
     public void testSequenceEncoder() throws IOException {
+        @SuppressWarnings("deprecation")
         File outputFile = new File(Maven.getMavenTargetDir(), H264EncoderTest.class.getName() + ".test");
         SequenceEncoder enc = new SequenceEncoder(outputFile);
 

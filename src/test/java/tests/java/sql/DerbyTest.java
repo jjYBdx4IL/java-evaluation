@@ -31,6 +31,7 @@ public class DerbyTest extends DBPerformanceTestBase {
         //DriverManager.getConnection("jdbc:derby:"+getDBDirectory()+";shutdown=true");
     }
     
+    @SuppressWarnings("deprecation")
     @BeforeClass
     public static void classSetUp() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();

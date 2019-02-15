@@ -43,6 +43,7 @@ public class SSHAgentTest implements ISVNAuthenticationProvider {
 
     private static final Logger log = LoggerFactory.getLogger(SSHAgentTest.class);
 
+    @SuppressWarnings("unused")
     @Ignore
     @Test
     public void testSSHAgent() throws SVNException {

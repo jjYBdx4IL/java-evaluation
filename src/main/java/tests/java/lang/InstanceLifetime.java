@@ -23,6 +23,7 @@ public class InstanceLifetime {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void finalize() throws Throwable {
         LOG.debug("finalize");

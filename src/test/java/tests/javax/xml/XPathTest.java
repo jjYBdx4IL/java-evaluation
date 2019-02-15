@@ -8,6 +8,13 @@
  */
 package tests.javax.xml;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,21 +28,11 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class XPathTest {
-
-    private static final Logger log = LoggerFactory.getLogger(XPathTest.class);
 
     @Test
     public void test1() throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {

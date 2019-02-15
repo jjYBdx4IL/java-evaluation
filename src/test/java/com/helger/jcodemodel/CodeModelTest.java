@@ -53,11 +53,11 @@ public class CodeModelTest {
         assertEquals("package org.sand;\n"
                 + "\n"
                 + "public class Test1 {\n"
-                + "}\n", IOUtils.toString(new File(outDir, "org" + File.separator + "sand" + File.separator + "Test1.java").toURI()));
+                + "}\n", IOUtils.toString(new File(outDir, "org" + File.separator + "sand" + File.separator + "Test1.java").toURI(), "UTF-8"));
         assertEquals("package org.sand.sub;\n"
                 + "\n"
                 + "public class Test2 {\n"
-                + "}\n", IOUtils.toString(new File(outDir, "org" + File.separator + "sand" + File.separator + "sub" + File.separator + "Test2.java").toURI()));
+                + "}\n", IOUtils.toString(new File(outDir, "org" + File.separator + "sand" + File.separator + "sub" + File.separator + "Test2.java").toURI(), "UTF-8"));
     }
 
     @SuppressWarnings("unused")

@@ -106,6 +106,7 @@ public class JavaCompilerTest {
         try (URLClassLoader classLoader = new URLClassLoader(new URL[] { TEMP_DIR.toURI().toURL() })) {
             Class<?> loadedClass = classLoader.loadClass("Main123");
 
+            @SuppressWarnings("deprecation")
             Object o = loadedClass.newInstance();
             Method m = loadedClass.getMethod("get");
             assertEquals(123, m.invoke(o));

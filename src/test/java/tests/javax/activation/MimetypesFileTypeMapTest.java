@@ -13,6 +13,7 @@ public class MimetypesFileTypeMapTest {
 
     @Test
     public void test() throws IOException {
+        @SuppressWarnings("unused")
         MimetypesFileTypeMap map = new MimetypesFileTypeMap(getClass().getResourceAsStream("/META-INF/mimetypes.default"));
         FileTypeMap def = MimetypesFileTypeMap.getDefaultFileTypeMap();
         assertEquals("image/png", def.getContentType("asd.png"));

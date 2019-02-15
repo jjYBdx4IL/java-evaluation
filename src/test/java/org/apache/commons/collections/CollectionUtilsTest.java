@@ -21,6 +21,7 @@ import org.junit.Test;
  */
 public class CollectionUtilsTest {
 
+    @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testImmutability() {
         List<String> aList = new ArrayList<>();

@@ -1,46 +1,10 @@
 package org.apache.pdfbox;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 - 2015 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.log4j.Logger;
-import org.apache.pdfbox.cos.COSName;
-//import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.apache.pdfbox.pdmodel.PDDestinationNameTreeNode;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentNameDictionary;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.COSObjectable;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
-import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureTreeRoot;
-//import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-//import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionURI;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
-import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDNamedDestination;
-import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
-import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
-import org.junit.Test;
-
 /**
  *
  * @author Github jjYBdx4IL Projects
  */
 public class CreatePDFTest {
-
-    private static final Logger log = Logger.getLogger(CreatePDFTest.class.getName());
 
     // this is pdfbox v1
     

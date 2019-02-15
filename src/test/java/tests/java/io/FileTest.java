@@ -43,6 +43,7 @@ public class FileTest {
 
     @Test
     public void testGetCanonicalPath() throws IOException {
+        @SuppressWarnings("deprecation")
         File targetDir = new File(Maven.getMavenTargetDir().getCanonicalPath() + File.separator);
         LOG.debug(targetDir.getCanonicalPath());
         assertFalse(targetDir.getCanonicalPath().endsWith(File.separator));

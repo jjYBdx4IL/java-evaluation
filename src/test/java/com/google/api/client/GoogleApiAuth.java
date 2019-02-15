@@ -15,6 +15,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.auth.oauth2.UserCredentials;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jetty.server.Request;
@@ -66,6 +67,7 @@ public class GoogleApiAuth extends AbstractHandler {
     private URL redirectUrl = null;
     private String stateSecret = null;
     private String datastoreUser = null;
+    private GoogleClientSecrets clientSecrets = null;
 
     /**
      * 
@@ -78,6 +80,26 @@ public class GoogleApiAuth extends AbstractHandler {
         credStore = new File(configDir, "credentials");
     }
 
+    private GoogleClientSecrets getClientSecrets() throws IOException {
+        if (clientSecrets != null) {
+            return clientSecrets;
+        }
+        
+        if (!clientIdFile.exists()) {
+            throw new FileNotFoundException(clientIdFile
+                + " not found. Go to: https://console.developers.google.com/apis"
+                + " and select the desired API service in Google's API library, then create credentials and download"
+                + " them in JSON format to the aforementioned file location.");
+        }
+
+        // load client secrets
+        clientSecrets = GoogleClientSecrets.load(
+            JacksonFactory.getDefaultInstance(),
+            new InputStreamReader(new FileInputStream(clientIdFile)));
+        
+        return clientSecrets;
+    }
+    
     /**
      * NOT thread-safe.
      * 
@@ -98,17 +120,8 @@ public class GoogleApiAuth extends AbstractHandler {
             FilePermUtils.setOwnerAccessOnlyNonExec(configDir);
         }
 
-        if (!clientIdFile.exists()) {
-            throw new FileNotFoundException(clientIdFile
-                + " not found. Go to: https://console.developers.google.com/apis"
-                + " and select the desired API service in Google's API library, then create credentials and download"
-                + " them in JSON format to the aforementioned file location.");
-        }
-
         // load client secrets
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-            JacksonFactory.getDefaultInstance(),
-            new InputStreamReader(new FileInputStream(clientIdFile)));
+        GoogleClientSecrets clientSecrets = getClientSecrets();
 
         FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(credStore);
         DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore("datastore");
@@ -123,12 +136,12 @@ public class GoogleApiAuth extends AbstractHandler {
                 .build();
 
         Credential credential = codeFlow.loadCredential(datastoreUser);
-        LOG.info("stored credential: " + credential);
+        LOG.debug("stored credential: " + credential);
         if (credential != null) {
-            LOG.info("loaded credential from: " + credStore.getAbsolutePath() + " : " + datastore.getId());
-            LOG.info("stored credential access token: " + credential.getAccessToken());
-            LOG.info("stored credential refresh token: " + credential.getRefreshToken());
-            LOG.info("stored credential expires in secs: " + credential.getExpiresInSeconds());
+            LOG.debug("loaded credential from: " + credStore.getAbsolutePath() + " : " + datastore.getId());
+            LOG.debug("stored credential access token: " + credential.getAccessToken());
+            LOG.debug("stored credential refresh token: " + credential.getRefreshToken());
+            LOG.debug("stored credential expires in secs: " + credential.getExpiresInSeconds());
         }
 
         // do we need to authenticate?
@@ -174,12 +187,12 @@ public class GoogleApiAuth extends AbstractHandler {
             // for
             // the Google Sign-In image button):
             redirectUrl = new URL("http://localhost:" + server.getURI().getPort() + "/");
-            LOG.info("redirectUrl: " + redirectUrl);
+            LOG.debug("redirectUrl: " + redirectUrl);
             // set state to something random to verify in the callback
             String loginUrl = codeFlow.newAuthorizationUrl().setState(stateSecret)
                 .setRedirectUri(redirectUrl.toString())
                 .build();
-            LOG.info("codeFlow.newAuthorizationUrl()...build(): " + loginUrl);
+            LOG.debug("codeFlow.newAuthorizationUrl()...build(): " + loginUrl);
 
             // we don't use a login page in this example, we send the user
             // straight
@@ -200,11 +213,19 @@ public class GoogleApiAuth extends AbstractHandler {
             throw new Exception(ex);
         }
     }
+    
+    public UserCredentials toUserCredentials(Credential credential) throws IOException {
+        return UserCredentials.newBuilder()
+            .setClientId(getClientSecrets().getDetails().getClientId())
+            .setClientSecret(getClientSecrets().getDetails().getClientSecret())
+            .setRefreshToken(credential.getRefreshToken())
+            .build();
+    }
 
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-        LOG.info(String.format(Locale.ROOT, "handle(%s, ...)", target));
+        LOG.debug(String.format(Locale.ROOT, "handle(%s, ...)", target));
 
         // second step: the user gets redirected back to a page on our server,
         // specified in clientRedirectUri:
@@ -217,7 +238,7 @@ public class GoogleApiAuth extends AbstractHandler {
         countDownLatch.countDown();
 
         String error = baseRequest.getParameter("error");
-        LOG.info("error: " + error);
+        LOG.warn("error: " + error);
         if (error != null && !error.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("text/plain");
@@ -232,7 +253,7 @@ public class GoogleApiAuth extends AbstractHandler {
             // security:
             String code = baseRequest.getParameter("code");
             String state = baseRequest.getParameter("state");
-            LOG.info(String.format(Locale.ROOT, "code=%s, state=%s", code, state));
+            LOG.debug(String.format(Locale.ROOT, "code=%s, state=%s", code, state));
             checkNotNull(code);
             checkNotNull(state);
             checkArgument(state.equals(stateSecret));
@@ -257,12 +278,12 @@ public class GoogleApiAuth extends AbstractHandler {
 
             // only works with openid, email scopes
             Payload payload = tokenResponse.parseIdToken().getPayload();
-            LOG.info("user info payload: " + payload);
+            LOG.debug("user info payload: " + payload);
             checkNotNull(payload);
 
-            LOG.info("unique google user id: " + payload.getSubject());
-            LOG.info("user email: " + payload.getEmail());
-            LOG.info("user email verified: " + payload.getEmailVerified());
+            LOG.debug("unique google user id: " + payload.getSubject());
+            LOG.debug("user email: " + payload.getEmail());
+            LOG.debug("user email verified: " + payload.getEmailVerified());
 
             checkNotNull(payload.getSubject());
             checkNotNull(payload.getEmail());

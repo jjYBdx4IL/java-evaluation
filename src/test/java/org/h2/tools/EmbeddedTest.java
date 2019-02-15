@@ -1,32 +1,21 @@
 package org.h2.tools;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.github.jjYBdx4IL.utils.env.Maven;
-import com.github.jjYBdx4IL.utils.env.Surefire;
-import java.awt.Desktop;
+import org.apache.commons.io.FileUtils;
+import org.h2.Driver;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Locale;
-import java.util.Properties;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.h2.Driver;
-import org.h2.engine.Constants;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * In this test we demonstrate how to start the embedded h2 managment frontend web server for an existing database
@@ -38,8 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public class EmbeddedTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmbeddedTest.class); 
-    
     private static final File TEST_DIR = Maven.getTempTestDir(EmbeddedTest.class);
     private static final File TEST_DB = new File(TEST_DIR, "h2db");
     private static final String DB_URL = "jdbc:h2:" + TEST_DB.getAbsolutePath();

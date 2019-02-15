@@ -20,6 +20,7 @@ public class ContinueTest {
         assertEquals(10, nFor);
     }
     
+    @SuppressWarnings("unused")
     @Test
     public void testContinueWithLabel() {
         int nFor = 0;

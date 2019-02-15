@@ -28,6 +28,7 @@ public class TestBase extends InteractiveTestBase {
     	return getTimeSeries(0);
     }
     
+    @SuppressWarnings("deprecation")
     public TimeSeries getTimeSeries(long seed) {
         final TimeSeries series = new TimeSeries( "Time Series" );
         RegularTimePeriod current = new Month( );

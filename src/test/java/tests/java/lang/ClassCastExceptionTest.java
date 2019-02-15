@@ -21,6 +21,7 @@ public class ClassCastExceptionTest {
     public void test() {
         Object o = new String();
         try {
+            @SuppressWarnings("unused")
             Integer i = (Integer) o;
             fail();
         } catch (ClassCastException ex) {}

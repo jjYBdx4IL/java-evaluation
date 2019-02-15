@@ -27,6 +27,7 @@ public class URLEncodedUtilsTest {
 
     @Test
     public void testParse() throws URISyntaxException {
+        @SuppressWarnings("deprecation")
         List<NameValuePair> result = URLEncodedUtils.parse(new URI("http://test/?&arg1=value1%3D"),
                 "UTF-8");
 

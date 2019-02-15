@@ -61,7 +61,8 @@ public class DataStreamsTest {
             double price;
             int unit;
             String desc;
-            double total = 0.0;
+            @SuppressWarnings("unused")
+            double total = 0d;
             Exception caught = null;
             try {
                 while (true) {

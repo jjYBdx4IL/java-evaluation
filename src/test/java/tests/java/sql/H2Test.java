@@ -32,6 +32,7 @@ public class H2Test extends DBPerformanceTestBase {
         update(conn, "SHUTDOWN");
     }
     
+    @SuppressWarnings("deprecation")
     @BeforeClass
     public static void classSetUp() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Class.forName("org.h2.Driver").newInstance();

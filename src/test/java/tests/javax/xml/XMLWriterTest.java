@@ -9,7 +9,6 @@ package tests.javax.xml;
  * #L%
  */
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
@@ -28,9 +27,11 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
+import org.apache.xerces.impl.Constants;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -46,7 +47,7 @@ import org.xml.sax.InputSource;
  *
  * @author Github jjYBdx4IL Projects
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 public class XMLWriterTest {
 
     private final static Logger LOG = Logger.getLogger(XMLWriterTest.class.getName());

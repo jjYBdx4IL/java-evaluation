@@ -73,7 +73,7 @@ public class DOMPurifyTest extends AbstractHandler {
             final String pageAsXml = page.asXml();
             assertTrue(pageAsXml.contains("<script>"));
 
-            final String pageAsText = page.asText();
+            page.asText();
         }
 
     }

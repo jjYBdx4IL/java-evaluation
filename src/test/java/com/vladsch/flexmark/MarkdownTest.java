@@ -9,13 +9,9 @@ import com.vladsch.flexmark.profiles.pegdown.PegdownOptionsAdapter;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.options.DataHolder;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MarkdownTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MarkdownTest.class);
-    
     static final DataHolder OPTIONS = PegdownOptionsAdapter.flexmarkOptions(Extensions.ALL & ~Extensions.HARDWRAPS);
     static final Parser PARSER = Parser.builder(OPTIONS).build();
     static final HtmlRenderer RENDERER = HtmlRenderer.builder(OPTIONS).build();
