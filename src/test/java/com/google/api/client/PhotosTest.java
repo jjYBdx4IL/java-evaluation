@@ -12,11 +12,10 @@ import com.google.photos.library.v1.PhotosLibrarySettings;
 import com.google.photos.library.v1.internal.InternalPhotosLibraryClient.SearchMediaItemsPage;
 import com.google.photos.library.v1.proto.Album;
 import com.google.photos.library.v1.proto.MediaItem;
-import org.apache.poi.util.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -46,10 +45,8 @@ public class PhotosTest {
             albumId = album.getId();
             for (MediaItem item : plc.searchMediaItems(albumId).iterateAll()) {
                 if ("ball-407081__340.jpg".equals(item.getFilename())) {
-                    try (InputStream is = new URL(item.getBaseUrl() + "=w640-h480").openStream()) {
-                        IOUtils.copy(is, new File(TEMP_DIR, "ball.jpg"));
-                        // @insert:image:ball.jpg@
-                    }
+                    FileUtils.copyURLToFile(new URL(item.getBaseUrl() + "=w640-h480"), new File(TEMP_DIR, "ball.jpg"));
+                    // @insert:image:ball.jpg@
                 }
             }
             SearchMediaItemsPage page = plc.searchMediaItems(albumId).getPage();

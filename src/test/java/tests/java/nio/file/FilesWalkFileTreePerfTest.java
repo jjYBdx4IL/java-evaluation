@@ -1,0 +1,137 @@
+package tests.java.nio.file;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.apache.commons.io.DirectoryWalker;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.results.RunResult;
+import org.openjdk.jmh.results.format.ResultFormatFactory;
+import org.openjdk.jmh.results.format.ResultFormatType;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.options.VerboseMode;
+import testgroup.RequiresIsolatedVM;
+
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * The benchmark results indicate that {@link Files#walkFileTree(Path, FileVisitor)} is about 400 times faster
+ * than Apache commons-io's {@link DirectoryWalker}.
+ * 
+ * @author jjYBdx4IL
+ *
+ */
+@Category(RequiresIsolatedVM.class)
+public class FilesWalkFileTreePerfTest {
+
+    public static final Path ROOT = Paths.get(System.getProperty("user.dir"));
+    
+    @Test
+    public void testRunner() throws RunnerException, IOException {
+        // or set forks(0), https://github.com/melix/jmh-gradle-plugin/issues/103
+        System.setProperty("jmh.separateClasspathJAR", "true");
+        
+        Options opt = new OptionsBuilder()
+            // Specify which benchmarks to run.
+            // You can be more specific if you'd like to run only one benchmark
+            // per test.
+            .include(this.getClass().getName() + ".*")
+            // Set the following options as needed
+            .mode(Mode.AverageTime)
+            .timeUnit(TimeUnit.MICROSECONDS)
+            .warmupTime(TimeValue.milliseconds(100))
+            .warmupIterations(2)
+            .measurementTime(TimeValue.milliseconds(100))
+            .measurementIterations(10)
+            .threads(1)
+            .forks(1)
+            .shouldFailOnError(true)
+            .shouldDoGC(true)
+            .verbosity(VerboseMode.SILENT)
+            .operationsPerInvocation(countFiles())
+            // .jvmArgs("-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining")
+            // .addProfiler(WinPerfAsmProfiler.class)
+            .build();
+
+        Runner r = new Runner(opt);
+        RunResult result = r.runSingle();
+        assertNotNull(result);
+        
+        ResultFormatFactory.getInstance(ResultFormatType.TEXT, System.out).writeOut(Arrays.asList(result));
+    }
+
+    // The JMH samples are the best documentation for how to use it
+    // http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/
+    @State(Scope.Thread)
+    public static class BenchmarkState {
+        List<Integer> list;
+
+        @Setup(Level.Trial)
+        public void initialize() {
+
+            Random rand = new Random();
+
+            list = new ArrayList<>();
+            for (int i = 0; i < 1000; i++)
+                list.add(rand.nextInt());
+        }
+    }
+
+    @Benchmark
+    public void benchmark1(BenchmarkState state, Blackhole bh) throws IOException {
+        bh.consume(countFiles());
+    }
+
+    private static int countFiles() throws IOException {
+        final AtomicInteger count = new AtomicInteger();
+        Files.walkFileTree(ROOT, new FileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                count.incrementAndGet();
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                throw new RuntimeException();
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            
+        });
+        return count.get();
+    }
+}
