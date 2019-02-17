@@ -2,7 +2,6 @@ package org.apache.commons.io;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openjdk.jmh.annotations.Benchmark;
