@@ -5,6 +5,6 @@ jdk:
   - openjdk11
 before_install:
   - git clone https://github.com/jjYBdx4IL/misc
-  - mvn install -f misc -DskipTests -DskipITs >& log || tail -n1000 log
+  - mvn install -f misc -Ddependency-check.skip -DskipTests -DskipITs -Dmaven.javadoc.skip -Dcheckstyle.skip -Dlicense.skip -Denforcer.skip >& log || tail -n1000 log
 install: true
 script: mvn -B clean install
