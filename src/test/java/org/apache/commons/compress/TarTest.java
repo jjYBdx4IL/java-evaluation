@@ -20,19 +20,20 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
 
 public class TarTest {
-    
+
     // http://commons.apache.org/compress/examples.html
     @Test
     public void test1() throws ArchiveException, IOException {
         final String tarFileName = "target/test.tar";
-        
+
         final String file1Content = "file 1 content";
         final String file1Path = "./file1.txt";
         final String file2Content = "file 2 content";
         final String file2Path = "./file2.txt";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final TarArchiveOutputStream taos = (TarArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream("tar", baos);
+        final TarArchiveOutputStream taos = (TarArchiveOutputStream) new ArchiveStreamFactory()
+            .createArchiveOutputStream("tar", baos);
 
         TarArchiveEntry tae = new TarArchiveEntry(file1Path);
         tae.setSize(file1Content.getBytes().length);
@@ -50,14 +51,15 @@ public class TarTest {
 
         FileWriter fw = new FileWriter(tarFileName);
         IOUtils.write(baos.toByteArray(), fw, "UTF-8");
-        
+
         // read in the generated tar file
-        final TarArchiveInputStream tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", new BufferedInputStream(new FileInputStream(tarFileName)));
-        
-        while((tae = tais.getNextTarEntry()) != null) {
-            System.out.println(tae.getModTime()+"\t"+tae.getSize()+"\t"+tae.getName());
+        final TarArchiveInputStream tais = (TarArchiveInputStream) new ArchiveStreamFactory()
+            .createArchiveInputStream("tar", new BufferedInputStream(new FileInputStream(tarFileName)));
+
+        while ((tae = tais.getNextTarEntry()) != null) {
+            System.out.println(tae.getModTime() + "\t" + tae.getSize() + "\t" + tae.getName());
         }
-        
+
         tais.close();
     }
 }

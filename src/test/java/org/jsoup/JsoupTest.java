@@ -21,7 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Jsoup: excellent html parser for Java.
+ * 
  * @author Github jjYBdx4IL Projects
  */
 public class JsoupTest {
@@ -156,5 +157,22 @@ public class JsoupTest {
             + "</body></html>");
         doc.setBaseUri("http://www.test.de");
         assertEquals("google one two three four", doc.text());
+    }
+    
+    // use :last-child selector and .after() to insert a script into the html head
+    @Test
+    public void testModifyDom() {
+        Document doc = Jsoup.parse("<html><head>"
+            + "  <liNk type=\"text/css\" rel=\"stylesheet\" hrEf=\"/rez/style.css\" />"
+            + "  <scripT sRc=\"/rez/prettify.js\"></script>"
+            + "</head><body>"
+            + "  <script src=\"/rez/prettify2.js\"></script>"
+            + "  <iMg Src=\"somepic.png\" alt=\"desc\" />"
+            + "  <A Href=\"http://www.google.de\">google</a>"
+            + "<p>one</p><p>two</p><p>three<p>four"
+            + "</body></html>");
+        doc.setBaseUri("http://www.test.de");
+        assertEquals(1, doc.select("head > *:last-child").after("<scipt src=\"injected.js\"/>").size());
+        assertTrue(doc.html(), doc.html().contains("injected.js"));
     }
 }

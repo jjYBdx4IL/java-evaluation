@@ -88,7 +88,11 @@ public abstract class WebSocketChatTestBase {
         
         LOG.info("all replies received");
 
-        server.stop();
+        try {
+            server.stop();
+        } catch (Exception ex) {
+            LOG.warn("", ex);
+        }
         
         chatHandler.getChatServer().wait4Shutdown(10L);
     }

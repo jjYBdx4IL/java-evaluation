@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.9</maven.compiler.source>
         <maven.compiler.target>1.9</maven.compiler.target>
-        <jetty.version>9.4.14.v20181114</jetty.version>
+        <jetty.version>9.4.15.v20190215</jetty.version>
         <gwt.version>2.8.2</gwt.version>
         <jackson.version>2.9.7</jackson.version>
         <lwjgl.version>3.1.6</lwjgl.version>
@@ -412,6 +412,10 @@
             <version>1.0.8-RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>gfx-utils</artifactId>
             <version>1.0</version>
@@ -713,7 +717,7 @@
             <artifactId>lucene-analyzers-common</artifactId>
             <version>7.7.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -1099,6 +1103,11 @@
                 <version>2.1.3</version>
             </dependency>
             <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.28</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.auth</groupId>
                 <artifactId>google-auth-library-credentials</artifactId>
                 <version>0.9.1</version>
@@ -1276,12 +1285,12 @@
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
-                <version>4.4.0</version>
+                <version>5.2.0</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna-platform</artifactId>
-                <version>4.4.0</version>
+                <version>5.2.0</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -1351,12 +1360,12 @@
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-api</artifactId>
-                <version>3.141.5</version>
+                <version>3.141.59</version>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-remote-driver</artifactId>
-                <version>3.141.5</version>
+                <version>3.141.59</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -1401,7 +1410,7 @@
             <dependency>
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
-                <version>1.19.1</version>
+                <version>1.20</version>
             </dependency>
             <dependency>
                 <groupId>com.github.jjYBdx4IL.utils</groupId>

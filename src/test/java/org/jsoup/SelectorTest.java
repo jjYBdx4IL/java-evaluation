@@ -1,6 +1,5 @@
 package org.jsoup;
 
-import static com.github.jjYBdx4IL.utils.cache.SimpleDiskCacheEntry.fetch;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -9,9 +8,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 /**
  *
  * @author Github jjYBdx4IL Projects
@@ -19,6 +15,39 @@ import java.net.MalformedURLException;
 public class SelectorTest {
 
     // https://jsoup.org/apidocs/org/jsoup/select/Selector.html
+    @Test
+    public void testSelectSibling() {
+        String html = "<html><head><title>First parse</title></head>"
+            + "<body>\n"
+            + "  <table>\n"
+            + "    <tr>\n"
+            + "      <th>key0</th>\n"
+            + "      <td>value0</td>\n"
+            + "    </tr>\n"
+            + "    <tr>\n"
+            + "      <th>key</th>\n"
+            + "      <td>value</td>\n"
+            + "      <td>value2</td>\n"
+            + "    </tr>\n"
+            + "    <tr>\n"
+            + "      <th>key3</th>\n"
+            + "      <td>value3</td>\n"
+            + "    </tr>\n"
+            + "  </table>\n"
+            + "</body></html>";
+        Document doc = Jsoup.parse(html);
+
+        Elements els = doc.select("th + td");
+        assertEquals(3, els.size());
+        assertEquals("value0", els.get(0).wholeText());
+        assertEquals("value", els.get(1).wholeText());
+        assertEquals("value3", els.get(2).wholeText());
+        
+        els = doc.select("table th:matches(^key$) + td");
+        assertEquals(1, els.size());
+        assertEquals("value", els.get(0).wholeText());
+    }
+    
     @Test
     public void testSelectChildAtTopOnly() {
         String html = "<html><head><title>First parse</title></head>"
@@ -57,9 +86,13 @@ public class SelectorTest {
         assertEquals(3, doc.select("table * td").size());
     }
     
+    // the :last-child selector requires the '>' operator
     @Test
-    public void testSelectWl() throws MalformedURLException, IOException {
-        Document doc = Jsoup.parse(fetch("https://search.wikileaks.org/gifiles/emailid/273620"));
-        System.out.println(doc.select("#doc-description").get(0).wholeText());
+    public void testSelectLastChild() {
+        String html = "<html><head><title>First parse</title></head></html>";
+        Document doc = Jsoup.parse(html);
+        assertEquals(0, doc.select("head:last-child").size());
+        Element el = doc.select("head > *:last-child").get(0);
+        assertEquals("title", el.tag().getName());
     }
 }
