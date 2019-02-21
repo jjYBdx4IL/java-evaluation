@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The benchmark results indicate that {@link Files#walkFileTree(Path, FileVisitor)} is about 400 times faster
- * than Apache commons-io's {@link DirectoryWalker}.
+ * The benchmark results indicate that {@link Files#walkFileTree(Path, FileVisitor)} is about as fast
+ * as Apache commons-io's {@link DirectoryWalker}.
  * 
  * @author jjYBdx4IL
  *
