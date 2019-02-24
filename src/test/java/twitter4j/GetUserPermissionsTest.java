@@ -21,7 +21,7 @@ public class GetUserPermissionsTest {
     private static final Logger LOG = LoggerFactory.getLogger(GetUserPermissionsTest.class);
     
     @Test
-    public void testGetUserPermissions() throws IOException, TwitterException {
+    public void testGetUserPermissions() throws IOException, TwitterException, InterruptedException {
         assumeTrue(Surefire.isSingleTestExecution());
         
         String token = null;

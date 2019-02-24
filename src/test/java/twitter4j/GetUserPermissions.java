@@ -1,17 +1,7 @@
 package twitter4j;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.Locale;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -20,9 +10,21 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.auth.AccessToken;
-
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class GetUserPermissions extends AbstractHandler implements AutoCloseable {
 
@@ -36,6 +38,7 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
 
     private Twitter twitter = null;
     private RequestToken requestToken = null;
+    private CountDownLatch latch = new CountDownLatch(1);
 
     public GetUserPermissions(String appOAuthToken, String appOAuthTokenSecret) throws IOException {
         this.appOAuthToken = appOAuthToken;
@@ -55,33 +58,49 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
 
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         LOG.info(String.format(Locale.ROOT, "handle(%s, ...)", target));
 
+        if (!target.equals("/")) {
+            return;
+        }
+        
+        // match request with callback request 
+        String oAuthToken = baseRequest.getParameter("oauth_token");
+        assertNotNull(oAuthToken);
+        LOG.info("oAuthToken: " + oAuthToken);
+        assertEquals(requestToken.getToken(), oAuthToken);
+        
+        // transform oauth token into access token
         oAuthVerifier = baseRequest.getParameter("oauth_verifier");
-
+        assertNotNull(oAuthVerifier);
+        LOG.info("oAuthVerifier: " + oAuthVerifier);
+        try {
+            accessToken = twitter.getOAuthAccessToken(requestToken, oAuthVerifier);
+            LOG.info("accessToken: " + accessToken);
+        } catch (TwitterException e) {
+            throw new RuntimeException(e);
+        }        
+        
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html");
         response.getWriter()
-                .print("<html><body><h2>Token received. Close this browser window to continue.</h2></body></html>");
+            .print("<html><body><h2>Token received. Close this browser window to continue.</h2></body></html>");
 
         baseRequest.setHandled(true);
-
-        synchronized (this) {
-            notify();
-        }
+        latch.countDown();
     }
 
     private URL getReturnURL() throws MalformedURLException, UnknownHostException {
         ServerConnector connector = (ServerConnector) server.getConnectors()[0];
-        InetAddress addr = InetAddress.getLocalHost();
-        return new URL(String.format(Locale.ROOT, "%s://%s:%d/return", "http", addr.getHostAddress(),
-                connector.getLocalPort()));
+        URL returnUrl = new URL("http", "localhost", connector.getLocalPort(), "");
+        LOG.info("return url: " + returnUrl.toExternalForm());
+        return returnUrl;
     }
 
     public void openBrowserForTwitterAppAuth() {
         try {
-            server = new Server(0);
+            server = new Server(TwitterApp.LOCALHOST_CALLBACK_PORT);
             server.setHandler(this);
             try {
                 server.start();
@@ -92,6 +111,8 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
 
             // requestToken = twitter.getOAuthRequestToken("oob");
             requestToken = twitter.getOAuthRequestToken(getReturnURL().toExternalForm());
+            assertNotNull(requestToken);
+            LOG.info("token secret: " + requestToken.getTokenSecret());
             String authURL = requestToken.getAuthorizationURL();
             LOG.info("new auth URL: " + authURL);
             Desktop.getDesktop().browse(new URL(authURL).toURI());
@@ -109,25 +130,8 @@ public class GetUserPermissions extends AbstractHandler implements AutoCloseable
     }
 
     // doesnt account for user not accepting authorization yet
-    void waitForUserReturn() {
-        synchronized (this) {
-            while (accessToken == null) {
-                try {
-                    wait(1000L);
-                } catch (InterruptedException e) {
-                    LOG.error("", e);
-                }
-            }
-        }
-
-        if (oAuthVerifier != null) {
-            try {
-                accessToken = twitter.getOAuthAccessToken(requestToken, oAuthVerifier);
-                // long userId = twitter.verifyCredentials().getId();
-            } catch (TwitterException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    void waitForUserReturn() throws InterruptedException {
+        latch.await();
     }
 
     public AccessToken getAccessToken() {
