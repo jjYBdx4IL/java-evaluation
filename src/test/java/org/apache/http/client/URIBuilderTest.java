@@ -6,7 +6,7 @@
  * %%
  * #L%
  */
-package org.apache.http;
+package org.apache.http.client;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
