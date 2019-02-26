@@ -14,6 +14,7 @@ import com.sun.jna.win32.W32APIOptions;
  */
 public interface IUser32 extends W32APIOptions {
 
+    @SuppressWarnings("deprecation")
     IUser32 instance = (IUser32) Native.loadLibrary("user32", IUser32.class, DEFAULT_OPTIONS);
 
     public interface WNDENUMPROC extends StdCallLibrary.StdCallCallback {
