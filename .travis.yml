@@ -4,6 +4,7 @@ env:
 jdk:
   - openjdk11
 before_install:
+  - sudo apt-get -y install libc6-i386
   - git clone https://github.com/jjYBdx4IL/misc
   - mvn install -f misc -Ddependency-check.skip -DskipTests -DskipITs -Dmaven.javadoc.skip -Dcheckstyle.skip -Dlicense.skip -Denforcer.skip >& log || tail -n1000 log
 install: true
