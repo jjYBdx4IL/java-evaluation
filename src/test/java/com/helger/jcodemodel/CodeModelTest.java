@@ -12,22 +12,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-
+import com.github.jjYBdx4IL.utils.env.Maven;
+import com.helger.jcodemodel.writer.JCMWriter;
+import com.helger.jcodemodel.writer.SingleStreamCodeWriter;
+import com.sun.codemodel.ExternalTestEnum;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.jjYBdx4IL.utils.env.Maven;
-import com.helger.jcodemodel.writer.JCMWriter;
-import com.helger.jcodemodel.writer.SingleStreamCodeWriter;
-import com.sun.codemodel.ExternalTestEnum;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 /**
  * More: https://github.com/phax/jcodemodel/tree/master/src/test/java/com/helger/jcodemodel
