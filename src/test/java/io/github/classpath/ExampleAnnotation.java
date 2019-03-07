@@ -1,4 +1,4 @@
-package io.github.lukehutch.fastclasspathscanner;
+package io.github.classpath;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @author work
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PACKAGE)
-public @interface ExamplePackageAnnotation {
+@Target(ElementType.TYPE)
+public @interface ExampleAnnotation {
     int value() default 0;
 }

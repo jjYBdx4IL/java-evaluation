@@ -14,15 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -39,6 +43,7 @@ public class BufferedImageTest extends InteractiveTestBase {
         r = new Random(0);
     }
 
+    //@meta:keywords:downsampling,sampling,nn,nearest-neighbor,interpolation,bilinear,bicubic@
     @Test
     public void testDownsampling() throws InterruptedException, InvocationTargetException {
         openWindow();
@@ -176,6 +181,16 @@ public class BufferedImageTest extends InteractiveTestBase {
         assertArrayEquals(icmValues, testValues);
         icm.getBlues(testValues);
         assertArrayEquals(icmValues, testValues);
+    }
+    
+    @Test
+    public void testGraphics() throws IOException {
+        BufferedImage b = new BufferedImage(400, 600, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics g = b.getGraphics();
+        g.drawRect(100, 100, 100, 100);
+        g.drawString("abc\r123", 20, 20);
+        ImageIO.write(b, "png", new File(TEMP_DIR, "testGraphics.png"));
+        //@insert:image:testGraphics.png@
     }
 
 }

@@ -1,5 +1,14 @@
 package testutils;
 
+import com.github.jjYBdx4IL.utils.awt.AWTUtils;
+import com.github.jjYBdx4IL.utils.env.Maven;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.ScanResult;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,9 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.lang.reflect.Executable;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -27,19 +37,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jjYBdx4IL.utils.awt.AWTUtils;
-import com.github.jjYBdx4IL.utils.env.Maven;
-
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.matchprocessor.MethodAnnotationMatchProcessor;
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Provides a persistent GUI that re-executes a selected test-method upon class change (ie. in combination with an IDE's
@@ -167,33 +164,27 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
      */
     public List<MethodRef> findAnnotatedTestMethodsInCurrentModuleOnly() throws Throwable {
         ClassLoader cl = new URLClassLoader(new URL[]{new URL(moduleUriPrefix)},
-                Thread.currentThread().getContextClassLoader());
-
+            Thread.currentThread().getContextClassLoader());
+        
         final List<MethodRef> foundMethods = new ArrayList<>();
 
-        MethodAnnotationMatchProcessor matchProcessor = new MethodAnnotationMatchProcessor() {
-            @Override
-            public void processMatch(Class<?> classRef, Executable method) {
-                try {
-                    if (method instanceof Method) {
-                        return;
+        try (ScanResult scanResult = new ClassGraph()
+            .enableClassInfo()
+            .enableAnnotationInfo()
+            .enableMethodInfo()
+            .overrideClassLoaders(cl)
+            .disableJarScanning()
+            .scan()) {
+            scanResult.getClassesWithMethodAnnotation(Test.class.getName())
+                .forEach(ci -> {
+                    for (MethodInfo mi : ci.getMethodInfo()) {
+                        if (mi.getAnnotationInfo(Test.class.getName()) != null) {
+                            foundMethods.add(new MethodRef(ci.loadClass(), mi.loadClassAndGetMethod()));
+                        }
                     }
-                    String fullResourcePath = getResourceUri(classRef);
-                    if (fullResourcePath.startsWith(moduleUriPrefix)) {
-                        foundMethods.add(new MethodRef(classRef, (Method) method));
-                    }
-                } catch (Exception ex) {
-                    LOG.error("", ex);
-                }
-            }
-        };
-
-        FastClasspathScanner scanner = new FastClasspathScanner();
-        scanner.matchClassesWithMethodAnnotation(Test.class, matchProcessor);
-        scanner.overrideClassLoaders(cl);
-        //scanner.verbose(true);
-        scanner.scan();
-
+                });
+        }        
+        
         return foundMethods;
     }
 
