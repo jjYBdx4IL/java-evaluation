@@ -63,6 +63,7 @@ import java.util.Locale;
  *
  * @author jjYBdx4IL
  */
+//@meta:keywords:svg,nanosvg,animation,rasterization@
 public class NanoSvgTest extends LwjglTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(NanoSvgTest.class);
