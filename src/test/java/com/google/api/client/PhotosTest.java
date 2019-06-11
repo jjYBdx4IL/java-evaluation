@@ -13,6 +13,7 @@ import com.google.photos.library.v1.internal.InternalPhotosLibraryClient.SearchM
 import com.google.photos.library.v1.proto.Album;
 import com.google.photos.library.v1.proto.MediaItem;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class PhotosTest {
     @Test
     public void test() throws Exception {
         assumeFalse(CI.isCI());
+        assumeFalse(SystemUtils.IS_OS_WINDOWS);
 
         GoogleApiAuth auth = new GoogleApiAuth(PhotosTest.class);
         Credential credential = auth.authorize(REQUIRED_SCOPES, "user");

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jjYBdx4IL.evaluation</groupId>
@@ -19,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jetty.version>9.4.15.v20190215</jetty.version>
+        <jetty.version>9.4.18.v20190429</jetty.version>
         <gwt.version>2.8.2</gwt.version>
         <jackson.version>2.9.8</jackson.version>
         <lwjgl.version>3.1.6</lwjgl.version>
@@ -158,8 +159,8 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                                <!-- required because lwjgl and swing/awt don't work 
-                                    together: -->
+                            <!-- required because lwjgl and swing/awt don't 
+                                work together: -->
                             <reuseForks>false</reuseForks>
                             <groups>testgroup.RequiresIsolatedVM</groups>
                             <excludedGroups>testgroup.IgnoreFailure</excludedGroups>
@@ -169,6 +170,8 @@
                 </executions>
                 <configuration>
                     <systemPropertyVariables>
+                        <org.bytedeco.javacpp.logger>slf4j</org.bytedeco.javacpp.logger>
+                        <org.bytedeco.javacpp.loadlibraries>true</org.bytedeco.javacpp.loadlibraries>
                         <jna.debug_load>true</jna.debug_load>
                     </systemPropertyVariables>
                     <argLine>-Djava.library.path=${project.build.directory}/natives</argLine>
@@ -223,7 +226,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.8.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -901,6 +904,21 @@
             <version>3.9</version>
         </dependency>
         <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+            <version>1.5</version>
+        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>org.bytedeco</groupId> -->
+<!--             <artifactId>opencv</artifactId> -->
+<!--             <version>4.0.1-1.5</version> -->
+<!--         </dependency> -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>opencv-platform</artifactId>
+            <version>4.0.1-1.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
             <artifactId>org.eclipse.egit.github.core</artifactId>
             <version>2.1.5</version>
@@ -950,7 +968,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.26</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -1430,7 +1448,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
+                <version>1.7.26</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -1505,7 +1523,7 @@
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.10</version>
+                <version>1.4.11.1</version>
             </dependency>
             <dependency>
                 <groupId>org.tukaani</groupId>
@@ -1526,7 +1544,8 @@
             <build>
                 <pluginManagement>
                     <plugins>
-                    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                        <!--This plugin's configuration is used to store 
+                            Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                         <plugin>
                             <groupId>org.eclipse.m2e</groupId>
                             <artifactId>lifecycle-mapping</artifactId>

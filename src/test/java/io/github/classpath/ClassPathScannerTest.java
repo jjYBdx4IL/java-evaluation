@@ -1,6 +1,9 @@
 package io.github.classpath;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+
+import org.apache.commons.lang.SystemUtils;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassGraph.ClasspathElementFilter;
@@ -62,6 +65,8 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindClassesExcludingDependenciesWithoutUsingCLFast() throws MalformedURLException {
+        assumeFalse(SystemUtils.IS_OS_WINDOWS);
+        
         ClasspathElementFilter cpef = new ClasspathElementFilter() {
             
             @Override
