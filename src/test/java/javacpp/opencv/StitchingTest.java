@@ -37,10 +37,11 @@ public class StitchingTest {
     private static final File TEMP_DIR = Maven.getTempTestDir(StitchingTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(StitchingTest.class);
 
-//    static {
-//        System.setProperty("org.bytedeco.javacpp.logger", "slf4j");
-//    }
-    
+    static {
+        // System.setProperty("org.bytedeco.javacpp.logger", "slf4j");
+        LoadOrderDetectorTest.loadLibs("jniopencv_core", "jniopencv_stitching", "jniopencv_imgcodecs");
+    }
+
     public static BufferedImage crop(BufferedImage img, int x, int y, int w, int h) {
         BufferedImage imgPart = new BufferedImage(w, h, img.getType());
         Graphics2D gr = imgPart.createGraphics();
@@ -58,12 +59,12 @@ public class StitchingTest {
         // @insert:image:original.jpg@
         final int w = image.getWidth();
         final int h = image.getHeight();
-        final int overlap = w/20;
+        final int overlap = w / 20;
         File outFile1 = new File(TEMP_DIR, "splitOutput1.jpg");
-        ImageIO.write(crop(image, 0, 0, w/2+overlap, h), "jpg", outFile1);
+        ImageIO.write(crop(image, 0, 0, w / 2 + overlap, h), "jpg", outFile1);
         // @insert:image:splitOutput1.jpg@
         File outFile2 = new File(TEMP_DIR, "splitOutput2.jpg");
-        ImageIO.write(crop(image, w/2-overlap, 0, w/2+overlap, h), "jpg", outFile2);
+        ImageIO.write(crop(image, w / 2 - overlap, 0, w / 2 + overlap, h), "jpg", outFile2);
         // @insert:image:splitOutput2.jpg@
 
         MatVector imgs = new MatVector();

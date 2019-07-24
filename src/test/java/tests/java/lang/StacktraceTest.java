@@ -8,6 +8,7 @@
  */
 package tests.java.lang;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -40,6 +41,14 @@ public class StacktraceTest {
             fail();
         } catch (Exception ex) {
             assertTrue(ex.getStackTrace()[0].getClassName().endsWith("Two"));
+            assertEquals(Two.class.getName(), ex.getStackTrace()[0].getClassName());
         }
+    }
+    
+    @Test
+    public void testThreadGetStackTrace() {
+        StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
+        assertEquals(StacktraceTest.class.getName(), ste.getClassName());
+        assertEquals("testThreadGetStackTrace", ste.getMethodName());
     }
 }

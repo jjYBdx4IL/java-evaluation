@@ -8,8 +8,10 @@ package tests.java.awt;
  * %%
  * #L%
  */
+import static org.junit.Assert.assertFalse;
 
-import static org.junit.Assert.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -19,9 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class JFrameTest {
 

@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -37,7 +38,8 @@ public class FontTest extends InteractiveTestBase {
         openWindow();
 
         FontScanner fontScanner = new FontScanner();
-        List<String> files = fontScanner.getFontFiles("/usr/share/fonts");
+        List<String> files = fontScanner.getFontFiles(
+            SystemUtils.IS_OS_WINDOWS ? "C:\\Windows\\fonts" : "/usr/share/fonts");
         log.info("found " + files.size() + " font files");
         int count = 0;
         for (String fontFilePath : files) {

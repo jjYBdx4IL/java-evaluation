@@ -63,4 +63,22 @@ public class CalendarTest {
         c.add(Calendar.HOUR_OF_DAY, 26);
         assertEquals(day + 1, c.get(Calendar.DAY_OF_MONTH));
     }
+    
+    @Test
+    public void testUtc() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("UTC"));
+        c.setTimeInMillis(0);
+        assertEquals(0, c.get(Calendar.HOUR_OF_DAY));
+        c.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+        assertEquals(1, c.get(Calendar.HOUR_OF_DAY));
+        
+        Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        c2.setTimeInMillis(0);
+        assertEquals(0, c2.get(Calendar.HOUR_OF_DAY));
+        
+        Calendar c3 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
+        c3.setTimeInMillis(0);
+        assertEquals(1, c3.get(Calendar.HOUR_OF_DAY));
+    }
 }

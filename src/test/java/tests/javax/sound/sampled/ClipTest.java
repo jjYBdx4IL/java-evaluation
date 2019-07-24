@@ -28,6 +28,7 @@ import javazoom.jl.decoder.JavaLayerException;
  *
  * @author Github jjYBdx4IL Projects
  */
+//@meta:keywords:audio clip playback,wav file playback,wav,wave,playback,simple@
 public class ClipTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClipTest.class);

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.jjYBdx4IL.evaluation</groupId>
     <artifactId>java-evaluation</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
 
     <name>Java Features And Libraries Evaluation</name>
     <url>https://github.com/jjYBdx4IL/java-evaluation</url>
@@ -20,6 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <libPath>${project.build.directory}/natives</libPath>
         <jetty.version>9.4.18.v20190429</jetty.version>
         <gwt.version>2.8.2</gwt.version>
         <jackson.version>2.9.8</jackson.version>
@@ -54,10 +61,50 @@
             </plugin>
 
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <target>
+                        <move todir="${libPath}">
+                            <fileset dir="${libPath}" />
+                            <mapper type="flatten" />
+                        </move>
+                    </target>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <verbose>false</verbose>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-opencv</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>opencv,ffmpeg,tesseract</includeArtifactIds>
+                            <includeClassifiers>${os.family}-x86_64</includeClassifiers>
+                            <outputDirectory>${libPath}</outputDirectory>
+                            <includes>**/*.so*,**/*.dll</includes>
+                            <actTransitively>true</actTransitively>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -73,9 +120,9 @@
                 </executions>
                 <configuration>
                     <rules>
-                        <requireNoRepositories />
+<!--                         <requireNoRepositories /> -->
                         <requirePluginVersions />
-                        <dependencyConvergence />
+<!--                         <dependencyConvergence /> -->
                         <requireUpperBoundDeps />
                         <requireReleaseDeps>
                             <message>No Snapshots Allowed!</message>
@@ -113,6 +160,24 @@
                     <skip>${skipITs}</skip>
                     <skipTests>${skipITs}</skipTests>
                     <failIfNoTests>true</failIfNoTests>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.mavennatives</groupId>
+                <artifactId>maven-nativedependencies-plugin</artifactId>
+                <version>0.0.7</version>
+                <executions>
+                    <execution>
+                        <id>unpacknatives</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nativesTargetDir>${libDir}</nativesTargetDir>
                 </configuration>
             </plugin>
 
@@ -171,16 +236,17 @@
                 <configuration>
                     <systemPropertyVariables>
                         <org.bytedeco.javacpp.logger>slf4j</org.bytedeco.javacpp.logger>
-                        <org.bytedeco.javacpp.loadlibraries>true</org.bytedeco.javacpp.loadlibraries>
+                        <org.bytedeco.javacpp.loadlibraries>false</org.bytedeco.javacpp.loadlibraries>
                         <jna.debug_load>true</jna.debug_load>
                     </systemPropertyVariables>
-                    <argLine>-Djava.library.path=${project.build.directory}/natives</argLine>
+                    <argLine>-Djava.library.path=${libPath}</argLine>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <reportFormat>plain</reportFormat>
                     <reuseForks>false</reuseForks>
                     <forkCount>1</forkCount>
                     <failIfNoTests>true</failIfNoTests>
                     <excludedGroups>testgroup.IT</excludedGroups>
+                    <rerunFailingTestsCount>10</rerunFailingTestsCount>
                 </configuration>
             </plugin>
         </plugins>
@@ -234,7 +300,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -405,6 +471,11 @@
             <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>net.troja.eve</groupId>
+            <artifactId>eve-esi</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.jjYBdx4IL.nn.fannj</groupId>
             <artifactId>fannj</artifactId>
             <version>0.7.2</version>
@@ -439,6 +510,11 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>at.swimmesberger</groupId>
+            <artifactId>glazedlists</artifactId>
+            <version>1.13.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>1.25.0</version>
@@ -465,6 +541,11 @@
             <version>1.1.0</version>
         </dependency>
         <dependency>
+            <groupId>de.erichseifert.gral</groupId>
+            <artifactId>gral-core</artifactId>
+            <version>0.11</version>
+        </dependency>
+        <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
             <version>1.10.1</version>
@@ -482,7 +563,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <version>1.4.199</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -649,6 +730,11 @@
             <version>1.1</version>
         </dependency>
         <dependency>
+            <groupId>com.github.tulskiy</groupId>
+            <artifactId>jkeymaster</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
             <groupId>javazoom</groupId>
             <artifactId>jlayer</artifactId>
             <version>1.0.1</version>
@@ -730,6 +816,11 @@
             <version>${junit.platform.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.lgooddatepicker</groupId>
+            <artifactId>LGoodDatePicker</artifactId>
+            <version>10.3.1</version>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -908,11 +999,11 @@
             <artifactId>javacv</artifactId>
             <version>1.5</version>
         </dependency>
-<!--         <dependency> -->
-<!--             <groupId>org.bytedeco</groupId> -->
-<!--             <artifactId>opencv</artifactId> -->
-<!--             <version>4.0.1-1.5</version> -->
-<!--         </dependency> -->
+        <!-- <dependency> -->
+        <!-- <groupId>org.bytedeco</groupId> -->
+        <!-- <artifactId>opencv</artifactId> -->
+        <!-- <version>4.0.1-1.5</version> -->
+        <!-- </dependency> -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>opencv-platform</artifactId>
@@ -934,12 +1025,27 @@
             <version>20181114.1</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jjYBdx4IL</groupId>
+            <artifactId>parser</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.sheigutn</groupId>
+            <artifactId>pushbullet-java-8</artifactId>
+            <version>1.3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.misc</groupId>
+            <artifactId>remote-robot</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mozilla</groupId>
@@ -1009,6 +1115,11 @@
             <version>1.19.0</version>
         </dependency>
         <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>tesseract-platform</artifactId>
+            <version>4.0.0-1.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.openimaj</groupId>
             <artifactId>test-resources</artifactId>
             <version>1.3.1</version>
@@ -1016,7 +1127,7 @@
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>text-utils</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -1051,6 +1162,17 @@
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>vmmgmt-test-utils</artifactId>
             <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.dfki.mary</groupId>
+            <artifactId>voice-cmu-slt-hsmm</artifactId>
+            <version>5.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
@@ -1198,7 +1320,7 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.8.0</version>
+                <version>2.8.5</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -1358,12 +1480,12 @@
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
-                <version>5.2.0</version>
+                <version>5.3.1</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna-platform</artifactId>
-                <version>5.2.0</version>
+                <version>5.3.1</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -1398,7 +1520,7 @@
             <dependency>
                 <groupId>com.squareup.okio</groupId>
                 <artifactId>okio</artifactId>
-                <version>1.14.1</version>
+                <version>1.17.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.pdfbox</groupId>
@@ -1579,6 +1701,27 @@
                                                 <ignore></ignore>
                                             </action>
                                         </pluginExecution>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>
+                                                    org.apache.maven.plugins
+                                                </groupId>
+                                                <artifactId>
+                                                    maven-dependency-plugin
+                                                </artifactId>
+                                                <versionRange>
+                                                    [3.1.1,)
+                                                </versionRange>
+                                                <goals>
+                                                    <goal>
+                                                        unpack-dependencies
+                                                    </goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore></ignore>
+                                            </action>
+                                        </pluginExecution>
                                     </pluginExecutions>
                                 </lifecycleMappingMetadata>
                             </configuration>
@@ -1610,5 +1753,30 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>opencv-natives-extraction-windows</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <os.family>windows</os.family>
+            </properties>
+        </profile>
+        <profile>
+            <id>opencv-natives-extraction-linux</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <properties>
+                <os.family>linux</os.family>
+            </properties>
+        </profile>
     </profiles>
+
 </project>

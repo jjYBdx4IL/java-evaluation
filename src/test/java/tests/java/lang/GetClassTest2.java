@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.jjYBdx4IL.utils.env.Maven;
-import com.github.jjYBdx4IL.utils.klass.Compile;
+import com.github.jjYBdx4IL.utils.klazz.Compile;
 
 /**
  *

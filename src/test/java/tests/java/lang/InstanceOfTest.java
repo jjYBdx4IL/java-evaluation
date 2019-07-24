@@ -46,6 +46,8 @@ public class InstanceOfTest {
 
         assertFalse(ste.getClass().isInstance(SocketTimeoutException.class));
         assertFalse(ste.getClass().isInstance(stec));
+        assertTrue(ste.getClass().isInstance(new SocketTimeoutException()));
+        assertTrue(ste.getClass().isInstance(ste));
 
         assertFalse(ex.getClass().isInstance(Exception.class));
         assertFalse(ex.getClass().isInstance(exc));

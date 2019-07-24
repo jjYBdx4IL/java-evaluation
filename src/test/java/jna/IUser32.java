@@ -1,4 +1,4 @@
-package net.java.dev.jna;
+package jna;
 
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

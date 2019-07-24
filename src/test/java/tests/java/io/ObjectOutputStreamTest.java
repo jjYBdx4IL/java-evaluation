@@ -24,6 +24,9 @@ public class ObjectOutputStreamTest {
         byte[] data;
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.flush(); // flush out header
+            LOG.info("header size: " + baos.size());
+            
             long end = System.currentTimeMillis() + DURATION_MS;
             do {
                 oos.writeObject(ExampleDTO.genRandom());
@@ -33,6 +36,12 @@ public class ObjectOutputStreamTest {
                 n * 1000l / DURATION_MS, baos.size() / n));
 
             oos.flush();
+            LOG.info(String.format("total stream size: %,d bytes", baos.size()));
+
+            // prevent memory leak on longer running oos (not ois: the writer
+            // will signal the reset to the receiver):
+            oos.reset();
+
             data = baos.toByteArray();
             long start = System.currentTimeMillis();
             try (ByteArrayInputStream bais = new ByteArrayInputStream(data);

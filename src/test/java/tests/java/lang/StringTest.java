@@ -41,10 +41,13 @@ public class StringTest {
         assertEquals("07", String.format(Locale.ROOT, "%02d", 7));
         assertEquals("004e", String.format(Locale.ROOT, "%04x", 78));
         assertEquals("804E", String.format(Locale.ROOT, "%X", 78+128*256));
-        assertEquals("abc", String.format("%s", "abc"));
-        assertEquals("abc -> 123", String.format("%s -> %s", "abc", "123"));
-        assertEquals("abc", String.format("%1$s", "abc"));
-        assertEquals("123", String.format("%2$s", "abc", "123"));
+        assertEquals("abc", String.format(Locale.ROOT, "%s", "abc"));
+        assertEquals("abc -> 123", String.format(Locale.ROOT, "%s -> %s", "abc", "123"));
+        assertEquals("abc", String.format(Locale.ROOT, "%1$s", "abc"));
+        assertEquals("123", String.format(Locale.ROOT, "%2$s", "abc", "123"));
+        assertEquals("123  ", String.format(Locale.ROOT, "%-5d", 123));
+        assertEquals("+123 ", String.format(Locale.ROOT, "%-+5d", 123));
+        assertEquals("  (12)", String.format(Locale.ROOT, "%(6d", -12));
     }
     
     @Test

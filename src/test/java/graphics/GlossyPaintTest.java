@@ -19,7 +19,7 @@ import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.RDRunner;
-import com.github.jjYBdx4IL.utils.klass.ClassReloader;
+import com.github.jjYBdx4IL.utils.klazz.ClassReloader;
 
 @RunWith(RDRunner.class)
 public class GlossyPaintTest extends InteractiveTestBase implements Runnable {

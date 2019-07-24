@@ -1,4 +1,4 @@
-package net.java.dev.jna;
+package jna;
 
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import com.sun.jna.platform.win32.WinDef.HWND;

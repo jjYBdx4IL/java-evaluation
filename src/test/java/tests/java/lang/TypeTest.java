@@ -91,6 +91,13 @@ public class TypeTest {
     }
 
     @Test
+    public void testHexIntRepresentation() {
+        assertEquals(0xc0000000, (1 << 30) | (1 << 31));
+        assertEquals(0xc02a0001, 1 | (0x2a << 16) | (0xc0 << 24));
+        
+    }
+    
+    @Test
     public void testIntDivRoundingErrors() {
         assertEquals(0, 1 / 3);
         assertEquals(0, 1 / 2);
@@ -111,6 +118,13 @@ public class TypeTest {
         assertEquals(0, (1 / -3));
         assertEquals(0, 1 / -2);
         assertEquals(0, 2 / -3);
+    }
+    
+    @Test
+    public void testIntPrecedence() {
+        assertEquals(2, 3 / 2 * 2);
+        assertEquals(3, 3 * 2 / 2);
+        assertEquals(3, 2 * 3 / 2);
     }
 
     @Test

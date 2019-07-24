@@ -75,6 +75,9 @@ public class SimpleDateFormatTest {
         stdf = new SimpleDateFormat("yyyy MM dd HH mm ss");
         stdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("2001 02 03 13 15 16", stdf.format(d));
+        
+        stdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+        assertEquals("2001-02-03 14:15:16.000 +0100", stdf.format(d));
     }
     
     @Test

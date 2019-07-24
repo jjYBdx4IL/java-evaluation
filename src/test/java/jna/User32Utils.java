@@ -1,6 +1,8 @@
-package net.java.dev.jna;
+package jna;
 
 import com.sun.jna.Native;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.RECT;
 import com.sun.jna.platform.win32.WinUser.WINDOWPLACEMENT;
@@ -26,26 +28,27 @@ public class User32Utils {
 
     public static void logHWNDInfo(HWND hWnd) {
         // window title
-        byte[] windowText = new byte[512];
-        IUser32.instance.GetWindowTextA(hWnd, windowText, 512);
+        char[] windowText = new char[512];
+        User32.INSTANCE.GetWindowText(hWnd, windowText, 512);
         String wText = Native.toString(windowText).trim();
         LOG.info(wText);
         
         // window position/size
         RECT rect = new RECT();
-        IUser32.instance.GetWindowRect(hWnd, rect);
+        User32.INSTANCE.GetWindowRect(hWnd, rect);
         LOG.info(rect.toString());
         
         WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
-        IUser32.instance.GetWindowPlacement(hWnd, placement);
+        User32.INSTANCE.GetWindowPlacement(hWnd, placement);
     }
 
     public static HWND getWindowAtCursor() {
-        long[] getPos = new long[1];
+        WinDef.POINT getPos = new WinDef.POINT();
 
-        IUser32.instance.GetCursorPos(getPos);
-        LOG.trace(String.format(Locale.ROOT, "pos: %d, %d", User32Utils.x(getPos[0]), User32Utils.y(getPos[0])));
-        HWND hwnd = IUser32.instance.WindowFromPoint(getPos[0]);
+        User32.INSTANCE.GetCursorPos(getPos);
+        LOG.trace(String.format(Locale.ROOT, "pos: %d, %d", getPos.x, getPos.y));
+        long getPosL = (getPos.x & 0xFFFF) + ((getPos.y & 0xFFFF) << 32);
+        HWND hwnd = IUser32.instance.WindowFromPoint(getPosL);
         
         return hwnd;
     }
