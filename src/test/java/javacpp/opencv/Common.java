@@ -20,7 +20,7 @@ import com.github.jjYBdx4IL.utils.remoterobot.RobotClient;
 import com.github.jjYBdx4IL.utils.remoterobot.RobotServer;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.TimeZone;
-
+import javacpp.opencv.eve.ReverseFontMatcherApp;
 import org.apache.commons.io.IOUtils;
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
@@ -290,6 +291,13 @@ public class Common {
         assertEquals(db.getDataType(), DataBuffer.TYPE_INT);
         int[] data = ((DataBufferInt) db).getData();
 
+        if (bi.getWidth() % 2 != 0) {
+            throw new RuntimeException("odd width");
+        }
+        if (bi.getHeight() % 2 != 0) {
+            throw new RuntimeException("odd height");
+        }
+        
         Frame f = new Frame(bi.getWidth(), bi.getHeight(), Frame.DEPTH_UBYTE, 4);
         long step = f.imageStride * Math.abs(f.imageDepth) / 8;
         int type = CV_MAKETYPE(f.imageDepth, f.imageChannels);
@@ -389,5 +397,13 @@ public class Common {
     protected void resetMouse() throws AWTException, InterruptedException, IOException {
         rightclick(disableCtxMenuClickLoc);
         click(disableCtxMenuClickLoc);
+    }
+    
+    protected Template createTpl(String tplText, Font font, float minScore) throws IOException {
+        BufferedImage bi = ReverseFontMatcherApp.createFontImage(font, tplText, 0);
+        Template tpl = new Template(tplText, bi, minScore, bot);
+        tpl.setBlur(true);
+        tpl.setNormalize(true);
+        return tpl;
     }
 }

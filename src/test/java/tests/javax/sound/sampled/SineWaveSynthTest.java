@@ -70,7 +70,7 @@ public class SineWaveSynthTest {
             double amplitudeLeft = VOLUME * Math.sin(frame * 2 * Math.PI * HZ / SAMPLE_RATE);
             double amplitudeRight = VOLUME * Math.sin(frame * 2 * Math.PI * (2*HZ) / SAMPLE_RATE);
 
-            toFrame(buf, amplitudeLeft, amplitudeRight);
+            SampleUtils.toFrame(buf, amplitudeLeft, amplitudeRight);
 
             assertEquals(buf.length, line.write(buf, 0, buf.length));
             frame++;
@@ -90,14 +90,5 @@ public class SineWaveSynthTest {
                 }
             };
         }.start();
-    }
-    
-    public static void toFrame(byte[] buf, double leftAmp, double rightAmp) {
-        long wordValue = (long) (leftAmp * 32767d);
-        buf[0] = (byte) (wordValue >> 8);
-        buf[1] = (byte) (wordValue & 0xFF);
-        wordValue = (long) (rightAmp * 32767d);
-        buf[2] = (byte) (wordValue >> 8);
-        buf[3] = (byte) (wordValue & 0xFF);
     }
 }

@@ -1,5 +1,11 @@
 package tests.java.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import org.junit.AfterClass;
+import org.junit.Test;
+
 /*
  * #%L
  * Evaluation
@@ -12,16 +18,13 @@ package tests.java.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class TimeZoneTest {
     
-    private final static TimeZone defaultTimeZoneBackup = TimeZone.getDefault();
+    private static final TimeZone defaultTimeZoneBackup = TimeZone.getDefault();
     
-    @After
-    public void afterTest() {
+    @AfterClass
+    public static void afterClass() {
         // restore default timezone to avoid introducing interdependencies between the test units...
         // (avoid using compile-on-save in Netbeans... it will save the class using lmod time from
         // the wrong timezone and therefore refuse to update it upon further changes!)

@@ -23,7 +23,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -65,6 +64,9 @@ public class EveOnlineAutominerTest extends Common {
     Template warpToLoc0mTpl = null;
     Template warpTo0mTpl = null;
     Template oreHoldFullTpl = null;
+    Template nothingFoundTpl = null;
+    Template watchListTpl = null;
+    Template warpToMemberTpl = null;
 
     @BeforeClass
     public static void beforeClass() throws IOException {
@@ -81,19 +83,12 @@ public class EveOnlineAutominerTest extends Common {
 
         enableBot();
 
-        Font baseFont1 = Font.createFont(Font.TRUETYPE_FONT, new File(
-            "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Eve Online\\SharedCache\\ResFiles\\"
-                + "88\\88f9d95bc6c159ab_0e00fd949bf65bc63e967002d7847113"));
-        Font ctxMenuFont = baseFont1.deriveFont(Font.PLAIN, 13.0f); // 12.71
-        Font baseFont2 = Font.createFont(Font.TRUETYPE_FONT, new File(
-            "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Eve Online\\SharedCache\\ResFiles\\"
-                + "bc\\bcf18b74b8808cb1_4bff95b968bbf6aec216b8a8d51553f7"));
-        @SuppressWarnings("unused")
-        Font titleFont = baseFont2.deriveFont(Font.PLAIN, 11.1f);
+        Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File(
+            Utils.sharedCacheLoc + "/ResFiles/88/88f9d95bc6c159ab_0e00fd949bf65bc63e967002d7847113"));
 
-        BufferedImage warpTo0mImg = ReverseFontMatcherTest.createFontImage(ctxMenuFont, "Warp to Within 0 m", 0);
-        warpTo0mTpl = new Template("warpTo0mImg", warpTo0mImg, 0.90f, bot);
-        warpTo0mTpl.setBlur(true);
+        warpTo0mTpl = createTpl("Warp to Within 0 m", font1.deriveFont(Font.PLAIN, 13.0f), 0.90f);
+        warpToMemberTpl = createTpl("Warp to Member          ", font1.deriveFont(Font.PLAIN, 12.0f), 0.96f);
+        watchListTpl = createTpl("Watch List", font1.deriveFont(Font.PLAIN, 10.86f), 0.96f);
 
         miningOverviewTpl = new Template("eve/EveOnlineOverviewMining.png", 0.97f, bot);
         stripminer1Tpl = new Template("eve/EveOnlineStripMiner1b.png", 0.99f, bot);
@@ -108,6 +103,7 @@ public class EveOnlineAutominerTest extends Common {
         selectAllTpl = new Template("eve/EveOnlineSelectAll.png", 0.95f, bot);
         warpToLoc0mTpl = new Template("eve/EveOnlineWarpTo0m.png", 0.95f, bot);
         oreHoldFullTpl = new Template("eve/EveOnlineOreHoldFull.png", 0.985f, bot);
+        nothingFoundTpl = new Template("eve/NothingFound.png", 0.95f, bot);
 
         // width and height need to be a multiple of 2
 
@@ -180,12 +176,12 @@ public class EveOnlineAutominerTest extends Common {
                     Thread.sleep(10000);
                     continue;
                 }
-                
+
                 int numActiveStripMiners = stripminerTpl.getLastMatchCount() + stripminer1Tpl.getLastMatchCount();
-                
+
                 // launch drones early in case there are enemy NPCs around
                 bot.sendInput(KeyEvent.VK_L);
-                
+
                 if (numActiveStripMiners == 0) {
                     Match match = miningOverviewTpl.findBestMatch(null);
                     if (match == null) {
@@ -193,8 +189,9 @@ public class EveOnlineAutominerTest extends Common {
                         Thread.sleep(10000);
                         continue;
                     }
-    
-                    // no strip miner active for 8 minutes -> warp to next belt via
+
+                    // no strip miner active for 8 minutes -> warp to next belt
+                    // via
                     // HOME
                     if (TimeUtils.isOlderThan(lastStripMinerActivityDetected, "8m")
                         && TimeUtils.isOlderThan(lastWarpToBelt, "8m")) {
@@ -203,22 +200,27 @@ public class EveOnlineAutominerTest extends Common {
                         state++;
                         continue;
                     }
-    
+
                     if (!switchToMiningTab()) {
                         continue;
                     }
-                    
+
+                    if (nothingFoundTpl.findBestMatch(match.offsetRegion(0, 0, 500, 250)) != null) {
+                        LOG.info("switching to next belt (2)");
+                        toCache("beltIdx", ++beltIdx);
+                        state++;
+                        continue;
+                    }
+
                     match.clickRelToMatchOrigin(40, 70);
-    
+
                     // approch first target in mining overview
                     bot.sendInput(KeyEvent.VK_Q);
                     // lock that target
                     bot.sendInput(KeyEvent.VK_CONTROL);
                     // wait for target lock
                     Thread.sleep(5000L);
-                    // start mining drones
-                    bot.sendInput(KeyEvent.VK_F);
-                    
+
                     // start strip miners
                     if (useLeftStripMiner) {
                         bot.sendInput(KeyEvent.VK_F2);
@@ -227,13 +229,19 @@ public class EveOnlineAutominerTest extends Common {
                     }
                     useLeftStripMiner = !useLeftStripMiner;
                 }
-                
+
                 if (useLeftStripMiner) {
                     bot.sendInput(KeyEvent.VK_F2);
                 } else {
                     bot.sendInput(KeyEvent.VK_F3);
                 }
                 useLeftStripMiner = !useLeftStripMiner;
+                
+                // launch drones again, in case our first try was too early
+                bot.sendInput(KeyEvent.VK_L);
+                Thread.sleep(3000L);
+                // start mining drones
+                bot.sendInput(KeyEvent.VK_F);
             }
             // set course to base
             else if (state == 1) {
@@ -274,35 +282,11 @@ public class EveOnlineAutominerTest extends Common {
                 }
 
                 oreHoldMatch.clickMatchCenter();
+                Thread.sleep(1000);
                 bot.sendInput(KeyEvent.VK_TAB);
                 bot.sendInput(KeyEvent.VK_TAB);
                 bot.sendInput(KeyEvent.VK_CONTROL, KeyEvent.VK_A);
                 bot.sendInput(KeyEvent.VK_CONTROL, KeyEvent.VK_X);
-
-                // // find block border right to "ore hold" label in inventory
-                // Point p = match.relMatchPos;
-                // p.x += match.tpl.cols() + 3;
-                // p.y += match.tpl.rows();
-                // double distance = match.pixelBlackDistance(p.x, p.y);
-                // for (int x = p.x; x < match.screenshot.cols(); x++) {
-                // if (match.pixelBlackDistance(x, p.y) < distance / 2) {
-                // // this should be the position of the
-                // // first ore in the ore hold:
-                // p.x = x + 30;
-                // break;
-                // }
-                // }
-
-                // match.rightclickRelToScreenshot(p);
-                // Point firstOrePos = match.toAbsoluteCoords(p);
-
-                // match = selectAllTpl.findBestMatchRetry(match.offsetRegion(0,
-                // -230, 300, 500), 20, 3000);
-                // if (match == null) {
-                // Thread.sleep(10000);
-                // continue;
-                // }
-                // match.clickCenter();
 
                 Match itemHangarMatch = itemHangarTpl.findBestMatch(inventoryRegion);
                 if (itemHangarMatch == null) {
@@ -313,6 +297,7 @@ public class EveOnlineAutominerTest extends Common {
 
                 // drop into item hangar
                 itemHangarMatch.clickMatchCenter();
+                Thread.sleep(1000);
                 bot.sendInput(KeyEvent.VK_TAB);
                 bot.sendInput(KeyEvent.VK_TAB);
                 bot.sendInput(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
@@ -321,6 +306,12 @@ public class EveOnlineAutominerTest extends Common {
                 oreHoldMatch.clickMatchCenter();
                 Thread.sleep(3000);
                 if (oreHoldFullTpl.findBestMatch(inventoryRegion) != null) {
+                    LOG.info("emptying ores failed (1)");
+                    Thread.sleep(3000);
+                    continue;
+                }
+                if (nothingFoundTpl.findBestMatch(inventoryRegion) == null) {
+                    LOG.info("emptying ores failed (2)");
                     Thread.sleep(3000);
                     continue;
                 }
@@ -341,22 +332,41 @@ public class EveOnlineAutominerTest extends Common {
             }
             // warp to belt
             else if (state == 4) {
+                // make sure we finished undocking
                 Match m = miningOverviewTpl.findBestMatch();
                 if (m == null) {
                     Thread.sleep(3000);
                     continue;
                 }
+                
+                // are we in mining fleet (ie. fleet watch list is open)?
+                m = watchListTpl.findBestMatch();
+                if (m != null) {
+                    // then warp to first member in fleet watch list
+                    if (!activateContextMenuEntry(m.matchCenterToAbsCoords(0, 30), warpToMemberTpl)) {
+                        LOG.warn("fleet warp option not found");
+                        Thread.sleep(10000);
+                        continue;
+                    }
+                } else {
+                    // mining solo in asteroid belts
+                    m = miningOverviewTpl.findBestMatch();
+                    if (m == null) {
+                        Thread.sleep(3000);
+                        continue;
+                    }
 
-                // click on belts tab
-                if (!switchToBeltsTab()) {
-                    continue;
-                }
+                    // click on belts tab
+                    if (!switchToBeltsTab()) {
+                        continue;
+                    }
 
-                // select and warp to asteroid
-                if (!activateContextMenuEntry(m.matchCenterToAbsCoords(80, 64 + beltIdx * 19), warpTo0mTpl)) {
-                    LOG.warn("warp option not found");
-                    Thread.sleep(10000);
-                    continue;
+                    // select and warp to asteroid
+                    if (!activateContextMenuEntry(m.matchCenterToAbsCoords(80, 64 + beltIdx * 19), warpTo0mTpl)) {
+                        LOG.warn("warp option not found");
+                        Thread.sleep(10000);
+                        continue;
+                    }
                 }
 
                 switchToMiningTab();
@@ -369,7 +379,7 @@ public class EveOnlineAutominerTest extends Common {
             }
         }
     }
-    
+
     private boolean switchToMiningTab() throws AWTException, InterruptedException, IOException {
         Match m = miningOverviewTpl.findBestMatch();
         if (m == null) {
@@ -378,7 +388,7 @@ public class EveOnlineAutominerTest extends Common {
         m.clickRelToMatchOrigin(80, 30);
         return true;
     }
-    
+
     private boolean switchToBeltsTab() throws AWTException, InterruptedException, IOException {
         Match m = miningOverviewTpl.findBestMatch();
         if (m == null) {

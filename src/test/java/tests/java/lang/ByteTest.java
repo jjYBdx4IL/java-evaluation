@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Github jjYBdx4IL Projects
@@ -68,5 +70,19 @@ public class ByteTest {
             fail();
         } catch(NumberFormatException ex) {
         }
+    }
+    
+    @Test
+    public void testByteArrayEquals() {
+        byte[] a01 = new byte[] {0, 1};
+        byte[] b01 = new byte[] {0, 1};
+        byte[] c11 = new byte[] {1, 1};
+        byte[] d111 = new byte[] {1, 1, 1};
+        
+        assertFalse(a01.equals(b01));
+        
+        assertTrue(Arrays.equals(a01, b01));
+        assertTrue(!Arrays.equals(a01, c11));
+        assertTrue(!Arrays.equals(c11, d111));
     }
 }

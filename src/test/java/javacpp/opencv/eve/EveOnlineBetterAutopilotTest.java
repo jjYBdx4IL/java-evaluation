@@ -1,31 +1,29 @@
 package javacpp.opencv.eve;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import com.github.jjYBdx4IL.utils.env.Surefire;
 import com.github.jjYBdx4IL.utils.remoterobot.KeepAlive;
-import com.privatejgoodies.common.base.SystemUtils;
-import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinUser;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.AWTException;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.HotKeyListener;
+import com.tulskiy.keymaster.common.Provider;
 import javacpp.opencv.Common;
 import javacpp.opencv.Match;
 import javacpp.opencv.Template;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pushbullet.PushbulletUtils;
 import testgroup.RequiresIsolatedVM;
+
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.io.IOException;
+
+import javax.swing.KeyStroke;
 
 /**
  * An example based on:
@@ -51,13 +49,12 @@ import testgroup.RequiresIsolatedVM;
  */
 // @meta:keywords:eve online,autopilot@
 @Category(RequiresIsolatedVM.class)
-public class EveOnlineBetterAutopilotTest extends Common {
+public class EveOnlineBetterAutopilotTest extends Common implements HotKeyListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(EveOnlineBetterAutopilotTest.class);
 
     private volatile boolean isActive = false;
     private volatile boolean isDoOnce = false;
-    private static User32 lib = null;
 
     private static Template jumpTpl;
     private static Template dockTpl;
@@ -66,12 +63,9 @@ public class EveOnlineBetterAutopilotTest extends Common {
 
     KeepAlive keepAlive = null;
     
-    @BeforeClass
-    public static void beforeClass() throws IOException {
-        assumeTrue(SystemUtils.IS_OS_WINDOWS);
-        lib = User32.INSTANCE;
-    }
-
+    private final KeyStroke keyStrokeF10 = KeyStroke.getKeyStroke("F10");
+    private final KeyStroke keyStrokeF11 = KeyStroke.getKeyStroke("F11");
+    
     @Test
     public void test() throws IOException, InterruptedException, AWTException, JavaLayerException {
         assumeTrue(Surefire.isSingleTestExecution());
@@ -90,44 +84,10 @@ public class EveOnlineBetterAutopilotTest extends Common {
         undockTpl = new Template("eve/EveOnlineBetterAutopilotUndock.png", 0.97f, bot);
         lookAtMyShipTpl = new Template("eve/EveOnlineBetterAutopilotLookAtMyShip.png", 0.94f, bot);
 
-        new Thread() {
-            @Override
-            public void run() {
-                final int hotKeyId = 1;
-                final int hotKeyId2 = 2;
-                WinUser.MSG msg = new WinUser.MSG();
-                // assertTrue(lib.RegisterHotKey(null, hotKeyId,
-                // WinUser.MOD_ALT, KeyEvent.VK_F12));
-                // assertTrue(lib.RegisterHotKey(null, hotKeyId2,
-                // WinUser.MOD_ALT, KeyEvent.VK_F11));
-                assertTrue(lib.RegisterHotKey(null, hotKeyId, 0, KeyEvent.VK_F11));
-                assertTrue(lib.RegisterHotKey(null, hotKeyId2, 0, KeyEvent.VK_F10));
-                while (lib.GetMessage(msg, null, 0, 0) != -1) {
-                    if (msg.message == WinUser.WM_QUIT) {
-                        lib.UnregisterHotKey(null, hotKeyId);
-                        lib.UnregisterHotKey(null, hotKeyId2);
-                        return;
-                    }
-                    if (msg.message == WinUser.WM_HOTKEY) {
-                        if (msg.wParam.intValue() == hotKeyId) {
-                            isActive = !isActive;
-                            LOG.info("changed state: isActive = " + isActive);
-                            if (isActive) {
-                                play("on.mp3");
-                            } else {
-                                play("off.mp3");
-                            }
-                        } else if (msg.wParam.intValue() == hotKeyId2) {
-                            isDoOnce = true;
-                            LOG.info("do once");
-                        }
-                    }
-                }
-                // assertTrue(lib.UnregisterHotKey(null, hotKeyId));
-                // assertTrue(lib.UnregisterHotKey(null, hotKeyId2));
-            }
-        }.start();
-
+        Provider provider = Provider.getCurrentProvider(false);
+        provider.register(keyStrokeF10, this);
+        provider.register(keyStrokeF11, this);
+        
         Rectangle region = new Rectangle(FIRST_WAYPOINT_POS.x - 50, FIRST_WAYPOINT_POS.y - 50, 500, 500);
 
         LOG.info("started");
@@ -213,5 +173,21 @@ public class EveOnlineBetterAutopilotTest extends Common {
                 }
             }
         }.start();
+    }
+
+    @Override
+    public void onHotKey(HotKey hotKey) {
+        if (hotKey.keyStroke.equals(keyStrokeF11)) {
+            isActive = !isActive;
+            LOG.info("changed state: isActive = " + isActive);
+            if (isActive) {
+                play("on.mp3");
+            } else {
+                play("off.mp3");
+            }
+        } else if (hotKey.keyStroke.equals(keyStrokeF10)) {
+            isDoOnce = true;
+            LOG.info("do once");
+        }
     }
 }

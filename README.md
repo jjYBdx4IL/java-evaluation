@@ -11,7 +11,7 @@ works.
 
 Run
 
-    mvn exec:java
+    mvn exec:java -Ptestgui
 
 to start up a GUI that will re-run a selected test unit as soon as
 a change in its class is detected. Btw if you are using NetBeans, don't

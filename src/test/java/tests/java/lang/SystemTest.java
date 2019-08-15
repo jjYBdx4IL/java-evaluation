@@ -36,4 +36,9 @@ public class SystemTest {
         assertNotNull(p.getProperty("java.runtime.version"));
         LOG.info("java runtime version: " + p.getProperty("java.runtime.version"));
     }
+    
+    @Test
+    public void testCurrentTime() {
+        LOG.info(String.format("System.currentTimeMillis() = %,d", System.currentTimeMillis()));
+    }
 }

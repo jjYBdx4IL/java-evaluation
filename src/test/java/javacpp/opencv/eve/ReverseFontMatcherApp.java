@@ -72,8 +72,7 @@ import testgroup.RequiresIsolatedVM;
 public class ReverseFontMatcherApp extends Common implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReverseFontMatcherApp.class);
-    public static final File EVE_RES_DIR = new File(
-        "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Eve Online\\SharedCache\\ResFiles");
+    public static final File EVE_RES_DIR = new File(Utils.sharedCacheLoc + "/ResFiles");
     public static final File TEMP_DIR = Maven.getTempTestDir(ReverseFontMatcherApp.class);
     public static final File CACHE_FILE = new File(TEMP_DIR.getParentFile(), TEMP_DIR.getName() + ".resfontcache");
     public static final int PADDING = 64;
@@ -640,9 +639,10 @@ public class ReverseFontMatcherApp extends Common implements Runnable {
         Rectangle2D bounds = fm.getStringBounds(text, g);
         g.dispose();
 
-        bi = new BufferedImage((int) Math.ceil(bounds.getWidth() + 2 * padding),
-            (int) Math.ceil(bounds.getHeight() + 2 * padding),
-            bi.getType());
+        int width = (int) Math.ceil(bounds.getWidth() + 2 * padding);
+        int height = (int) Math.ceil(bounds.getHeight() + 2 * padding); 
+        
+        bi = new BufferedImage(width + width % 2, height + height % 2, bi.getType());
         g = (Graphics2D) bi.getGraphics();
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);

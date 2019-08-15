@@ -33,6 +33,15 @@ public class TypeTest {
     public void beforeTest() {
         propertyRestorer.restoreProps();;
     }
+    
+    @Test
+    public void testImplicitArgumentConversion() {
+        // there is NO implicit argument conversion before pushing the result into the function call
+        assertEquals(4d, Math.pow(2, 3 / 2 * 2), 1e-6);
+        assertEquals(8d, Math.pow(2, 3 / 2d * 2), 1e-6);
+        assertEquals(8d, Math.pow(2, 3d / 2 * 2), 1e-6);
+        assertEquals(4d, Math.pow(2, 3 / 2 * 2d), 1e-6);
+    }
 
     @Test
     public void testBooleanParse() {

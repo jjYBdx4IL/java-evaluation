@@ -48,8 +48,9 @@ public class SequencerExampleMain implements MetaEventListener {
         receiver.send(AllNotesOffMsg.create(2), outdev.getMicrosecondPosition());
         receiver.send(AllNotesOffMsg.create(3), outdev.getMicrosecondPosition());
 
-        // MidiChannelRemapper mapper = new MidiChannelRemapper(receiver);
-        // mapper.mapAllTo(0, 3);
+//        MidiChannelRemapper mapper = new MidiChannelRemapper(receiver);
+//        mapper.mapAllTo(0, 3);
+//        sequencer.getTransmitter().setReceiver(mapper);
         sequencer.getTransmitter().setReceiver(receiver);
 
         sequencer.getTransmitter().setReceiver(new MidiLoggerReceiver());

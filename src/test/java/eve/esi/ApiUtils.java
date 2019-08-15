@@ -1,18 +1,20 @@
 package eve.esi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.ApiResponse;
 import net.troja.eve.esi.HeaderUtil;
 import net.troja.eve.esi.model.CharacterLocationResponse;
+import net.troja.eve.esi.model.MarketOrdersResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ApiUtils {
 
@@ -30,20 +32,73 @@ public class ApiUtils {
             LOG.error("", e);
         }
     }
+    
+    public static void retryDelay(int secs) {
+        try {
+            Thread.sleep(secs * 1000L);
+        } catch (InterruptedException e) {
+            LOG.error("", e);
+        }
+    }
 
     public static interface MultiPageCallExecutor<T> {
         ApiResponse<List<T>> call(int page) throws ApiException;
     }
 
     public static <T> List<T> pageWalk(MultiPageCallExecutor<T> callExecutor) {
+        return pageWalk(callExecutor, null);
+    }
+
+    /**
+     * 
+     * @param <T>
+     *            the api response type
+     * @param callExecutor
+     *            the per-page call executor
+     * @param prevLmod
+     *            if set to the value returned by the last call, the method will
+     *            return null if the lmod header date in the api response has not
+     *            changed (or is newer). Otherwise, that argument will be
+     *            updated to the newer lmod date of the returned result set.
+     * @return the result set
+     */
+    public static <T> List<T> pageWalk(MultiPageCallExecutor<T> callExecutor, Date prevLmod) {
         int page = 1;
         List<T> results = new ArrayList<>();
+        Date lmod = null;
         while (true) {
             try {
                 ApiResponse<List<T>> response = callExecutor.call(page);
                 results.addAll(response.getData());
+
+                Date pageLmod = ApiUtils.getLmod(response);
+//                LOG.info("lmod = " + pageLmod);
+                
+                // nothing updated yet?
+                if (prevLmod != null && !pageLmod.after(prevLmod)) {
+                    return null;
+                }
+
+                // make sure that all result pages come from the same result
+                // set:
+                if (lmod == null) {
+                    lmod = pageLmod;
+                }
+                if (!lmod.equals(pageLmod)) {
+                    LOG.info("result set changed during retrieval, restarting...");
+                    LOG.info(lmod  + " vs " + pageLmod);
+                    results.clear();
+                    page = 1;
+                    lmod = null;
+                    retryDelay(90);
+                    continue;
+                }
+
                 Integer xPages = HeaderUtil.getXPages(response.getHeaders());
                 if (page >= xPages) {
+                    if (prevLmod != null) {
+                        prevLmod.setTime(lmod.getTime());
+                    }
                     return results;
                 }
                 page++;
@@ -68,7 +123,7 @@ public class ApiUtils {
     public static interface CallExecutorVoid {
         void call() throws ApiException;
     }
-    
+
     public static interface CallExecutor<T> {
         T call() throws ApiException;
     }
@@ -93,6 +148,9 @@ public class ApiUtils {
             try {
                 return callExecutor.call(id);
             } catch (ApiException e) {
+                if (e.getMessage().equals("Not Found")) {
+                    throw new RuntimeException("element not found, id = " + id, e);
+                }
                 LOG.error("", e);
                 retryDelay();
             }
@@ -110,7 +168,7 @@ public class ApiUtils {
             }
         }
     }
-    
+
     public static long toGenericLocationId(CharacterLocationResponse clr) {
         if (clr.getStationId() != null) {
             return (long) clr.getStationId();
@@ -123,11 +181,21 @@ public class ApiUtils {
 
     // https://docs.esi.evetech.net/docs/id_ranges.html
     public static boolean isStation(long id) {
-        id /= 1000*1000;
+        id /= 1000 * 1000;
         return id >= 60 && id < 70;
     }
+
     public static boolean isSystem(long id) {
-        id /= 1000*1000;
+        id /= 1000 * 1000;
         return id >= 30 && id < 31;
+    }
+    
+    public static Date getLmod(ApiResponse<?> res) {
+        String lmod = HeaderUtil.getHeader(res.getHeaders(), "last-modified");
+        return new Date(ZonedDateTime.parse(lmod, HeaderUtil.DATE_FORMAT).toInstant().toEpochMilli());
+    }
+    
+    public static boolean isNpcOrder(MarketOrdersResponse mor)  {
+        return mor.getDuration() > 90;
     }
 }

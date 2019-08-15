@@ -73,6 +73,9 @@ public class DevSelUtils {
     public static MidiDevice getVirMidiOutDevice() throws MidiUnavailableException {
         return getMidiOutDeviceByName("virmidi.*");
     }
+    public static MidiDevice getVirMidiInDevice() throws MidiUnavailableException {
+        return getMidiInDeviceByName("virmidi.*");
+    }
     
     public static MidiDevice getMidiOutDeviceByName(String regex) throws MidiUnavailableException {
         if (regex == null) {

@@ -38,6 +38,9 @@ public class CalendarTest {
     @Test
     public void testCalendarClear() {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+        assertEquals("CET", c.getTimeZone().getID());
+        assertNotEquals(-3600 * 1000, c.getTimeInMillis());
+        assertNotEquals(1970, c.get(Calendar.YEAR));
         c.clear();
         assertEquals("CET", c.getTimeZone().getID());
         assertEquals(-3600 * 1000, c.getTimeInMillis());
@@ -80,5 +83,12 @@ public class CalendarTest {
         Calendar c3 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
         c3.setTimeInMillis(0);
         assertEquals(1, c3.get(Calendar.HOUR_OF_DAY));
+    }
+    
+    @Test
+    public void testAvlCalTypes() {
+        for (String calType : Calendar.getAvailableCalendarTypes()) {
+            System.out.println(calType);
+        }
     }
 }

@@ -67,4 +67,12 @@ public class SummaryStatisticsTest {
         assertEquals(0.954, nHits2Sigma / nSamples, 0.03);
         assertEquals(0.997, nHits3Sigma / nSamples, 0.03);
     }
+    
+    @Test
+    public void test2() {
+        SummaryStatistics ss = new SummaryStatistics();
+        ss.addValue(1);
+        ss.addValue(2);
+        assertEquals(.7071, ss.getStandardDeviation(), 1e-4);
+    }
 }

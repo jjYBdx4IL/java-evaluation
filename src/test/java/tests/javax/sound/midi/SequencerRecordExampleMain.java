@@ -32,7 +32,7 @@ public class SequencerRecordExampleMain implements MetaEventListener {
         
         MidiDevice indev = DevSelUtils.getHwInDevice();
         indev.open();
-        indev.getTransmitter().setReceiver(sequencer.getReceiver());;
+        indev.getTransmitter().setReceiver(sequencer.getReceiver());
 
         Sequence sequence = new Sequence(Sequence.PPQ, 10, 4);
         

@@ -37,7 +37,7 @@ public class SendMidiEventsTest {
         int channel = 0;
         
         send(ProgramChangeMsg.create(0, 5));
-        send(ProgramChangeMsg.create(1, 5));
+        send(ProgramChangeMsg.create(1, 6));
         send(ProgramChangeMsg.create(2, 5));
         send(ProgramChangeMsg.create(3, 5));
         send(ControlChangeMsg.create(0, 64, 64));

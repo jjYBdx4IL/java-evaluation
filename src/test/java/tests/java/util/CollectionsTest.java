@@ -11,14 +11,16 @@ package tests.java.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
-import org.junit.Test;
 
 /**
  * @author Github jjYBdx4IL Projects
@@ -85,4 +87,48 @@ public class CollectionsTest {
 		assertTrue(speedUp >= minExpectedSpeedUp);
 	}
 		
+	@Test
+	public void testSortNatural() {
+	    List<Integer> list = new ArrayList<>();
+	    list.add(2);
+	    list.add(1);
+	    list.add(3);
+	    
+	    Collections.sort(list);
+	    assertEquals("1,2,3", StringUtils.join(list, ","));
+	}
+	
+    @Test
+    public void testSortComparator() {
+        List<Integer> list = new ArrayList<>();
+        list.add(2);
+        list.add(1);
+        list.add(3);
+        
+        Collections.sort(list, new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        assertEquals("1,2,3", StringUtils.join(list, ","));
+    }
+    
+    @Test
+    public void testSortComparator2() {
+        List<Integer> list = new ArrayList<>();
+        list.add(2);
+        list.add(1);
+        list.add(3);
+        
+        Collections.sort(list, new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return Integer.compare(o1, o2);
+            }
+        });
+        assertEquals("1,2,3", StringUtils.join(list, ","));
+    }
 }

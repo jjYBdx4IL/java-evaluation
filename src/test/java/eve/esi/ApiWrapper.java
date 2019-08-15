@@ -1,20 +1,9 @@
 package eve.esi;
 
 import com.github.jjYBdx4IL.utils.text.Eta;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import eve.esi.ApiUtils.CallExecutorVoid;
 import eve.esi.ApiUtils.CallExecutor;
 import eve.esi.ApiUtils.CallExecutor2;
+import eve.esi.ApiUtils.CallExecutorVoid;
 import eve.esi.ApiUtils.MultiPageCallExecutor;
 import net.troja.eve.esi.ApiClient;
 import net.troja.eve.esi.ApiException;
@@ -26,16 +15,28 @@ import net.troja.eve.esi.api.SsoApi;
 import net.troja.eve.esi.api.UniverseApi;
 import net.troja.eve.esi.api.UserInterfaceApi;
 import net.troja.eve.esi.api.WalletApi;
+import net.troja.eve.esi.model.CategoryResponse;
 import net.troja.eve.esi.model.CharacterInfo;
 import net.troja.eve.esi.model.CharacterLocationResponse;
 import net.troja.eve.esi.model.CharacterShipResponse;
 import net.troja.eve.esi.model.ConstellationResponse;
+import net.troja.eve.esi.model.MarketGroupResponse;
 import net.troja.eve.esi.model.MarketOrdersResponse;
 import net.troja.eve.esi.model.RegionResponse;
 import net.troja.eve.esi.model.StationResponse;
 import net.troja.eve.esi.model.StructureResponse;
 import net.troja.eve.esi.model.SystemResponse;
 import net.troja.eve.esi.model.TypeResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ApiWrapper {
 
@@ -140,6 +141,28 @@ public class ApiWrapper {
         return ApiUtils.retryWrap(callExecGetStructure, id);
     }
     
+    CallExecutor2<Integer, CategoryResponse> callExecGetCategory = new CallExecutor2<Integer, CategoryResponse>() {
+        @Override
+        public CategoryResponse call(Integer id) throws ApiException {
+            return uniApi.getUniverseCategoriesCategoryId(id, null, DATASOURCE, null, null);
+        }
+    };
+    
+    public CategoryResponse getCategory(int id) {
+        return ApiUtils.retryWrap(callExecGetCategory, id);
+    }
+
+    CallExecutor2<Integer, MarketGroupResponse> callExecGetMarketGroup = new CallExecutor2<Integer, MarketGroupResponse>() {
+        @Override
+        public MarketGroupResponse call(Integer id) throws ApiException {
+            return market.getMarketsGroupsMarketGroupId(id, null, DATASOURCE, null, null);
+        }
+    };
+    
+    public MarketGroupResponse getMarketGroup(int id) {
+        return ApiUtils.retryWrap(callExecGetMarketGroup, id);
+    }
+    
     public Map<Integer, SystemResponse> dumpSystems() throws IOException, ApiException {
         return ApiUtils.idWalk(new CallExecutor<List<Integer>>() {
             @Override
@@ -241,12 +264,25 @@ public class ApiWrapper {
     }
 
     public List<MarketOrdersResponse> dumpMarketOrders(String orderType, int regionId) {
+        return dumpMarketOrders(orderType, regionId, null);
+    }
+    
+    /**
+     *
+     * @param prevLmod
+     *            if set to the value returned by the last call, the method will
+     *            return null if the lmod header date in the api response has not
+     *            changed (or is newer). Otherwise, that argument will be
+     *            updated to the newer lmod date of the returned result set.
+     * @return the result set
+     */
+    public List<MarketOrdersResponse> dumpMarketOrders(String orderType, int regionId, Date prevLmod) {
         return ApiUtils.pageWalk(new MultiPageCallExecutor<MarketOrdersResponse>() {
             @Override
             public ApiResponse<List<MarketOrdersResponse>> call(int page) throws ApiException {
                 return market.getMarketsRegionIdOrdersWithHttpInfo(orderType, regionId, DATASOURCE, null, page, null);
             }
-        });
+        }, prevLmod);
     }
 
     public void setAutopilot(long destLocationId) {
