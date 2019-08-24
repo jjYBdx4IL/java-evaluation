@@ -17,21 +17,17 @@ import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinGDI;
 import com.sun.jna.platform.win32.WinGDI.BITMAPINFO;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
-
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.lwjgl.system.windows.User32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tests.javax.sound.sampled.SineWaveSynthTest;
 
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
-
-import javax.sound.sampled.LineUnavailableException;
-
-import tests.javax.sound.sampled.SineWaveSynthTest;
 
 /**
  * This class is intended as a replacement for {@link java.awt.Robot} on
@@ -242,7 +238,7 @@ public class ExtRobot extends Common {
     public void setAutoWaitForIdle(boolean b) {
     }
 
-    public static void main(String[] args) throws LineUnavailableException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         ExtRobot bot = new ExtRobot();
         bot.delay(500);
         bot.setAutoDelay(500);

@@ -14,9 +14,9 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-public class SineWaveSynthTest {
+public class SineWaveSynthWithVolumeChangesTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SineWaveSynthTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SineWaveSynthWithVolumeChangesTest.class);
 
     public static final float SAMPLE_RATE = 44100f;
     public static final int CHANNELS = 2;
@@ -26,7 +26,7 @@ public class SineWaveSynthTest {
     public static final AudioFormat.Encoding ENCODING = AudioFormat.Encoding.PCM_SIGNED;
 
     public static final float HZ = 440f;
-    public static final double VOLUME = 0.1;
+    public static double VOLUME = 0.1;
     public static final long PLAY_DURATION_MS = 30000;
     public static final int BUFFER_DELAY_MS = 20;
 
@@ -62,13 +62,17 @@ public class SineWaveSynthTest {
         initAudio();
 
         long frame = 0;
-        long endTime = System.currentTimeMillis() + ms;
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + ms;
 
         // we cannot transfer sample by sample because the processing overhead
         // would be too much
         final int maxXferFrames = line.getBufferSize() / FRAME_SIZE;
         LOG.info("max xfer frames: " + maxXferFrames);
         byte[] buf = new byte[maxXferFrames * FRAME_SIZE];
+        double currentVolume = VOLUME;
+        double targetVolume = VOLUME;
+        double prevAmplitude = 0d;
 
         while (System.currentTimeMillis() < endTime) {
             int xferFrames = line.available() / FRAME_SIZE;
@@ -77,11 +81,19 @@ public class SineWaveSynthTest {
                 continue;
             }
             for (int i = 0; i < xferFrames; i++) {
-                double amplitudeLeft = VOLUME * Math.sin(frame * 2 * Math.PI * HZ / SAMPLE_RATE);
-                double amplitudeRight = VOLUME * Math.sin(frame * 2 * Math.PI * (2 * HZ) / SAMPLE_RATE);
+                double amplitude = Math.sin(frame * 2 * Math.PI * HZ / SAMPLE_RATE);
 
-                SampleUtils.toFrame(buf, i * FRAME_SIZE, amplitudeLeft, amplitudeRight);
+                // change volume when passing the 0 amplitude
+                targetVolume = VOLUME * ((System.currentTimeMillis() - startTime) / 1000L % 2 == 1 ? .1d : 1d);
+                if (targetVolume != currentVolume) {
+                    if (prevAmplitude * amplitude < 0d) {
+                        currentVolume = targetVolume;
+                    }
+                }
+                
+                SampleUtils.toFrame(buf, i * FRAME_SIZE, currentVolume * amplitude, currentVolume * amplitude);
                 frame++;
+                prevAmplitude = amplitude;
             }
             assertEquals(xferFrames * FRAME_SIZE, line.write(buf, 0, xferFrames * FRAME_SIZE));
         }

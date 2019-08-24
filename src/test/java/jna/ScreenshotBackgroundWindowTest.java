@@ -17,7 +17,7 @@ import com.sun.jna.platform.win32.WinDef.RECT;
 import com.sun.jna.platform.win32.WinGDI;
 import com.sun.jna.platform.win32.WinGDI.BITMAPINFO;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
-
+import javacpp.opencv.LoadOrderDetectorTest;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -25,15 +25,10 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-
-import javax.sound.sampled.LineUnavailableException;
-
-import javacpp.opencv.LoadOrderDetectorTest;
 import testgroup.RequiresIsolatedVM;
 import tests.javax.sound.sampled.SineWaveSynthTest;
+
+import java.io.File;
 
 /**
  * Inspired by: https://stackoverflow.com/questions/4433994/java-window-image
@@ -53,7 +48,7 @@ public class ScreenshotBackgroundWindowTest extends Common {
     }
 
     @Test
-    public void test() throws InterruptedException, IOException, LineUnavailableException {
+    public void test() throws Exception {
         assumeTrue(Surefire.isSingleTestExecution());
 
         HWND hWnd = lib.GetForegroundWindow();
