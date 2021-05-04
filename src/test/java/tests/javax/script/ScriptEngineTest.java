@@ -1,6 +1,7 @@
 package tests.javax.script;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeNotNull;
 
 import org.junit.Test;
 
@@ -19,6 +20,8 @@ public class ScriptEngineTest {
     public void test() throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("javascript");
+        // https://openjdk.java.net/jeps/372
+        assumeNotNull(engine);
         Bindings bindings = engine.createBindings();
         bindings.put("example", "123/456/789");
 
@@ -33,6 +36,8 @@ public class ScriptEngineTest {
     public void testBindings() throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("javascript");
+        // https://openjdk.java.net/jeps/372
+        assumeNotNull(engine);
         Bindings bindings = engine.createBindings();
 
         engine.eval("var example = \"abc\";", bindings);

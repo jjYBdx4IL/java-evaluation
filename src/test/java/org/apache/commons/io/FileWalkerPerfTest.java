@@ -1,7 +1,9 @@
 package org.apache.commons.io;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assume.assumeTrue;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -52,6 +54,8 @@ public class FileWalkerPerfTest {
 
     @Test
     public void testRunner() throws RunnerException, IOException {
+    	assumeTrue(SystemUtils.IS_OS_LINUX);
+    	
         // or set forks(0), https://github.com/melix/jmh-gradle-plugin/issues/103
         System.setProperty("jmh.separateClasspathJAR", "true");
         

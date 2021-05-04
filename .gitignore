@@ -1,3 +1,4 @@
+*.key
 target/
 /*.log
 pom.xml.tag

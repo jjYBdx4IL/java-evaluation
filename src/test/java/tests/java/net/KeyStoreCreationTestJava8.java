@@ -30,14 +30,14 @@ import java.security.cert.X509Certificate;
  *
  * @author Github jjYBdx4IL Projects
  */
-public class KeyStoreCreationTest {
+public class KeyStoreCreationTestJava8 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KeyStoreCreationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeyStoreCreationTestJava8.class);
 
     @SuppressWarnings("unused")
     @Test
     public void test() throws Exception {
-        File keyStoreLoc = new File(Maven.getTempTestDir(KeyStoreCreationTest.class), "keystore");
+        File keyStoreLoc = new File(Maven.getTempTestDir(KeyStoreCreationTestJava8.class), "keystore");
         LOG.info(keyStoreLoc.getAbsolutePath());
         keyStoreLoc.getParentFile().mkdirs();
         if (keyStoreLoc.exists()) {

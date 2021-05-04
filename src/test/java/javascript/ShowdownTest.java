@@ -1,6 +1,7 @@
 package javascript;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeNotNull;
 
 import com.github.jjYBdx4IL.utils.cache.SimpleDiskCacheEntry;
 import com.github.jjYBdx4IL.utils.cache.SimpleDiskCacheEntry.UpdateMode;
@@ -28,6 +29,8 @@ public class ShowdownTest {
 
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("javascript");
+        // https://openjdk.java.net/jeps/372
+        assumeNotNull(engine);
         Bindings bindings = engine.createBindings();
         bindings.put("markdownInput", "#hello, markdown!");
 

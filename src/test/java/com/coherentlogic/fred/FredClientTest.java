@@ -34,6 +34,7 @@ import com.coherentlogic.fred.client.core.domain.Unit;
 import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.InteractiveTestBase;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
+import org.apache.commons.io.IOUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
@@ -59,6 +60,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -76,17 +79,18 @@ public class FredClientTest extends InteractiveTestBase {
 
     private static final File TEMP_DIR = Maven.getTempTestDir(FredClientTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(FredClientTest.class);
-    public final static String FRED_API_KEY = "FRED_API_KEY";
-    public final static String FRED_API_TESTKEY = "e3aa92f92406f8d46fd1ce8341e40eb8";
     public final static String FRED_REST_TEMPLATE_ID = "fredRestTemplate";
     private final static String API_KEY;
     private final static Date REALTIME_START = using(2001, Calendar.JANUARY, 20);
     private final static Date REALTIME_END = using(2004, Calendar.MAY, 17);
 
     static {
-        API_KEY = System.getenv(FRED_API_KEY) != null
-            ? System.getenv(FRED_API_KEY)
-            : FRED_API_TESTKEY;
+        try {
+            File f = new File(Maven.getMavenBuildDir(FredClientTest.class).getParentFile(), "fredapi.key");
+            API_KEY = IOUtils.toString(f.toURI(), "UTF-8").trim();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     private final ApplicationContext context = new FileSystemXmlApplicationContext(
         "src/test/resources/com/coherentlogic/fred/application-context.xml");
@@ -289,14 +293,14 @@ public class FredClientTest extends InteractiveTestBase {
         assertEquals(0, seriess.getOffset());
         assertEquals(1000, seriess.getLimit());
 
-        assertTrue(seriess.getSeriesList().size() > 20);
+        assertTrue(seriess.getSeriesList().size() > 2);
     }
 
     @Test
     public void plotRussell2000TotalMarketIndex() throws InvocationTargetException, InterruptedException, IOException {
         openWindow();
 
-        final String seriesId = "RU2000TR";
+        final String seriesId = "DTWEXBGS";
 
         QueryBuilder builder = new QueryBuilder(restTemplate);
 
@@ -316,8 +320,8 @@ public class FredClientTest extends InteractiveTestBase {
         Observation obs1 = observationList.get(0);
         Observation obs2 = observationList.get(1);
 
-        assertEquals(new BigDecimal("100.00"), obs1.getValue());
-        assertEquals(null, obs2.getValue());
+        assertEquals(new BigDecimal("101.4155"), obs1.getValue());
+        assertEquals(new BigDecimal("100.7558"), obs2.getValue());
 
         final TimeSeries series = new TimeSeries(seriesId);
         RegularTimePeriod current = new Day();

@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -27,6 +29,7 @@ import org.junit.Test;
  *
  * @author Github jjYBdx4IL Projects
  */
+@Ignore
 public class UriTemplateTest {
 
     @Test

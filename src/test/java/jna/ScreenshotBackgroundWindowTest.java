@@ -21,6 +21,7 @@ import javacpp.opencv.LoadOrderDetectorTest;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class ScreenshotBackgroundWindowTest extends Common {
         LoadOrderDetectorTest.loadLibs();
     }
 
+    @Ignore
     @Test
     public void test() throws Exception {
         assumeTrue(Surefire.isSingleTestExecution());
