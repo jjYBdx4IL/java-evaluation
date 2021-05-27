@@ -75,4 +75,58 @@ public class ScannerTest {
         
         scanner.close();
     }
+    
+    @Test
+    public void testWithoutNextLine() {
+        Scanner scanner = new Scanner("1\n2\n");
+
+        assertEquals(1, scanner.nextInt());
+        assertEquals(2, scanner.nextInt());
+        
+        scanner.close();
+    }
+    
+    @Test
+    public void testPartialScan() {
+        Scanner scanner = new Scanner("1 2\n3 4\n");
+
+        // line 1: "1 2\n"
+        assertTrue(scanner.hasNextLine());
+        assertEquals(1, scanner.nextInt());
+        assertTrue(scanner.hasNextLine());
+        assertEquals(" 2", scanner.nextLine());
+
+        // line 1: "3 4\n"
+        assertTrue(scanner.hasNextLine());
+        assertEquals(3, scanner.nextInt());
+        assertEquals(" 4", scanner.nextLine());
+
+        assertFalse(scanner.hasNextLine());
+        try {
+            scanner.nextLine();
+        } catch (NoSuchElementException ex) {
+        }
+        
+        scanner.close();
+    }
+    
+    @Test
+    public void testNextLine() {
+        Scanner scanner = new Scanner("1 2\n3 4\n");
+
+        // line 1: "1 2\n"
+        assertEquals("1 2", scanner.nextLine());
+        assertEquals(3, scanner.nextInt());
+        
+        scanner.close();
+    }
+    
+    @Test
+    public void testHasNextLine() {
+        assertTrue(new Scanner("1 2\n").hasNextLine());
+        assertTrue(new Scanner("1 2").hasNextLine());
+        Scanner scanner = new Scanner("1");
+        scanner.nextInt();
+        assertFalse(scanner.hasNextLine());
+    }
 }

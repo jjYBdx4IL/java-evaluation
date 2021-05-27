@@ -9,9 +9,12 @@
 package com.googlecode.fannj;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
+import com.privatejgoodies.common.base.SystemUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,6 +54,7 @@ public class FannJTest {
     @Test
     public void testrun() throws IOException {
         //System.getProperties().list(System.out);
+        assumeTrue(SystemUtils.IS_OS_LINUX);
 
         File temp = File.createTempFile("fannj_", ".tmp");
         temp.deleteOnExit();

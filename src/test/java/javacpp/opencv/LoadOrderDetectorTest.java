@@ -169,7 +169,7 @@ public class LoadOrderDetectorTest {
         Map<String, List<String>> deps = new HashMap<>();
 
         for (String lib : libs) {
-            String s = FileUtils.readFileToString(new File(lib), StandardCharsets.UTF_8).toLowerCase(Locale.ROOT);
+            String s = FileUtils.readFileToString(new File(lib), StandardCharsets.US_ASCII).toLowerCase(Locale.ROOT);
             if (LOG.isDebugEnabled()) {
                 LOG.debug(lib + ":");
             }

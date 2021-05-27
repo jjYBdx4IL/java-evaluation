@@ -11,8 +11,12 @@ package freemarker.template;
 import static org.junit.Assert.assertEquals;
 
 import com.github.jjYBdx4IL.utils.env.Maven;
+
+import freemarker.core.StringArraySequence;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.jcodec.common.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +27,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -35,9 +40,21 @@ import java.util.Map;
 public class TemplateTest {
 
     private static final File TEMP_DIR = Maven.getTempTestDir(TemplateTest.class);
-    private static final Configuration CFG = new Configuration(Configuration.VERSION_2_3_28);
+    private static final Configuration CFG = new Configuration(Configuration.VERSION_2_3_31);
     private static final Map<String, Object> ROOT = new HashMap<>();
 
+    public static class UpperCaseMethod implements TemplateMethodModelEx {
+
+        public TemplateModel exec(List args) throws TemplateModelException {
+            StringBuilder sb = new StringBuilder();
+            for (Object arg : args) {
+                SimpleScalar s = (SimpleScalar) arg;
+                sb.append(s.toString().toUpperCase(Locale.ROOT));
+            }
+            return SimpleScalar.newInstanceOrNull(sb.toString());
+        }
+    }
+    
     @BeforeClass
     public static void beforeClass() {
         CFG.setDefaultEncoding("UTF-8");
@@ -55,6 +72,7 @@ public class TemplateTest {
         map.put("two", "2b");
         list.add(map);
         ROOT.put("list", list);
+        ROOT.put("uppercase", new UpperCaseMethod());
     }
 
     private String execute(String tplCode) throws TemplateException, IOException {
@@ -111,4 +129,12 @@ public class TemplateTest {
         assertEquals("01", execute("<#list list as x>${x?index}</#list>"));
         assertEquals("1a/2a1b/2b", execute("<#list list as x>${x.one}/${x.two}</#list>"));
     }
+    
+    // https://freemarker.apache.org/docs/pgui_datamodel_method.html
+    @Test
+    public void testMethod() throws TemplateException, IOException  {
+        assertEquals("USER", execute("${uppercase('user')}"));
+        assertEquals("BIG JOE", execute("${uppercase(user)}"));
+    }
+    
 }

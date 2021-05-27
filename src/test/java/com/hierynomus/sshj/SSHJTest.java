@@ -19,6 +19,7 @@ import com.github.jjYBdx4IL.utils.vmmgmt.VMInstanceProviderRule;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,13 +58,9 @@ public class SSHJTest {
         }
     }
 
-    @Before
-    public void before() {
-        Assume.assumeNotNull(providerRule);
-    }
-    
     @Test
     public void test1() throws IOException {
+        Assume.assumeNotNull(providerRule);
         VMData vm = providerRule.getProvider().createVM(OS.UbuntuWilyAmd64);
         
         try (SSHClient ssh = new SSHClient()) {
@@ -74,47 +71,69 @@ public class SSHJTest {
             //ssh.authPublickey(System.getProperty("user.name"));
             ssh.authPassword("root", "");
             
-            // sftp file and data transfer
-            try (SFTPClient sftp = ssh.newSFTPClient()) {
-                String src = FredClientTest.class.getResource("application-context.xml").getFile();
-                sftp.put(new FileSystemFile(src), "/tmp");
-                sftp.put(src, "/tmp/2.xml");
-                
-                // structured remote file listings
-                List<RemoteResourceInfo> rris = sftp.ls("/tmp");
-                for (RemoteResourceInfo rri : rris) {
-                    LOG.info(rri.toString());
-                }
-                
-                // remote random read access
-                RemoteFile rf = sftp.open("/tmp/2.xml");
-                byte[] to = new byte[3];
-                assertEquals(3, rf.read(2, to, 0, 3));
-                assertEquals("xml", new String(to, "ASCII"));
-                rf.close();
-                
-                // random write access
-                Set<OpenMode> omode = new HashSet<>();
-                omode.add(OpenMode.CREAT);
-                omode.add(OpenMode.WRITE);
-                omode.add(OpenMode.READ);
-                omode.add(OpenMode.EXCL);
-                rf = sftp.open("/tmp/3.xml", omode);
-                rf.write(100, "abc".getBytes("ASCII"), 0, 3);
-                assertEquals(3, rf.read(99, to, 0, 3));
-                assertEquals("\0ab", new String(to, "ASCII"));
-                rf.close();
-            }
-            
-            try (Session session = ssh.startSession()) {
-                Command cmd = session.exec("ls -lrt /tmp");
-                LOG.info(IOUtils.readFully(cmd.getInputStream()).toString());
-                LOG.info("start join");
-                cmd.join(5, TimeUnit.SECONDS);
-                LOG.info("\n** exit status: " + cmd.getExitStatus());
-            }
-            ssh.disconnect();
+            runSshTests(ssh);
         }
     }
 
+    @Ignore
+    @Test
+    public void testport24() throws IOException {
+        try (SSHClient ssh = new SSHClient()) {
+            ssh.addHostKeyVerifier(new PromiscuousVerifier());
+            //ssh.loadKnownHosts();
+
+            ssh.connect("localhost", 24);
+            //ssh.authPublickey(System.getProperty("user.name"));
+            ssh.authPassword("test", "test");
+
+            runSshTests(ssh);
+        }
+    }
+    
+    private void runSshTests(SSHClient ssh) throws IOException {
+        // sftp file and data transfer
+        try (SFTPClient sftp = ssh.newSFTPClient()) {
+            String src = FredClientTest.class.getResource("application-context.xml").getFile();
+            sftp.put(new FileSystemFile(src), "/tmp");
+            sftp.put(src, "/tmp/2.xml");
+            
+            // structured remote file listings
+            List<RemoteResourceInfo> rris = sftp.ls("/tmp");
+            for (RemoteResourceInfo rri : rris) {
+                LOG.info(rri.toString());
+            }
+            
+            // remote random read access
+            RemoteFile rf = sftp.open("/tmp/2.xml");
+            byte[] to = new byte[3];
+            assertEquals(3, rf.read(2, to, 0, 3));
+            assertEquals("xml", new String(to, "ASCII"));
+            rf.close();
+            
+            if (sftp.statExistence("/tmp/3.xml") != null) {
+                sftp.rm("/tmp/3.xml");
+            }
+            
+            // random write access
+            Set<OpenMode> omode = new HashSet<>();
+            omode.add(OpenMode.CREAT);
+            omode.add(OpenMode.WRITE);
+            omode.add(OpenMode.READ);
+            omode.add(OpenMode.EXCL);
+            rf = sftp.open("/tmp/3.xml", omode);
+            rf.write(100, "abc".getBytes("ASCII"), 0, 3);
+            assertEquals(3, rf.read(99, to, 0, 3));
+            assertEquals("\0ab", new String(to, "ASCII"));
+            rf.close();
+        }
+        
+        try (Session session = ssh.startSession()) {
+            Command cmd = session.exec("ls -lrt /tmp");
+            LOG.info(IOUtils.readFully(cmd.getInputStream()).toString());
+            LOG.info("start join");
+            cmd.join(5, TimeUnit.SECONDS);
+            LOG.info("\n** exit status: " + cmd.getExitStatus());
+        }
+        ssh.disconnect();
+    }
 }

@@ -11,15 +11,15 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  *
@@ -27,16 +27,18 @@ import com.github.jjYBdx4IL.utils.env.Maven;
  */
 public class WatchServiceTest {
 
-    public static final File TEMP_DIR = Maven.getTempTestDir(WatchServiceTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(WatchServiceTest.class);
-    private static final AtomicBoolean WATCHER_REGISTERED = new AtomicBoolean(false);
-    private static final File TEST_FILE = new File(TEMP_DIR, "test.file");
+    private static final CountDownLatch WATCHER_REGISTERED = new CountDownLatch(1);
+    private File TEST_FILE;
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    
     @Before
-    public void cleanupBefore() throws IOException {
-        FileUtils.cleanDirectory(TEMP_DIR);
+    public void before() {
+        TEST_FILE = new File(folder.getRoot(), "test.file");
     }
-
+    
     /**
      * WatchService does *not* work recursively on directories. Each directory must be registered separately.
      *
@@ -50,14 +52,12 @@ public class WatchServiceTest {
             @Override
             public void run() {
                 try {
-                    WatchService watchService = TEMP_DIR.toPath().getFileSystem().newWatchService();
-                    TEMP_DIR.toPath().register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
+                    Path TEMP_DIR = folder.getRoot().toPath();
+                    WatchService watchService = TEMP_DIR.getFileSystem().newWatchService();
+                    TEMP_DIR.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE,
                             StandardWatchEventKinds.OVERFLOW);
-                    synchronized (WATCHER_REGISTERED) {
-                        WATCHER_REGISTERED.set(true);
-                        WATCHER_REGISTERED.notifyAll();
-                    }
+                    WATCHER_REGISTERED.countDown();
                     // loop forever to watch directory
                     while (true) {
                         WatchKey watchKey;
@@ -69,7 +69,7 @@ public class WatchServiceTest {
                             assertTrue(event.context() instanceof Path);
                             Path p = (Path) event.context();
                             LOG.debug(p.toFile().getPath() + " " + event.kind());
-                            if (TEMP_DIR.toPath().relativize(TEST_FILE.toPath()).toFile().equals(p.toFile())) {
+                            if (TEMP_DIR.relativize(TEST_FILE.toPath()).toFile().equals(p.toFile())) {
                                 TEST_FILE.delete();
                                 return;
                             }
@@ -94,11 +94,7 @@ public class WatchServiceTest {
             TEST_FILE.getParentFile().mkdirs();
         }
         t.start();
-        synchronized (WATCHER_REGISTERED) {
-            while (!WATCHER_REGISTERED.get()) {
-                WATCHER_REGISTERED.wait();
-            }
-        }
+        assertTrue(WATCHER_REGISTERED.await(10, TimeUnit.SECONDS));
         TEST_FILE.createNewFile();
         t.join();
         assertFalse(TEST_FILE.exists());

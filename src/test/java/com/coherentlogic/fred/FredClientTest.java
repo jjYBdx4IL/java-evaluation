@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 import com.coherentlogic.coherent.data.model.core.cache.CacheServiceProviderSpecification;
 import com.coherentlogic.coherent.data.model.core.cache.MapCompliantCacheServiceProvider;
@@ -80,7 +81,7 @@ public class FredClientTest extends InteractiveTestBase {
     private static final File TEMP_DIR = Maven.getTempTestDir(FredClientTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(FredClientTest.class);
     public final static String FRED_REST_TEMPLATE_ID = "fredRestTemplate";
-    private final static String API_KEY;
+    private static String API_KEY = null;
     private final static Date REALTIME_START = using(2001, Calendar.JANUARY, 20);
     private final static Date REALTIME_END = using(2004, Calendar.MAY, 17);
 
@@ -89,7 +90,7 @@ public class FredClientTest extends InteractiveTestBase {
             File f = new File(Maven.getMavenBuildDir(FredClientTest.class).getParentFile(), "fredapi.key");
             API_KEY = IOUtils.toString(f.toURI(), "UTF-8").trim();
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            LOG.warn("failed to read FRED api key", ex);
         }
     }
     private final ApplicationContext context = new FileSystemXmlApplicationContext(
@@ -99,6 +100,7 @@ public class FredClientTest extends InteractiveTestBase {
 
     @Before
     public void setUp() throws Exception {
+        assumeNotNull(API_KEY);
         restTemplate = (RestTemplate) context.getBean(FRED_REST_TEMPLATE_ID);
     }
 

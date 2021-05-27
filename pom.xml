@@ -25,16 +25,16 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>16</maven.compiler.source>
+		<maven.compiler.target>16</maven.compiler.target>
 		<libPath>${project.build.directory}/natives</libPath>
 		<jetty.version>9.4.40.v20210413</jetty.version>
-		<gwt.version>2.8.2</gwt.version>
+		<gwt.version>2.9.0</gwt.version>
 		<jackson.version>2.9.8</jackson.version>
 		<lwjgl.version>3.1.6</lwjgl.version>
 		<jersey.version>2.28</jersey.version>
-		<junit5.version>5.4.1</junit5.version>
-		<junit.platform.version>1.4.1</junit.platform.version>
+		<junit5.version>5.7.2</junit5.version>
+		<junit.platform.version>1.7.2</junit.platform.version>
 	</properties>
 
 	<build>
@@ -103,7 +103,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<includeArtifactIds>opencv,ffmpeg,tesseract</includeArtifactIds>
+							<includeArtifactIds>opencv,ffmpeg,tesseract,openblas</includeArtifactIds>
 							<includeClassifiers>${os.family}-x86_64</includeClassifiers>
 							<outputDirectory>${libPath}</outputDirectory>
 							<includes>**/*.so*,**/*.dll</includes>
@@ -414,7 +414,13 @@
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-all</artifactId>
-			<version>1.10</version>
+			<version>1.14</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.kitteh.irc</groupId>
@@ -519,6 +525,12 @@
 			<groupId>com.github.jjYBdx4IL.utils</groupId>
 			<artifactId>gfx-utils</artifactId>
 			<version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>at.swimmesberger</groupId>
@@ -651,8 +663,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.javaparser</groupId>
-			<artifactId>java-symbol-solver-core</artifactId>
-			<version>0.5.5</version>
+			<artifactId>javaparser-symbol-solver-core</artifactId>
+			<version>3.22.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.danielflower.apprunner</groupId>
@@ -795,7 +807,7 @@
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>2.3.0</version>
+			<version>2.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jtidy</groupId>
@@ -1014,7 +1026,7 @@
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>javacv</artifactId>
-			<version>1.5</version>
+			<version>1.5.5</version>
 		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.bytedeco</groupId> -->
@@ -1024,7 +1036,7 @@
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>opencv-platform</artifactId>
-			<version>4.0.1-1.5</version>
+			<version>4.5.1-1.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.mylyn.github</groupId>
@@ -1102,6 +1114,11 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>1.23</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-core</artifactId>
+            <version>2.6.0</version>
+        </dependency>
 		<dependency>
 			<groupId>com.hierynomus</groupId>
 			<artifactId>sshj</artifactId>
@@ -1146,7 +1163,12 @@
 			<artifactId>text-utils</artifactId>
 			<version>1.2-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>com.google.crypto.tink</groupId>
+            <artifactId>tink</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+  		<dependency>
 			<groupId>net.sf.trove4j</groupId>
 			<artifactId>trove4j</artifactId>
 			<version>3.0.3</version>
@@ -1287,7 +1309,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.8.1</version>
+				<version>3.12.0</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-logging</groupId>
@@ -1327,7 +1349,7 @@
 			<dependency>
 				<groupId>org.freemarker</groupId>
 				<artifactId>freemarker</artifactId>
-				<version>2.3.28</version>
+				<version>2.3.31</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.auth</groupId>
@@ -1347,7 +1369,7 @@
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
-				<version>2.8.5</version>
+				<version>2.8.6</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -1432,12 +1454,12 @@
 			<dependency>
 				<groupId>org.jasypt</groupId>
 				<artifactId>jasypt</artifactId>
-				<version>1.9.2</version>
+				<version>1.9.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.22.0-CR2</version>
+				<version>3.28.0-GA</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.annotation</groupId>
@@ -1522,7 +1544,7 @@
 			<dependency>
 				<groupId>org.json</groupId>
 				<artifactId>json</artifactId>
-				<version>20170516</version>
+				<version>20180813</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jsoup</groupId>
@@ -1537,7 +1559,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.13</version>
+				<version>4.13.2</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sourceforge.htmlunit</groupId>
@@ -1577,7 +1599,7 @@
 			<dependency>
 				<groupId>com.google.protobuf</groupId>
 				<artifactId>protobuf-java</artifactId>
-				<version>3.5.1</version>
+				<version>3.14.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.rometools</groupId>

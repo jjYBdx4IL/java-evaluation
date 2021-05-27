@@ -76,7 +76,7 @@ public class CssBoxTest {
     }
 
     @Test
-    public void testTransparentBackground() throws MalformedURLException, IOException, SAXException, InterruptedException, Exception {
+    public void testTransparentBatckground() throws MalformedURLException, IOException, SAXException, InterruptedException, Exception {
         server = new AdHocHttpServer(getLocalExampleHomepageRoot());
 
         URL url = server.computeServerURL("/cssbox_homepage.html");

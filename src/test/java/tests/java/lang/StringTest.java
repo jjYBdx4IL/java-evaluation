@@ -80,6 +80,9 @@ public class StringTest {
         assertEquals("t.t/t.a", "t.t/t.T".replaceAll("\\.[^.]+$", ".a"));
         assertEquals("", "/123/456".replaceAll("/.*?$", ""));
         assertEquals("/123", "/123/456".replaceAll("/[^/]*$", ""));
+        assertEquals("\\", "6".replaceAll(".", "\\\\"));
+        assertEquals("66", "6".replaceAll("(.)", "$1$1"));
+        assertEquals("66", "6".replaceAll(".", "$0$0"));
     }
 
     /**
@@ -153,5 +156,21 @@ public class StringTest {
         assertTrue("A".compareTo("B") < 0);
         assertTrue("A".compareTo("A") == 0);
     }
-    
+
+    @Test
+    public void testBlock() throws Exception {
+        // no matter what the line endings of this source file are, they get converted to "\n"
+        assertEquals("a\n", """
+                a
+                """);
+        // single "\" only allowed at end of line and prevent line break
+        assertEquals("ab\n", """
+                a\
+                b
+                """);
+        // ", ' and \ are allowed to be escaped
+        assertEquals("\\\"'\n", """
+                \\\"\'
+                """);
+    }
 }

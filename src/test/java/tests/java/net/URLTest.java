@@ -6,6 +6,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.github.jjYBdx4IL.utils.env.Maven;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +23,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.cert.X509Certificate;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.jjYBdx4IL.utils.env.Maven;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  *
@@ -27,6 +33,7 @@ import com.github.jjYBdx4IL.utils.env.Maven;
  */
 public class URLTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(URLTest.class);
     private static final File TEMP_DIR = Maven.getTempTestDir(URLTest.class);
 
     @Before
@@ -73,10 +80,10 @@ public class URLTest {
 
         url = new URL("http://some.server.de");
         assertEquals("", url.getFile());
-        
+
         url = new URL("http://some.server.de/");
         assertEquals("/", url.getFile());
-        
+
         url = new URL("http://some.server.de:81/pub/");
         assertEquals(81, url.getPort());
         assertEquals(80, url.getDefaultPort());
@@ -90,7 +97,7 @@ public class URLTest {
         assertEquals("file", url.getProtocol());
 
         url = new URL("file:/C:\\home\\bla");
-        //assertEquals("/C:/home/bla", url.getPath());
+        // assertEquals("/C:/home/bla", url.getPath());
         assertEquals("file", url.getProtocol());
     }
 
@@ -145,7 +152,18 @@ public class URLTest {
                 ((Closeable) result).close();
             }
         }
-
     }
 
+    @Ignore
+    @Test
+    public void testRetrieveRemoteCertDetails() throws Exception {
+        URL u = new URL("https://www.google.com");
+        HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
+        try (InputStream is = conn.getInputStream()) {
+            conn.connect();
+            LOG.info("peer principal: " + conn.getPeerPrincipal());
+            X509Certificate c = (X509Certificate) conn.getServerCertificates()[0];
+            LOG.info("notAfter: " + c.getNotAfter());
+        } 
+    }
 }

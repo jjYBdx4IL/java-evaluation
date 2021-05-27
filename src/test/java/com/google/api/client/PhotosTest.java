@@ -2,6 +2,14 @@ package com.google.api.client;
 
 import static org.junit.Assume.assumeFalse;
 
+import java.io.File;
+import java.net.URL;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import com.github.jjYBdx4IL.utils.env.CI;
 import com.github.jjYBdx4IL.utils.env.Maven;
 import com.google.api.client.auth.oauth2.Credential;
@@ -12,13 +20,6 @@ import com.google.photos.library.v1.PhotosLibrarySettings;
 import com.google.photos.library.v1.internal.InternalPhotosLibraryClient.SearchMediaItemsPage;
 import com.google.photos.library.v1.proto.Album;
 import com.google.photos.library.v1.proto.MediaItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SystemUtils;
-import org.junit.Test;
-
-import java.io.File;
-import java.net.URL;
-import java.util.List;
 
 public class PhotosTest {
 
@@ -27,10 +28,10 @@ public class PhotosTest {
         "https://www.googleapis.com/auth/photoslibrary.readonly",
         "https://www.googleapis.com/auth/photoslibrary.appendonly");
 
+    @Ignore
     @Test
     public void test() throws Exception {
         assumeFalse(CI.isCI());
-        assumeFalse(SystemUtils.IS_OS_WINDOWS);
 
         GoogleApiAuth auth = new GoogleApiAuth(PhotosTest.class);
         Credential credential = auth.authorize(REQUIRED_SCOPES, "user");
@@ -48,7 +49,7 @@ public class PhotosTest {
             for (MediaItem item : plc.searchMediaItems(albumId).iterateAll()) {
                 if ("ball-407081__340.jpg".equals(item.getFilename())) {
                     FileUtils.copyURLToFile(new URL(item.getBaseUrl() + "=w640-h480"), new File(TEMP_DIR, "ball.jpg"));
-                    // @insert:image:ball.jpg@
+                    // @ insert:image:ball.jpg@
                 }
             }
             SearchMediaItemsPage page = plc.searchMediaItems(albumId).getPage();

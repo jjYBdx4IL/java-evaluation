@@ -3,6 +3,8 @@ package com.jayway.jsonpath;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.net.MediaType;
+import com.google.gson.JsonArray;
+
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -76,5 +78,14 @@ public class JsonPathTest extends AbstractHandler {
         assertEquals("false", 
             JsonPath.parse(getUrl("")).read("$['overlay']['userProps']['update.autoCreateFields']"));
         assertEquals(7, (int) JsonPath.parse(getUrl("")).read("$['responseHeader']['QTime']"));
+    }
+
+    @Test
+    public void testJsonPath2() throws Exception {
+        assertEquals(7, (int) JsonPath.parse(getUrl("")).read("$.responseHeader.QTime"));
+
+        net.minidev.json.JSONArray ja = JsonPath.parse(getUrl("")).read("$.responseHeader[?(@.status)].QTime");
+        assertEquals(1, ja.size());
+        assertEquals(7, (int) ja.get(0));
     }
 }

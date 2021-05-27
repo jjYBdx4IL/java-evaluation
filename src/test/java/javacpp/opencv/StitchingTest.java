@@ -93,8 +93,8 @@ public class StitchingTest {
         // @insert:image:stitched.jpg@
 
         image = ImageIO.read(resultImgFile);
-        assertEquals(w, image.getWidth(), 5d);
-        assertEquals(h, image.getHeight(), 5d);
+        assertEquals(w, image.getWidth(), 10);
+        assertEquals(h, image.getHeight(), 10);
     }
 
 }

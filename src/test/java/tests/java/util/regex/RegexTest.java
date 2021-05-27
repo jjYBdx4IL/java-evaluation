@@ -1,14 +1,13 @@
 package tests.java.util.regex;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import com.github.jjYBdx4IL.utils.junit4.RegularExpressionTestBase;
+import com.google.gwt.regexp.shared.RegExp;
 
 import org.apache.commons.validator.routines.RegexValidator;
 import org.junit.Ignore;
@@ -16,8 +15,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jjYBdx4IL.utils.junit4.RegularExpressionTestBase;
-import com.google.gwt.regexp.shared.RegExp;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class RegexTest extends RegularExpressionTestBase {
 
@@ -292,5 +295,16 @@ public class RegexTest extends RegularExpressionTestBase {
 
         assertEquals(2, new String(new byte[]{0, 'a'}, "UTF-8").length());
         System.out.println((int)new String(new byte[]{-121}, "UTF-8").charAt(0) + "\n");
+    }
+    
+    @Test
+    public void testResultStream() {
+        Pattern p = Pattern.compile("\\d+");
+        Matcher m = p.matcher(" 1 22  \n   333");
+        List<Integer> l = new ArrayList<>();
+        m.results().forEach(r -> {
+            l.add(Integer.parseInt(r.group(0)));
+        });
+        assertArrayEquals(null, new Integer[]{1,22,333}, l.toArray(new Integer[]{}));
     }
 }

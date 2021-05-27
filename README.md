@@ -1,13 +1,20 @@
 # java-evaluation
 
-[![Build Status](https://travis-ci.org/jjYBdx4IL/java-evaluation.png?branch=master)](https://travis-ci.org/jjYBdx4IL/java-evaluation)
-
 The test units in this module should be viewed as examples about how stuff
 works. Whenever I have issues to get something working properly, I try to
 put it in here and try to understand how a simpler variant of the problem
 works.
 
-## TestAutorunGUI
+This project depends on https://github.com/jjYBdx4IL/misc/ - master:
+
+    git clone https://github.com/jjYBdx4IL/misc.git
+    cd misc
+    mvn clean install -DskipTests -DskipITs -Ddependency-check.skip -Dmaven.javadoc.skip
+
+That should give you all dependencies without executing any tests.
+
+
+## TestAutorunGUI (might work or not, not really using it)
 
 Run
 
@@ -20,5 +27,4 @@ run this command from within NetBeans as it will disable compile-on-save.
 
 
 --
-[![Build Status](https://travis-ci.org/jjYBdx4IL/java-evaluation.png?branch=master)](https://travis-ci.org/jjYBdx4IL/java-evaluation)
-devel/java/github/java-evaluation@7840
+devel/java/github/java-evaluation@7853

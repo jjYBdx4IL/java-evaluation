@@ -35,6 +35,13 @@ public class FileTest {
     private final static File TEMP_DIR = Maven.getTempTestDir(FileTest.class);
 
     @Test
+    public void testListFiles() {
+        File f = new File(".").listFiles()[0];
+        assertFalse(f.isAbsolute());
+        assertTrue(f.toString().contains(File.separator)); // ie. toString() == .\.classpath
+    }
+    
+    @Test
     public void testConstructorPathSeparatorHandling() {
         File f = new File("a", "b/c");
         assertEquals("a/b/c".replace("/", File.separator), f.getPath());

@@ -1,10 +1,11 @@
 package com.github.javaparser;
 
+import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
-import com.github.javaparser.symbolsolver.model.typesystem.Type;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
@@ -33,6 +34,10 @@ public class JavaSymbolSolverTest {
     private static final Logger LOG = LoggerFactory.getLogger(JavaSymbolSolverTest.class);
     private static final File TEMP_DIR = Maven.getTempTestDir(JavaSymbolSolverTest.class);
     
+    static {
+        StaticJavaParser.getConfiguration().setLanguageLevel(LanguageLevel.CURRENT);
+    }
+    
     @Before
     public void before() throws IOException {
         FileUtils.cleanDirectory(TEMP_DIR);
@@ -51,13 +56,13 @@ public class JavaSymbolSolverTest {
 
         FileUtils.write(classFile, classContent, "UTF-8");
 
-        CompilationUnit compilationUnit = JavaParser.parse(classFile);
+        CompilationUnit compilationUnit = StaticJavaParser.parse(classFile);
         Optional<ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("A");
         LOG.debug(classA.toString());
         assertEquals(1, classA.get().getMethodsBySignature("get").size());
         
         Node node = classA.get().getParentNodeForChildren();
-        Type typeOfTheNode = JavaParserFacade.get(combinedTypeSolver).getType(node);
+        ResolvedType typeOfTheNode = JavaParserFacade.get(combinedTypeSolver).getType(node);
         
         assertNotNull(typeOfTheNode);
     }

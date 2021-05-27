@@ -1,9 +1,11 @@
 package com.github.javaparser;
 
+import static com.github.jjYBdx4IL.utils.text.StringUtil.f;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -29,11 +31,15 @@ public class JavaParserTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaParserTest.class);
 
+    static {
+        StaticJavaParser.getConfiguration().setLanguageLevel(LanguageLevel.CURRENT);
+    }
+    
     // beware: a comment line between javadoc and class spec makes the parser
     // fail to find the javadoc comment.
     @Test
     public void testJavadoc() {
-        CompilationUnit compilationUnit = JavaParser.parse("// @asd@\n"
+        CompilationUnit compilationUnit = StaticJavaParser.parse("// @asd@\n"
             + "/** First doc sentence.\n"
             + " * B.\n"
             + " * @param key the key\n"
@@ -48,7 +54,7 @@ public class JavaParserTest {
             classA.get().getComment().get().getContent());
 
         assertTrue(classA.get().getJavadoc().isPresent());
-        assertEquals("First doc sentence.\nB.",
+        assertEquals(f("First doc sentence.%nB."),
             classA.get().getJavadoc().get().getDescription().toText());
 
         JavadocBlockTag bt = classA.get().getJavadoc().get().getBlockTags().get(0);
@@ -65,12 +71,12 @@ public class JavaParserTest {
     @Test
     public void testGetClassByName() {
         // no package
-        CompilationUnit compilationUnit = JavaParser.parse("class A { }");
+        CompilationUnit compilationUnit = StaticJavaParser.parse("class A { }");
         Optional<ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("A");
         assertTrue(classA.isPresent());
 
         // with package
-        compilationUnit = JavaParser.parse("package x; class A { }");
+        compilationUnit = StaticJavaParser.parse("package x; class A { }");
         classA = compilationUnit.getClassByName("x.A");
         assertFalse(classA.isPresent());
         classA = compilationUnit.getClassByName("A");
@@ -79,7 +85,7 @@ public class JavaParserTest {
 
     @Test
     public void test2() {
-        CompilationUnit compilationUnit = JavaParser.parse("class A { public int get() { return 123; } }");
+        CompilationUnit compilationUnit = StaticJavaParser.parse("class A { public int get() { return 123; } }");
         Optional<ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("A");
         LOG.debug(classA.toString());
         assertEquals(1, classA.get().getMethodsBySignature("get").size());
@@ -87,7 +93,7 @@ public class JavaParserTest {
 
     @Test
     public void test3() {
-        CompilationUnit compilationUnit = JavaParser.parse("class A { public int get() { return abc; } }");
+        CompilationUnit compilationUnit = StaticJavaParser.parse("class A { public int get() { return abc; } }");
         Optional<ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("A");
         LOG.debug(classA.toString());
         assertEquals(1, classA.get().getMethodsBySignature("get").size());
@@ -95,7 +101,7 @@ public class JavaParserTest {
 
     @Test
     public void testGenericVisitor() {
-        CompilationUnit compilationUnit = JavaParser
+        CompilationUnit compilationUnit = StaticJavaParser
             .parse("class A { private boolean ok; public int get() { return abc; } }");
 
         GenericVisitor<Void, Object> visitor = new GenericVisitorAdapter<Void, Object>() {
@@ -117,7 +123,7 @@ public class JavaParserTest {
 
     @Test
     public void testTreeVisitor() {
-        CompilationUnit compilationUnit = JavaParser
+        CompilationUnit compilationUnit = StaticJavaParser
             .parse("class A { private boolean ok; public int get() { return abc; } }");
 
         TreeVisitor visitor = new TreeVisitor() {
