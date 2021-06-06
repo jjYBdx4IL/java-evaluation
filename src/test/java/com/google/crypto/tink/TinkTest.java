@@ -33,6 +33,7 @@ public class TinkTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testSymmetric() throws Exception {
         File keysetFile = new File(folder.getRoot(), "keyset.json");

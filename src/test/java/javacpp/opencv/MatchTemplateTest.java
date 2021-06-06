@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 
 import com.github.jjYBdx4IL.test.GraphicsResource;
 import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
 
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -53,7 +54,7 @@ public class MatchTemplateTest extends Common {
     @Test
     public void test() throws IOException {
         BufferedImage img1 = GraphicsResource.OPENIMAJ_TESTRES_AESTHETICODE.loadImage();
-        BufferedImage img2 = StitchingTest.crop(img1, 100, 100, 300, 300);
+        BufferedImage img2 = ImageUtils.cropNew(img1, 100, 100, 300, 300);
         File largePic = new File(TEMP_DIR, "large.jpg");
         File partPic = new File(TEMP_DIR, "part.jpg");
         ImageIO.write(img1, "jpg", largePic);

@@ -121,6 +121,7 @@ public class ScannerTest {
         scanner.close();
     }
     
+    @SuppressWarnings("resource")
     @Test
     public void testHasNextLine() {
         assertTrue(new Scanner("1 2\n").hasNextLine());

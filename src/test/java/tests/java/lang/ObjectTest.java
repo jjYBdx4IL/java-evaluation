@@ -21,7 +21,7 @@ public class ObjectTest {
     @Test
     public void testToStringMethod() {
         Object o = new Object();
-        Object l = new Long(1L);
+        Object l = Long.valueOf(1L);
         Object pb = new java.lang.ProcessBuilder();
         assertTrue(o.toString().startsWith("java.lang.Object@"));
         assertEquals("1", l.toString());

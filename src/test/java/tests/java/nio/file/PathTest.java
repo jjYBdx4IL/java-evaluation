@@ -1,5 +1,6 @@
 package tests.java.nio.file;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
@@ -30,5 +31,27 @@ public class PathTest {
             fail();
         } catch (IllegalArgumentException ex) {
         }
+    }
+    
+    @Test
+    public void testToString() {
+        // converts to system specific format:
+        assertEquals(File.separator + "root", Paths.get("/root").toString());
+        
+        // same
+        assertEquals(File.separator + "root", Paths.get("/root").toFile().toString());
+    }
+    
+    @Test
+    public void testNormalize() {
+        Path p = Paths.get("/a/b/.");
+        assertEquals(3, p.getNameCount());
+        assertEquals(2, p.normalize().getNameCount());
+    }
+    
+    @Test
+    public void countCompoments() {
+        assertEquals(2, Paths.get("/a////b").getNameCount());
+        assertEquals(2, Paths.get("a//b").getNameCount());
     }
 }

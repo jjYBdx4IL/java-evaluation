@@ -119,7 +119,8 @@ public class ExtRobot extends Common {
         // remove alpha channel
         Mat m2 = new Mat();
         cvtColor(m, m2, COLOR_BGRA2BGR);
-
+        f.close();
+        
         return m;
     }
 
@@ -177,6 +178,7 @@ public class ExtRobot extends Common {
         mousePress(User32.WM_LBUTTONDOWN);
     }
     
+    @SuppressWarnings("deprecation")
     public synchronized void mousePress(int buttons) {
         int msg = User32.WM_LBUTTONDOWN;
         switch (buttons) {
@@ -198,6 +200,7 @@ public class ExtRobot extends Common {
         mouseRelease(User32.WM_LBUTTONUP);
     }
     
+    @SuppressWarnings("deprecation")
     public synchronized void mouseRelease(int buttons) {
         int msg = User32.WM_LBUTTONUP;
         switch (buttons) {
@@ -238,6 +241,7 @@ public class ExtRobot extends Common {
     public void setAutoWaitForIdle(boolean b) {
     }
 
+    @SuppressWarnings("deprecation")
     public static void main(String[] args) throws Exception {
         ExtRobot bot = new ExtRobot();
         bot.delay(500);

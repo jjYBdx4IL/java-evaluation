@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @author work
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.PACKAGE})
 public @interface ExampleAnnotation {
     int value() default 0;
 }

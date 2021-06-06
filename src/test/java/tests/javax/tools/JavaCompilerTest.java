@@ -42,6 +42,7 @@ public class JavaCompilerTest {
         FileUtils.cleanDirectory(TEMP_DIR);
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void test() throws Exception {
         FileUtils.write(new File(TEMP_DIR, "Main123.java"), "public class Main123 { public int get() {return 123;}}",

@@ -1,5 +1,10 @@
 package org.dom4j;
 
+import static org.junit.Assert.assertEquals;
+
+import org.dom4j.io.SAXReader;
+import org.junit.Test;
+
 /*
  * #%L
  * Evaluation
@@ -12,12 +17,6 @@ package org.dom4j;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  *

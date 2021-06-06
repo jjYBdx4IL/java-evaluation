@@ -44,6 +44,7 @@ import testgroup.RequiresIsolatedVM;
  * 
  * @author jjYBdx4IL
  */
+@SuppressWarnings("resource")
 @Category(RequiresIsolatedVM.class)
 public class BufferedImageConversionTest extends Common {
 
@@ -63,6 +64,8 @@ public class BufferedImageConversionTest extends Common {
             waitKey(0);
             destroyAllWindows();
         }
+        jcv.close();
+        cv.close();
     }
 
     @Test
@@ -85,6 +88,9 @@ public class BufferedImageConversionTest extends Common {
             waitKey(0);
             destroyAllWindows();
         }
+        jcv2.close();
+        jcv.close();
+        cv.close();
     }
    
     @Test

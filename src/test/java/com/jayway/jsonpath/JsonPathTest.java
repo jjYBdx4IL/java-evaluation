@@ -3,7 +3,6 @@ package com.jayway.jsonpath;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.net.MediaType;
-import com.google.gson.JsonArray;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;

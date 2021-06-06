@@ -1,8 +1,8 @@
 package tests.java.awt;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 import com.github.jjYBdx4IL.utils.env.Maven;
 import com.github.jjYBdx4IL.utils.junit4.Screenshot;
@@ -63,16 +63,20 @@ public class SystemTrayTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         if (!SystemTray.isSupported()) {
             LOG.info("no system tray support found, trying stalonetray...");
-            ProcessBuilder bp = new ProcessBuilder("stalonetray");
-            p = bp.start();
-            long timeout = System.currentTimeMillis() + 60L * 1000L;
-            while (!SystemTray.isSupported() && System.currentTimeMillis() < timeout) {
-                try {
-                    p.exitValue();
-                    break;
-                } catch (IllegalThreadStateException ex) {
+            try {
+                ProcessBuilder bp = new ProcessBuilder("stalonetray");
+                p = bp.start(); // throws exception if not installed
+                long timeout = System.currentTimeMillis() + 60L * 1000L;
+                while (!SystemTray.isSupported() && System.currentTimeMillis() < timeout) {
+                    try {
+                        p.exitValue();
+                        break;
+                    } catch (IllegalThreadStateException ex) {
+                    }
+                    Thread.sleep(1000L);
                 }
-                Thread.sleep(1000L);
+            } catch (Exception ex) {
+                LOG.info(ex.getMessage());
             }
             if (!SystemTray.isSupported()) {
                 LOG.warn("tests will be skipped because we don't have system tray support!");
@@ -91,7 +95,7 @@ public class SystemTrayTest {
 
     @Test
     public void test() throws AWTException, InterruptedException {
-        assertTrue("system tray is supported", SystemTray.isSupported());
+        assumeTrue("system tray is supported", SystemTray.isSupported());
 
         PopupMenu popupMenu = new PopupMenu("main menu");
         popupMenu.add("label1");

@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.github.jjYBdx4IL.test.GraphicsResource;
 import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.gfx.ImageUtils;
 
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.MatVector;
@@ -17,11 +18,11 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -34,20 +35,12 @@ import testgroup.RequiresIsolatedVM;
 @Category(RequiresIsolatedVM.class)
 public class StitchingTest {
 
-    private static final File TEMP_DIR = Maven.getTempTestDir(StitchingTest.class);
+    private final File TEMP_DIR = Maven.getTempTestDir(StitchingTest.class);
     private static final Logger LOG = LoggerFactory.getLogger(StitchingTest.class);
 
     static {
         // System.setProperty("org.bytedeco.javacpp.logger", "slf4j");
         LoadOrderDetectorTest.loadLibs("jniopencv_core", "jniopencv_stitching", "jniopencv_imgcodecs");
-    }
-
-    public static BufferedImage crop(BufferedImage img, int x, int y, int w, int h) {
-        BufferedImage imgPart = new BufferedImage(w, h, img.getType());
-        Graphics2D gr = imgPart.createGraphics();
-        gr.drawImage(img, 0, 0, w, h, x, y, x + w, y + h, null);
-        gr.dispose();
-        return imgPart;
     }
 
     @Test
@@ -61,10 +54,10 @@ public class StitchingTest {
         final int h = image.getHeight();
         final int overlap = w / 20;
         File outFile1 = new File(TEMP_DIR, "splitOutput1.jpg");
-        ImageIO.write(crop(image, 0, 0, w / 2 + overlap, h), "jpg", outFile1);
+        ImageIO.write(ImageUtils.cropNew(image, 0, 0, w / 2 + overlap, h), "jpg", outFile1);
         // @insert:image:splitOutput1.jpg@
         File outFile2 = new File(TEMP_DIR, "splitOutput2.jpg");
-        ImageIO.write(crop(image, w / 2 - overlap, 0, w / 2 + overlap, h), "jpg", outFile2);
+        ImageIO.write(ImageUtils.cropNew(image, w / 2 - overlap, 0, w / 2 + overlap, h), "jpg", outFile2);
         // @insert:image:splitOutput2.jpg@
 
         MatVector imgs = new MatVector();
@@ -89,6 +82,7 @@ public class StitchingTest {
 
         File resultImgFile = new File(TEMP_DIR, "stitched.jpg");
         assertTrue(imwrite(resultImgFile.getAbsolutePath(), pano));
+        assertTrue(Files.exists(resultImgFile.toPath()));
         LOG.info("output written to " + resultImgFile.getAbsolutePath());
         // @insert:image:stitched.jpg@
 

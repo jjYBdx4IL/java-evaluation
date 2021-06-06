@@ -18,6 +18,7 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class ArrayComparisonTest {
 
+    @SuppressWarnings("deprecation")
     @Test
     public void test() {
         byte[] a = new byte[]{0, 1, 2};

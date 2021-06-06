@@ -63,6 +63,7 @@ public class DirectMatCreationTest extends Common {
 
         imwrite(new File(TEMP_DIR, "testJnaMemory2Mat.png").getAbsolutePath(), m2);
         // @insert:image:testJnaMemory2Mat.png@
+        f.close();
     }
 
     @Test
@@ -95,6 +96,7 @@ public class DirectMatCreationTest extends Common {
 
         imwrite(new File(TEMP_DIR, "testJnaMemory2Mat2.png").getAbsolutePath(), m2);
         // @insert:image:testJnaMemory2Mat2.png@
+        f.close();
     }
 
     @Test

@@ -1,16 +1,7 @@
 package org.json;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import org.json.JSONObject;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,5 +1,3 @@
-package org.jsoup;
-
 /*
  * #%L
  * Evaluation
@@ -9,13 +7,15 @@ package org.jsoup;
  * #L%
  */
 
+package org.jsoup;
+
+import static org.junit.Assert.fail;
+
 import com.github.jjYBdx4IL.test.HttpStatusCodeTestBase;
 
-import java.io.IOException;
-
-import org.jsoup.Jsoup;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  *

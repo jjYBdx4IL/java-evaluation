@@ -81,5 +81,6 @@ public class MixChannelsTest extends Common {
         cvtColor(m2, m2, COLOR_BGRA2BGR);
         imwrite(new File(TEMP_DIR, "test4byteAbgr2Mat4.png").getAbsolutePath(), m2);
         // @insert:image:test4byteAbgr2Mat4.png@
+        f.close();
     }
 }

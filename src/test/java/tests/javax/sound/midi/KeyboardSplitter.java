@@ -32,6 +32,7 @@ public class KeyboardSplitter implements Receiver {
         receivers.add(rcvr);
     }
 
+    @SuppressWarnings("unused")
     public void send(MidiMessage msgIn, long timeStamp) {
         if (!(msgIn instanceof ShortMessage)) {
             _send(msgIn, timeStamp);

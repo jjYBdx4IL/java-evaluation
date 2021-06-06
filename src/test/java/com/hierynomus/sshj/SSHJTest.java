@@ -8,7 +8,7 @@
  */
 package com.hierynomus.sshj;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.coherentlogic.fred.FredClientTest;
 import com.github.jjYBdx4IL.utils.vmmgmt.LibvirtUtils;
@@ -17,7 +17,6 @@ import com.github.jjYBdx4IL.utils.vmmgmt.VMData;
 import com.github.jjYBdx4IL.utils.vmmgmt.VMInstanceProviderRule;
 
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;

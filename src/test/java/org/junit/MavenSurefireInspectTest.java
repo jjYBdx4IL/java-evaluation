@@ -2,13 +2,12 @@ package org.junit;
 
 import com.github.jjYBdx4IL.utils.env.JavaProcess;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-import org.junit.Test;
 
 /*
  * #%L

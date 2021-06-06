@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
  * from:
  * https://github.com/mgajdos/jersey-intercepting-resource-methods/blob/master/src/main/java/sk/dejavu/blog/examples/intercepting/intercept/MyInterceptionService.java#L23
  */
+@SuppressWarnings("resource")
 public class ResourceInterceptor implements MethodInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceInterceptor.class);

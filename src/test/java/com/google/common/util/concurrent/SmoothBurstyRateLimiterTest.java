@@ -2,7 +2,6 @@ package com.google.common.util.concurrent;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.util.concurrent.SmoothBurstyRateLimiter;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,3 @@
-package org.junit;
-
 /*
  * #%L
  * Evaluation
@@ -8,19 +6,18 @@ package org.junit;
  * %%
  * #L%
  */
+package org.junit;
+
+import static org.junit.runner.JUnitCore.runClasses;
+
+import org.junit.experimental.categories.Category;
+import org.junit.rules.TestRule;
 
 // http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/TestWatcher.html
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.rules.TestRule;
-import testgroup.RequiresIsolatedVM;
 
-import static org.junit.runner.JUnitCore.runClasses;
+import testgroup.RequiresIsolatedVM;
 
 @Category(RequiresIsolatedVM.class)
 public class TestWatcherTest {

@@ -100,5 +100,6 @@ public class ScreenshotBackgroundWindowTest extends Common {
         imwrite(new File(TEMP_DIR, "matresult.png").getAbsolutePath(), m2);
 
         SineWaveSynthTest.beep(500);
+        f.close();
     }
 }

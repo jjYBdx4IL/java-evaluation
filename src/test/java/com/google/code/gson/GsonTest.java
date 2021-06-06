@@ -15,16 +15,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -81,8 +80,7 @@ public class GsonTest {
      */
     @Test
     public void testJenkinsJSONDepGraph() {
-        JsonParser parser = new JsonParser();
-        JsonElement root = parser.parse("{\n"
+        JsonElement root = gson.fromJson("{\n"
             + "  \"edges\":   [\n"
             + "        {\n"
             + "      \"from\": \"maven\",\n"
@@ -93,7 +91,7 @@ public class GsonTest {
             + "      \"from\": \"parent\",\n"
             + "      \"to\": \"android\",\n"
             + "      \"type\": \"dep\"\n"
-            + "    }]}");
+            + "    }]}", JsonElement.class);
         JsonArray arr = root.getAsJsonObject().get("edges").getAsJsonArray();
         Iterator<JsonElement> it = arr.iterator();
         while (it.hasNext()) {

@@ -1,16 +1,7 @@
 package org.junit;
 
-/*
- * #%L
- * Evaluation
- * %%
- * Copyright (C) 2014 Github jjYBdx4IL Projects
- * %%
- * #L%
- */
-
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *

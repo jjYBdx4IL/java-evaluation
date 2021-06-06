@@ -2,7 +2,6 @@ package org.apache.log4j;
 
 import static java.util.logging.Level.FINEST;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assume.assumeTrue;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
@@ -22,6 +21,8 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.openjdk.jmh.runner.options.VerboseMode;
+import org.slf4j.LoggerFactory;
+
 import testgroup.RequiresIsolatedVM;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class IsTraceEnabledPerformanceTest {
 
     private static final Logger LOG = Logger.getLogger(IsTraceEnabledPerformanceTest.class.getName());
+    private static final org.slf4j.Logger SLF = LoggerFactory.getLogger(IsTraceEnabledPerformanceTest.class);
     private static final java.util.logging.Logger JUL = java.util.logging.Logger
         .getLogger(IsTraceEnabledPerformanceTest.class.getName());
     private static final int OPS_PER_INVOCATION = 1000;
@@ -138,6 +140,115 @@ public class IsTraceEnabledPerformanceTest {
         for (int i = 0; i < OPS_PER_INVOCATION; i++) {
             if (LOG.isTraceEnabled()) {
                 LOG.log(Level.TRACE, "some msg");
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jFinalConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (SLF.isTraceEnabled()) {
+                SLF.trace("some msg" + state.finalStr);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (SLF.isTraceEnabled()) {
+                SLF.trace("some msg" + state.str);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jConcatPlaceholderNoIsEnabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg {}", state.str);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jFinalConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg" + state.finalStr);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg" + state.str);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jFinalStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg" + BenchmarkState.FINAL_STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jStaticConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg" + BenchmarkState.STATIC_STR);
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jNoConcat(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            SLF.trace("some msg");
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jFinalStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (SLF.isTraceEnabled()) {
+                SLF.trace("some msg" + BenchmarkState.FINAL_STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jStaticConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (SLF.isTraceEnabled()) {
+                SLF.trace("some msg" + BenchmarkState.STATIC_STR);
+            }
+        }
+
+        bh.consume(state.list.get(0));
+    }
+
+    @Benchmark
+    public void testSlf4jNoConcatDisabled(BenchmarkState state, Blackhole bh) {
+        for (int i = 0; i < OPS_PER_INVOCATION; i++) {
+            if (SLF.isTraceEnabled()) {
+                SLF.trace("some msg");
             }
         }
 
@@ -275,7 +386,6 @@ public class IsTraceEnabledPerformanceTest {
 
     @Test
     public void testRunner() throws RunnerException {
-    	assumeTrue(SystemUtils.IS_OS_LINUX);
     	
         // or set forks(0),
         // https://github.com/melix/jmh-gradle-plugin/issues/103
@@ -285,12 +395,12 @@ public class IsTraceEnabledPerformanceTest {
             .include(this.getClass().getName() + ".*")
             .mode(Mode.AverageTime)
             .timeUnit(TimeUnit.NANOSECONDS)
-            .warmupTime(TimeValue.milliseconds(100))
+            .warmupTime(TimeValue.milliseconds(10))
             .warmupIterations(1)
-            .measurementTime(TimeValue.milliseconds(100))
+            .measurementTime(TimeValue.milliseconds(10))
             .measurementIterations(1)
-            .threads(1)
-            .forks(1)
+            .threads(Math.max(1, Runtime.getRuntime().availableProcessors()/4))
+            .forks(SystemUtils.IS_OS_LINUX ? 1 : 0)
             .shouldFailOnError(true)
             .shouldDoGC(true)
             .operationsPerInvocation(OPS_PER_INVOCATION)

@@ -9,12 +9,14 @@ package org.dom4j;
  * #L%
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-import org.dom4j.DocumentException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  *

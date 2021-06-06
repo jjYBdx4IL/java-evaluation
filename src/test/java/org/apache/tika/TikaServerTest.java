@@ -39,6 +39,7 @@ public class TikaServerTest {
         assumeTrue("tika server not running on port " + TIKA_SERVER_PORT, PortUtils.isOpen(9998));
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void test() throws Exception {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {

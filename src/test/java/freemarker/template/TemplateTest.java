@@ -12,11 +12,8 @@ import static org.junit.Assert.assertEquals;
 
 import com.github.jjYBdx4IL.utils.env.Maven;
 
-import freemarker.core.StringArraySequence;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.jcodec.common.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,6 +42,7 @@ public class TemplateTest {
 
     public static class UpperCaseMethod implements TemplateMethodModelEx {
 
+        @SuppressWarnings("rawtypes")
         public TemplateModel exec(List args) throws TemplateModelException {
             StringBuilder sb = new StringBuilder();
             for (Object arg : args) {

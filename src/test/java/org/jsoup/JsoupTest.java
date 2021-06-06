@@ -1,5 +1,3 @@
-package org.jsoup;
-
 /*
  * #%L
  * Evaluation
@@ -9,16 +7,20 @@ package org.jsoup;
  * #L%
  */
 
-import java.io.IOException;
-import org.jsoup.Jsoup;
+package org.jsoup;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Jsoup: excellent html parser for Java.

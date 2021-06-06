@@ -51,6 +51,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+@SuppressWarnings("resource")
 public class Common {
 
     private static final Logger LOG = LoggerFactory.getLogger(Common.class);

@@ -2,10 +2,10 @@ package javazoom.jl;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 
-import com.github.jjYBdx4IL.utils.env.CI;
+import com.github.jjYBdx4IL.utils.env.Surefire;
 
-import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class JLayerDecoderTest {
 
     @Test
     public void testDirectPlayback() throws IOException, BitstreamException, DecoderException, FileNotFoundException, LineUnavailableException {
-        Assume.assumeFalse(CI.isCI());
+        assumeTrue(Surefire.isSingleTestExecution());
 
         long totalSize = Files.size(Paths.get(ConverterTest.MP3FILE.getAbsolutePath()));
         assertEquals(61440, totalSize);
@@ -51,7 +51,7 @@ public class JLayerDecoderTest {
 
     @Test
     public void testPlayer() throws FileNotFoundException, IOException, JavaLayerException {
-        Assume.assumeFalse(CI.isCI());
+        assumeTrue(Surefire.isSingleTestExecution());
         
         try (InputStream is = new FileInputStream(ConverterTest.MP3FILE)) {
             Player player = new Player(is);
