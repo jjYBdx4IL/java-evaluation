@@ -1,16 +1,19 @@
 package tests.java.net;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import com.github.jjYBdx4IL.utils.env.Maven;
+import com.github.jjYBdx4IL.utils.env.Surefire;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,9 +157,12 @@ public class URLTest {
         }
     }
 
-    @Ignore
+    // -Dhttps.proxyHost=xyz -Dhttps.proxyPort=3128
+    // (-Djava.net.useSystemProxies=true)
     @Test
     public void testRetrieveRemoteCertDetails() throws Exception {
+        assumeTrue(Surefire.isSingleTestExecution());
+        
         URL u = new URL("https://www.google.com");
         HttpsURLConnection conn = (HttpsURLConnection) u.openConnection();
         try (InputStream is = conn.getInputStream()) {
@@ -164,6 +170,18 @@ public class URLTest {
             LOG.info("peer principal: " + conn.getPeerPrincipal());
             X509Certificate c = (X509Certificate) conn.getServerCertificates()[0];
             LOG.info("notAfter: " + c.getNotAfter());
+        } 
+    }
+    
+    // -Dhttp.proxyHost=xyz -Dhttp.proxyPort=3128
+    // (-Djava.net.useSystemProxies=true)
+    @Test
+    public void testSimpleRemoteGet() throws Exception {
+        assumeTrue(Surefire.isSingleTestExecution());
+        
+        URL u = new URL("http://www.google.com");
+        try (InputStream is = u.openStream()) {
+            LOG.info("{}", IOUtils.toString(is, UTF_8));
         } 
     }
 }
