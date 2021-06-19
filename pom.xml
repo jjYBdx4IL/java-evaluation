@@ -270,6 +270,7 @@
 					<failIfNoTests>true</failIfNoTests>
 					<excludedGroups>testgroup.IT</excludedGroups>
 					<rerunFailingTestsCount>10</rerunFailingTestsCount>
+                    <runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -604,7 +605,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.199</version>
+			<version>1.4.200</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>

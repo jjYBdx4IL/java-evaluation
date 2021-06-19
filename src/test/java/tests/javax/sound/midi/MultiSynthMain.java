@@ -170,7 +170,7 @@ public class MultiSynthMain implements Receiver {
     }
 
     private void initMidi() throws Exception {
-        dev = DevSelUtils.getMidiInDeviceByName(".*virmidi.*hw:1,0,0.*|UM-ONE");
+        dev = DevSelUtils.getMidiInDeviceByName(".*virmidi.*hw:1,0,0.*|UM-ONE|MPK.*");
         Transmitter trans = dev.getTransmitter();
         trans.setReceiver(this);
         dev.open();

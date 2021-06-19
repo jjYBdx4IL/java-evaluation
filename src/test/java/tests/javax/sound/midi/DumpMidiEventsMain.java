@@ -11,7 +11,7 @@ public class DumpMidiEventsMain {
 
     public static void main(String[] args) throws Exception {
         //MidiDevice dev = DevSelUtils.getHwInDevice();
-        MidiDevice dev = DevSelUtils.getMidiInDeviceByName(".*virmidi.*hw:1,0,0.*|UM-ONE");
+        MidiDevice dev = DevSelUtils.getMidiInDeviceByName(".*virmidi.*hw:1,0,0.*|UM-ONE|MIDIIN4.*MPK249.*");
         Transmitter trans = dev.getTransmitter();
         trans.setReceiver(new MidiLoggerReceiver());
         dev.open();

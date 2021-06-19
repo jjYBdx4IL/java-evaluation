@@ -177,10 +177,14 @@ public class TestAutorunGUI extends JFrame implements ActionListener, Runnable, 
             .scan()) {
             scanResult.getClassesWithMethodAnnotation(Test.class.getName())
                 .forEach(ci -> {
-                    for (MethodInfo mi : ci.getMethodInfo()) {
-                        if (mi.getAnnotationInfo(Test.class.getName()) != null) {
-                            foundMethods.add(new MethodRef(ci.loadClass(), mi.loadClassAndGetMethod()));
+                    try {
+                        for (MethodInfo mi : ci.getMethodInfo()) {
+                            if (mi.getAnnotationInfo(Test.class.getName()) != null) {
+                                foundMethods.add(new MethodRef(ci.loadClass(), mi.loadClassAndGetMethod()));
+                            }
                         }
+                    } catch (NoClassDefFoundError err) {
+                        LOG.error(err.getMessage());
                     }
                 });
         }        

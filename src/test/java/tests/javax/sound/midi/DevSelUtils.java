@@ -85,7 +85,7 @@ public class DevSelUtils {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(toString(info));
             }
-            if (!info.getName().toLowerCase().matches(regex)) {
+            if (!info.getName().toLowerCase(Locale.ROOT).matches(regex.toLowerCase(Locale.ROOT))) {
                 continue;
             }
             try {
